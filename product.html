@@ -63,11 +63,14 @@ header{
 }
 
 .qty{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin-top:15px;
-  gap:10px;
+  text-align:center;
+  margin-top:20px;
+}
+
+.qty span{
+  display:block;
+  font-size:22px;
+  margin-bottom:10px;
 }
 
 .qty button{
@@ -104,19 +107,18 @@ header{
 
 <p>منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
 
-<div class="price" id="price">10.25 DH</div>
+<div class="price" id="price">0 DH</div>
 
-<!-- الأزرار -->
+<!-- اختيار -->
 <div class="buttons">
-  <button onclick="addPiece()">قطعة</button>
-  <button onclick="addBox()">علبة</button>
+  <button onclick="setPiece()">قطعة</button>
+  <button onclick="setBox()">علبة</button>
 </div>
 
 <!-- الكمية -->
 <div class="qty">
-  <button onclick="minus()">➖</button>
   <span id="qty">0</span>
-  <button onclick="plus()">➕</button>
+  <button onclick="minus()">➖</button>
 </div>
 
 <button class="order" onclick="order()">اطلب عبر واتساب</button>
@@ -126,46 +128,33 @@ header{
 <script>
 
 let quantity = 0;
-
 let pricePiece = 10.25;
 let piecesInBox = 16;
 
 /* تحديث الثمن */
-function updatePrice(){
-  let total = pricePiece * quantity;
-  document.getElementById("price").innerText = total + " DH";
+function update(){
+  document.getElementById("qty").innerText = quantity;
+  document.getElementById("price").innerText = (quantity * pricePiece) + " DH";
 }
 
-/* + */
-function plus(){
-  quantity++;
+/* قطعة = 1 */
+function setPiece(){
+  quantity = 1;
   update();
 }
 
-/* - */
+/* علبة = 16 */
+function setBox(){
+  quantity = 16;
+  update();
+}
+
+/* ناقص */
 function minus(){
   if(quantity > 0){
     quantity--;
     update();
   }
-}
-
-/* إضافة قطعة */
-function addPiece(){
-  quantity += 1;
-  update();
-}
-
-/* إضافة علبة */
-function addBox(){
-  quantity += 16;
-  update();
-}
-
-/* تحديث */
-function update(){
-  document.getElementById("qty").innerText = quantity;
-  updatePrice();
 }
 
 /* الطلب */
