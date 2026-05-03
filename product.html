@@ -19,10 +19,30 @@ header{
   text-align:center;
 }
 
+/* الصور */
 .slider img{
   width:100%;
   height:250px;
   object-fit:cover;
+  cursor:pointer;
+}
+
+/* تكبير الصورة */
+.modal{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal img{
+  width:90%;
+  max-height:90%;
 }
 
 .container{
@@ -52,17 +72,19 @@ header{
 }
 
 .qty{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:15px;
+  text-align:center;
   margin-top:20px;
 }
 
+.qty span{
+  display:block;
+  font-size:26px;
+  margin-bottom:10px;
+}
+
 .qty button{
-  width:60px;
-  height:60px;
-  font-size:22px;
+  padding:10px;
+  font-size:20px;
 }
 
 .order{
@@ -83,7 +105,12 @@ header{
 <header>تفاصيل المنتج</header>
 
 <div class="slider">
-  <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
+  <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png" onclick="zoom(this.src)">
+</div>
+
+<!-- zoom -->
+<div class="modal" id="modal" onclick="closeZoom()">
+  <img id="zoomedImg">
 </div>
 
 <div class="container">
@@ -92,17 +119,16 @@ header{
 
 <p>منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
 
-<div class="price" id="price">10.25 DH</div>
+<div class="price" id="price">0 DH</div>
 
 <div class="buttons">
-  <button onclick="setBox()">علبة</button>
-  <button onclick="setPiece()">قطعة</button>
+  <button onclick="addBox()">علبة</button>
+  <button onclick="addPiece()">قطعة</button>
 </div>
 
 <div class="qty">
-  <button onclick="plus()">+</button>
-  <span id="qty">1</span>
-  <button onclick="minus()">-</button>
+  <span id="qty">0</span>
+  <button onclick="minus()">➖</button>
 </div>
 
 <button class="order" onclick="order()">اطلب عبر واتساب</button>
@@ -111,7 +137,7 @@ header{
 
 <script>
 
-let quantity = 1;
+let quantity = 0;
 let pricePiece = 10.25;
 let piecesInBox = 16;
 
@@ -121,25 +147,19 @@ function update(){
   document.getElementById("price").innerText = (quantity * pricePiece) + " DH";
 }
 
-/* قطعة */
-function setPiece(){
-  quantity = 1;
+/* قطعة = +1 */
+function addPiece(){
+  quantity += 1;
   update();
 }
 
-/* علبة */
-function setBox(){
-  quantity = 16;
+/* علبة = +16 */
+function addBox(){
+  quantity += 16;
   update();
 }
 
-/* + */
-function plus(){
-  quantity++;
-  update();
-}
-
-/* - */
+/* ناقص */
 function minus(){
   if(quantity > 0){
     quantity--;
@@ -158,6 +178,16 @@ function order(){
   msg += "الكمية: " + quantity + " قطعة";
 
   window.open("https://wa.me/212613675970?text=" + encodeURIComponent(msg));
+}
+
+/* zoom */
+function zoom(src){
+  document.getElementById("modal").style.display = "flex";
+  document.getElementById("zoomedImg").src = src;
+}
+
+function closeZoom(){
+  document.getElementById("modal").style.display = "none";
 }
 
 </script>
