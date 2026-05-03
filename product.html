@@ -18,15 +18,18 @@ header{
   text-align:center;
 }
 
+/* SLIDER */
 .slider{
   display:flex;
   overflow-x:auto;
+  scroll-snap-type:x mandatory;
 }
 
 .slider img{
   width:100%;
   height:250px;
   object-fit:cover;
+  scroll-snap-align:start;
 }
 
 .container{
@@ -34,8 +37,9 @@ header{
 }
 
 .price{
-  font-size:20px;
+  font-size:22px;
   font-weight:bold;
+  margin:10px 0;
 }
 
 .buttons{
@@ -47,18 +51,23 @@ header{
 .buttons button{
   flex:1;
   padding:10px;
-  background:#000;
-  color:#fff;
   border:none;
   border-radius:10px;
+  background:#000;
+  color:#fff;
 }
 
 .qty{
   display:flex;
   justify-content:center;
   align-items:center;
+  margin-top:15px;
   gap:10px;
-  margin-top:10px;
+}
+
+.qty button{
+  padding:10px;
+  font-size:18px;
 }
 
 .order{
@@ -69,6 +78,7 @@ header{
   color:#fff;
   border:none;
   border-radius:10px;
+  font-size:16px;
 }
 </style>
 </head>
@@ -77,6 +87,7 @@ header{
 
 <header>تفاصيل المنتج</header>
 
+<!-- SLIDER -->
 <div class="slider">
   <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
   <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png">
@@ -87,15 +98,17 @@ header{
 
 <h2>balai IP harcha</h2>
 
-<p>منتج عملي وقوي للتنظيف اليومي.</p>
+<p>منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
 
 <div class="price" id="price">10.25 DH</div>
 
+<!-- اختيار -->
 <div class="buttons">
   <button onclick="setType('piece')">قطعة</button>
   <button onclick="setType('box')">علبة</button>
 </div>
 
+<!-- الكمية -->
 <div class="qty">
   <button onclick="minus()">➖</button>
   <span id="qty">1</span>
@@ -107,17 +120,15 @@ header{
 </div>
 
 <script>
-
 let quantity = 1;
 let type = "piece";
 
 let pricePiece = 10.25;
-let piecesInBox = 16;
-let priceBox = pricePiece * piecesInBox;
+let priceBox = 100; // بدلها إذا عندك ثمن العلبة
 
 function updatePrice(){
-  let unit = (type === "piece") ? pricePiece : priceBox;
-  document.getElementById("price").innerText = (unit * quantity) + " DH";
+  let price = (type === "piece" ? pricePiece : priceBox) * quantity;
+  document.getElementById("price").innerText = price + " DH";
 }
 
 function plus(){
@@ -127,7 +138,7 @@ function plus(){
 }
 
 function minus(){
-  if(quantity > 0){
+  if(quantity > 1){
     quantity--;
     document.getElementById("qty").innerText = quantity;
     updatePrice();
@@ -140,18 +151,12 @@ function setType(t){
 }
 
 function order(){
-  if(quantity === 0){
-    alert("اختار الكمية");
-    return;
-  }
+  let text = "السلام، بغيت نطلب balai IP harcha\n";
+  text += "النوع: " + (type === "piece" ? "قطعة" : "علبة") + "\n";
+  text += "الكمية: " + quantity;
 
-  let msg = "السلام، بغيت نطلب balai IP harcha\n";
-  msg += "النوع: " + (type === "piece" ? "قطعة" : "علبة") + "\n";
-  msg += "الكمية: " + quantity;
-
-  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(msg));
+  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(text));
 }
-
 </script>
 
 </body>
