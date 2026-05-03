@@ -9,7 +9,6 @@
 body{
   margin:0;
   font-family:Arial;
-  background:#fff;
 }
 
 header{
@@ -19,34 +18,67 @@ header{
   text-align:center;
 }
 
-.container{
-  padding:20px;
+/* SLIDER */
+.slider{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
 }
 
-img{
+.slider img{
   width:100%;
   height:250px;
   object-fit:cover;
-  border-radius:10px;
+  scroll-snap-align:start;
 }
 
-h1{
-  margin-top:15px;
-}
-
-p{
-  color:#555;
-}
-
-button{
-  width:100%;
+.container{
   padding:15px;
+}
+
+.price{
+  font-size:22px;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.buttons button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
   background:#000;
+  color:#fff;
+}
+
+.qty{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:15px;
+  gap:10px;
+}
+
+.qty button{
+  padding:10px;
+  font-size:18px;
+}
+
+.order{
+  width:100%;
+  margin-top:20px;
+  padding:15px;
+  background:green;
   color:#fff;
   border:none;
   border-radius:10px;
   font-size:16px;
-  margin-top:20px;
 }
 </style>
 </head>
@@ -55,46 +87,74 @@ button{
 
 <header>تفاصيل المنتج</header>
 
+<!-- SLIDER -->
+<div class="slider">
+  <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
+  <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png">
+  <img src="https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png">
+</div>
+
 <div class="container">
 
-<img id="image">
+<h2>balai IP harcha</h2>
 
-<h1 id="title"></h1>
+<p>منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
 
-<p id="description"></p>
+<div class="price" id="price">10.25 DH</div>
 
-<button onclick="order()">اطلب عبر واتساب</button>
+<!-- اختيار -->
+<div class="buttons">
+  <button onclick="setType('piece')">قطعة</button>
+  <button onclick="setType('box')">علبة</button>
+</div>
+
+<!-- الكمية -->
+<div class="qty">
+  <button onclick="minus()">➖</button>
+  <span id="qty">1</span>
+  <button onclick="plus()">➕</button>
+</div>
+
+<button class="order" onclick="order()">اطلب عبر واتساب</button>
 
 </div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const name = params.get("name");
+let quantity = 1;
+let type = "piece";
 
-let title = document.getElementById("title");
-let description = document.getElementById("description");
-let image = document.getElementById("image");
+let pricePiece = 10.25;
+let priceBox = 100; // بدلها إذا عندك ثمن العلبة
 
-if(name === "asperox"){
-  title.innerText = "Asperox";
-  description.innerText = "منظف قوي لإزالة الدهون الصعبة ⚡ مناسب للمطبخ والفرن والأسطح.";
-  image.src = "https://images.unsplash.com/photo-1581578731548-c64695cc6952";
+function updatePrice(){
+  let price = (type === "piece" ? pricePiece : priceBox) * quantity;
+  document.getElementById("price").innerText = price + " DH";
 }
 
-if(name === "aluminium"){
-  title.innerText = "Aluminium";
-  description.innerText = "ورق ألمنيوم عالي الجودة للاستعمال اليومي والتخزين.";
-  image.src = "https://images.unsplash.com/photo-1606813907291-d86efa9b94db";
+function plus(){
+  quantity++;
+  document.getElementById("qty").innerText = quantity;
+  updatePrice();
 }
 
-if(name === "dettol"){
-  title.innerText = "Dettol";
-  description.innerText = "صابون مضاد للبكتيريا يحافظ على نظافة وصحة البشرة.";
-  image.src = "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5";
+function minus(){
+  if(quantity > 1){
+    quantity--;
+    document.getElementById("qty").innerText = quantity;
+    updatePrice();
+  }
+}
+
+function setType(t){
+  type = t;
+  updatePrice();
 }
 
 function order(){
-  let text = "السلام، بغيت نطلب " + title.innerText;
+  let text = "السلام، بغيت نطلب balai IP harcha\n";
+  text += "النوع: " + (type === "piece" ? "قطعة" : "علبة") + "\n";
+  text += "الكمية: " + quantity;
+
   window.open("https://wa.me/212613675970?text=" + encodeURIComponent(text));
 }
 </script>
