@@ -9,9 +9,9 @@
 body{
   margin:0;
   font-family:Arial;
-  background:#f5f5f5;
 }
 
+/* HEADER */
 header{
   background:#000;
   color:#fff;
@@ -30,13 +30,12 @@ header{
   width:100%;
   height:250px;
   object-fit:cover;
-  scroll-snap-align:center;
-  flex-shrink:0;
+  scroll-snap-align:start;
   cursor:pointer;
 }
 
-/* ZOOM */
-.modal{
+/* IMAGE ZOOM */
+#popup{
   display:none;
   position:fixed;
   top:0;
@@ -46,20 +45,21 @@ header{
   background:rgba(0,0,0,0.9);
   justify-content:center;
   align-items:center;
+  z-index:999;
 }
 
-.modal img{
-  width:90%;
+#popup img{
+  max-width:90%;
   max-height:90%;
 }
 
-/* باقي التصميم */
+/* CONTENT */
 .container{
   padding:15px;
 }
 
 .price{
-  font-size:26px;
+  font-size:25px;
   font-weight:bold;
   margin:10px 0;
 }
@@ -72,7 +72,7 @@ header{
 
 .buttons button{
   flex:1;
-  padding:15px;
+  padding:12px;
   border:none;
   border-radius:15px;
   background:#000;
@@ -80,26 +80,28 @@ header{
   font-size:16px;
 }
 
+/* QTY */
 .qty{
   text-align:center;
-  margin-top:20px;
+  margin-top:15px;
 }
 
 .qty span{
+  font-size:30px;
   display:block;
-  font-size:26px;
   margin-bottom:10px;
 }
 
 .qty button{
-  padding:10px;
+  padding:12px 25px;
   font-size:20px;
 }
 
+/* ORDER */
 .order{
   width:100%;
   margin-top:20px;
-  padding:18px;
+  padding:15px;
   background:green;
   color:#fff;
   border:none;
@@ -113,16 +115,16 @@ header{
 
 <header>تفاصيل المنتج</header>
 
-<!-- الصور -->
+<!-- SLIDER -->
 <div class="slider">
   <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png" onclick="zoom(this.src)">
   <img src="https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png" onclick="zoom(this.src)">
   <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png" onclick="zoom(this.src)">
 </div>
 
-<!-- zoom -->
-<div class="modal" id="modal" onclick="closeZoom()">
-  <img id="zoomedImg">
+<!-- POPUP -->
+<div id="popup" onclick="closeZoom()">
+  <img id="popupImg">
 </div>
 
 <div class="container">
@@ -131,13 +133,15 @@ header{
 
 <p>منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
 
-<div class="price" id="price">0 DH</div>
+<div class="price" id="price">DH 0</div>
 
+<!-- BUTTONS -->
 <div class="buttons">
-  <button onclick="addBox()">علبة</button>
   <button onclick="addPiece()">قطعة</button>
+  <button onclick="addBox()">علبة</button>
 </div>
 
+<!-- QTY -->
 <div class="qty">
   <span id="qty">0</span>
   <button onclick="minus()">➖</button>
@@ -153,33 +157,31 @@ let quantity = 0;
 let pricePiece = 10.25;
 let piecesInBox = 16;
 
-/* تحديث */
-function update(){
+function updatePrice(){
+  document.getElementById("price").innerText = "DH " + (quantity * pricePiece);
   document.getElementById("qty").innerText = quantity;
-  document.getElementById("price").innerText = (quantity * pricePiece) + " DH";
 }
 
-/* قطعة */
+/* ADD */
 function addPiece(){
   quantity += 1;
-  update();
+  updatePrice();
 }
 
-/* علبة */
 function addBox(){
   quantity += 16;
-  update();
+  updatePrice();
 }
 
-/* ناقص */
+/* MINUS */
 function minus(){
   if(quantity > 0){
     quantity--;
-    update();
+    updatePrice();
   }
 }
 
-/* واتساب */
+/* WHATSAPP */
 function order(){
   if(quantity === 0){
     alert("اختار الكمية");
@@ -192,14 +194,14 @@ function order(){
   window.open("https://wa.me/212613675970?text=" + encodeURIComponent(msg));
 }
 
-/* zoom */
+/* ZOOM */
 function zoom(src){
-  document.getElementById("modal").style.display = "flex";
-  document.getElementById("zoomedImg").src = src;
+  document.getElementById("popup").style.display="flex";
+  document.getElementById("popupImg").src = src;
 }
 
 function closeZoom(){
-  document.getElementById("modal").style.display = "none";
+  document.getElementById("popup").style.display="none";
 }
 
 </script>
