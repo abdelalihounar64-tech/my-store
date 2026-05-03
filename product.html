@@ -18,17 +18,34 @@ header{
   text-align:center;
 }
 
+/* SLIDER */
 .slider{
   display:flex;
   overflow-x:auto;
-  scroll-snap-type:x mandatory;
 }
 
 .slider img{
   width:100%;
   height:250px;
   object-fit:cover;
-  scroll-snap-align:start;
+  cursor:pointer;
+}
+
+/* تكبير الصورة */
+.viewer{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.viewer img{
+  width:90%;
 }
 
 .container{
@@ -49,11 +66,10 @@ header{
 .buttons button{
   flex:1;
   padding:12px;
-  border:none;
-  border-radius:10px;
   background:#000;
   color:#fff;
-  font-size:16px;
+  border:none;
+  border-radius:10px;
 }
 
 .qty{
@@ -61,17 +77,13 @@ header{
   margin-top:20px;
 }
 
-.qty span{
-  font-size:30px;
-}
-
-.qty button{
+.minus{
+  padding:12px;
   margin-top:10px;
-  padding:10px 20px;
-  font-size:20px;
+  font-size:18px;
 }
 
-.add{
+.order{
   width:100%;
   margin-top:20px;
   padding:15px;
@@ -79,10 +91,9 @@ header{
   color:#fff;
   border:none;
   border-radius:10px;
-  font-size:16px;
 }
 
-.cart{
+.go{
   width:100%;
   margin-top:10px;
   padding:15px;
@@ -90,7 +101,6 @@ header{
   color:#fff;
   border:none;
   border-radius:10px;
-  font-size:16px;
 }
 </style>
 </head>
@@ -99,101 +109,134 @@ header{
 
 <header>تفاصيل المنتج</header>
 
-<!-- صور -->
-<div class="slider">
-  <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
-  <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png">
+<!-- الصور -->
+<div class="slider" id="slider"></div>
+
+<div class="viewer" id="viewer" onclick="closeImg()">
+  <img id="bigImg">
 </div>
 
 <div class="container">
 
-<h2 id="name">balai IP harcha</h2>
-
-<p id="desc">منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
+<h2 id="name"></h2>
+<p id="desc"></p>
 
 <div class="price" id="price">0 DH</div>
 
-<!-- اختيار -->
 <div class="buttons">
-  <button onclick="setPiece()">قطعة</button>
-  <button onclick="setBox()">علبة</button>
+  <button onclick="addPiece()">قطعة</button>
+  <button onclick="addBox()">علبة</button>
 </div>
 
-<!-- الكمية -->
 <div class="qty">
-  <span id="qty">0</span><br>
-  <button onclick="minus()">➖</button>
+  <h1 id="qty">0</h1>
+  <button class="minus" onclick="minus()">➖</button>
 </div>
 
-<button class="add" onclick="addToCart()">أضف للسلة</button>
-<button class="cart" onclick="goCart()">اذهب للسلة</button>
+<button class="order" onclick="addToCart()">أضف للسلة</button>
+<button class="go" onclick="goCart()">اذهب للسلة</button>
 
 </div>
 
 <script>
 
-// البيانات
-let name = "balai IP harcha";
-let pricePiece = 10.25;
-let piecesInBox = 16;
+// جلب البيانات
+const params = new URLSearchParams(window.location.search);
 
+let name = params.get("name");
+let pricePiece = parseFloat(params.get("price"));
+let piecesInBox = parseInt(params.get("box"));
+let img1 = params.get("img1");
+let img2 = params.get("img2");
+let img3 = params.get("img3");
+let desc = params.get("desc");
+
+// عرض البيانات
+document.getElementById("name").innerText = name;
+document.getElementById("desc").innerText = desc;
+
+// الصور
+let slider = document.getElementById("slider");
+
+function addImage(src){
+  if(!src) return;
+  let img = document.createElement("img");
+  img.src = src;
+  img.onclick = () => openImg(src);
+  slider.appendChild(img);
+}
+
+addImage(img1);
+addImage(img2);
+addImage(img3);
+
+// تكبير
+function openImg(src){
+  document.getElementById("viewer").style.display = "flex";
+  document.getElementById("bigImg").src = src;
+}
+
+function closeImg(){
+  document.getElementById("viewer").style.display = "none";
+}
+
+// الكمية
 let quantity = 0;
 
-// تحديث الثمن
-function updatePrice(){
-  let total = quantity * pricePiece;
-  document.getElementById("price").innerText = total + " DH";
+function update(){
+  document.getElementById("qty").innerText = quantity;
+  document.getElementById("price").innerText = (quantity * pricePiece) + " DH";
 }
 
-// قطعة
-function setPiece(){
+function addPiece(){
   quantity += 1;
-  document.getElementById("qty").innerText = quantity;
-  updatePrice();
+  update();
 }
 
-// علبة (16 قطعة)
-function setBox(){
+function addBox(){
   quantity += piecesInBox;
-  document.getElementById("qty").innerText = quantity;
-  updatePrice();
+  update();
 }
 
-// ناقص
 function minus(){
   if(quantity > 0){
     quantity--;
-    document.getElementById("qty").innerText = quantity;
-    updatePrice();
+    update();
   }
 }
 
-// إضافة للسلة (✔️ مصحح)
+// السلة
 function addToCart(){
-
   if(quantity === 0){
     alert("اختار الكمية");
     return;
   }
 
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let cart = [];
+
+  try{
+    cart = JSON.parse(localStorage.getItem("cart")) || [];
+  }catch(e){
+    cart = [];
+  }
 
   cart.push({
     name: name,
     qty: quantity,
-    unitPrice: pricePiece, // مهم
-    total: quantity * pricePiece
+    price: quantity * pricePiece
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
 
-  alert("تزاد للسلة");
+  alert("تمت الإضافة للسلة ✅");
 }
 
-// الذهاب للسلة
 function goCart(){
   window.location.href = "cart.html";
 }
+
+// أول تشغيل
+update();
 
 </script>
 
