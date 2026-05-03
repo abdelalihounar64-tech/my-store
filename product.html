@@ -6,39 +6,112 @@
 <title>Product</title>
 
 <style>
-body{margin:0;font-family:Arial;}
-header{background:#000;color:#fff;padding:15px;text-align:center;}
+body{
+  margin:0;
+  font-family:Arial;
+}
 
-.slider{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;}
-.slider img{width:100%;height:250px;object-fit:cover;scroll-snap-align:start;cursor:pointer;}
+/* HEADER */
+header{
+  background:#000;
+  color:#fff;
+  padding:15px;
+  text-align:center;
+}
 
+/* SLIDER */
+.slider{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+}
+
+.slider img{
+  width:100%;
+  height:250px;
+  object-fit:cover;
+  scroll-snap-align:start;
+  cursor:pointer;
+}
+
+/* ZOOM */
 #popup{
-display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-background:rgba(0,0,0,0.9);justify-content:center;align-items:center;
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  justify-content:center;
+  align-items:center;
 }
-#popup img{max-width:90%;}
 
-.container{padding:15px;}
-.price{font-size:25px;font-weight:bold;margin:10px 0;}
+#popup img{
+  max-width:90%;
+}
 
-.buttons{display:flex;gap:10px;}
+/* CONTENT */
+.container{
+  padding:15px;
+}
+
+.price{
+  font-size:25px;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+.buttons{
+  display:flex;
+  gap:10px;
+}
+
 .buttons button{
-flex:1;padding:12px;background:#000;color:#fff;border:none;border-radius:12px;
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:15px;
+  background:#000;
+  color:#fff;
 }
 
-.qty{text-align:center;margin-top:15px;}
-.qty span{font-size:30px;display:block;margin-bottom:10px;}
+/* QTY */
+.qty{
+  text-align:center;
+  margin-top:15px;
+}
 
-.qty button{padding:10px 25px;font-size:20px;}
+.qty span{
+  font-size:30px;
+  display:block;
+  margin-bottom:10px;
+}
 
+.qty button{
+  padding:12px 25px;
+  font-size:20px;
+}
+
+/* CART */
 .cartBtn{
-width:100%;margin-top:10px;padding:15px;
-background:#ff9800;color:#fff;border:none;border-radius:12px;
+  width:100%;
+  margin-top:10px;
+  padding:15px;
+  background:#ff9800;
+  color:#fff;
+  border:none;
+  border-radius:12px;
 }
 
 .order{
-width:100%;margin-top:10px;padding:15px;
-background:green;color:#fff;border:none;border-radius:12px;
+  width:100%;
+  margin-top:10px;
+  padding:15px;
+  background:green;
+  color:#fff;
+  border:none;
+  border-radius:12px;
 }
 </style>
 </head>
@@ -47,31 +120,30 @@ background:green;color:#fff;border:none;border-radius:12px;
 
 <header>تفاصيل المنتج</header>
 
-<div class="slider">
-<img src="https://i.ibb.co/VWG6NSVD/1777726032086.png" onclick="zoom(this.src)">
-<img src="https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png" onclick="zoom(this.src)">
-<img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png" onclick="zoom(this.src)">
-</div>
+<!-- SLIDER -->
+<div class="slider" id="slider"></div>
 
+<!-- ZOOM -->
 <div id="popup" onclick="closeZoom()">
-<img id="popupImg">
+  <img id="popupImg">
 </div>
 
 <div class="container">
 
-<h2>balai IP harcha</h2>
-<p>منتج عالي الجودة للتنظيف.</p>
+<h2 id="name"></h2>
+
+<p id="desc"></p>
 
 <div class="price" id="price">DH 0</div>
 
 <div class="buttons">
-<button onclick="addPiece()">قطعة</button>
-<button onclick="addBox()">علبة</button>
+  <button onclick="addPiece()">قطعة</button>
+  <button onclick="addBox()">علبة</button>
 </div>
 
 <div class="qty">
-<span id="qty">0</span>
-<button onclick="minus()">➖</button>
+  <span id="qty">0</span>
+  <button onclick="minus()">➖</button>
 </div>
 
 <button class="cartBtn" onclick="addToCart()">أضف للسلة</button>
@@ -81,44 +153,90 @@ background:green;color:#fff;border:none;border-radius:12px;
 
 <script>
 
-let quantity = 0;
-let pricePiece = 10.25;
+/* 🔥 جلب البيانات من الرابط */
+let params = new URLSearchParams(window.location.search);
 
-function update(){
-document.getElementById("qty").innerText = quantity;
-document.getElementById("price").innerText = "DH " + (quantity * pricePiece);
-}
+let name = params.get("name");
+let pricePiece = parseFloat(params.get("price"));
+let piecesInBox = parseInt(params.get("box"));
+let desc = params.get("desc");
 
-function addPiece(){quantity+=1;update();}
-function addBox(){quantity+=16;update();}
-function minus(){if(quantity>0){quantity--;update();}}
+let img1 = params.get("img1");
+let img2 = params.get("img2");
+let img3 = params.get("img3");
 
-function addToCart(){
-if(quantity===0){alert("اختار الكمية");return;}
+/* عرض البيانات */
+document.getElementById("name").innerText = name;
+document.getElementById("desc").innerText = desc;
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+/* الصور */
+let images = [img1, img2, img3];
+let sliderHTML = "";
 
-cart.push({
-name:"balai IP harcha",
-qty:quantity,
-price:pricePiece
+images.forEach(img=>{
+  if(img && img !== ""){
+    sliderHTML += `<img src="${img}" onclick="zoom(this.src)">`;
+  }
 });
 
-localStorage.setItem("cart", JSON.stringify(cart));
-alert("تمت الإضافة للسلة");
+document.getElementById("slider").innerHTML = sliderHTML;
+
+/* الكمية */
+let quantity = 0;
+
+function update(){
+  document.getElementById("qty").innerText = quantity;
+  document.getElementById("price").innerText = "DH " + (quantity * pricePiece);
+}
+
+function addPiece(){
+  quantity += 1;
+  update();
+}
+
+function addBox(){
+  quantity += piecesInBox;
+  update();
+}
+
+function minus(){
+  if(quantity > 0){
+    quantity--;
+    update();
+  }
+}
+
+/* السلة */
+function addToCart(){
+  if(quantity === 0){
+    alert("اختار الكمية");
+    return;
+  }
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart.push({
+    name:name,
+    qty:quantity,
+    price:pricePiece
+  });
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("تمت الإضافة للسلة");
 }
 
 function goCart(){
-window.location.href="cart.html";
+  window.location.href="cart.html";
 }
 
 /* zoom */
 function zoom(src){
-document.getElementById("popup").style.display="flex";
-document.getElementById("popupImg").src=src;
+  document.getElementById("popup").style.display="flex";
+  document.getElementById("popupImg").src = src;
 }
+
 function closeZoom(){
-document.getElementById("popup").style.display="none";
+  document.getElementById("popup").style.display="none";
 }
 
 </script>
