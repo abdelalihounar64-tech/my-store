@@ -6,107 +6,39 @@
 <title>Product</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-}
+body{margin:0;font-family:Arial;}
+header{background:#000;color:#fff;padding:15px;text-align:center;}
 
-/* HEADER */
-header{
-  background:#000;
-  color:#fff;
-  padding:15px;
-  text-align:center;
-}
+.slider{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;}
+.slider img{width:100%;height:250px;object-fit:cover;scroll-snap-align:start;cursor:pointer;}
 
-/* SLIDER */
-.slider{
-  display:flex;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-}
-
-.slider img{
-  width:100%;
-  height:250px;
-  object-fit:cover;
-  scroll-snap-align:start;
-  cursor:pointer;
-}
-
-/* IMAGE ZOOM */
 #popup{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.9);
-  justify-content:center;
-  align-items:center;
-  z-index:999;
+display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,0.9);justify-content:center;align-items:center;
 }
+#popup img{max-width:90%;}
 
-#popup img{
-  max-width:90%;
-  max-height:90%;
-}
+.container{padding:15px;}
+.price{font-size:25px;font-weight:bold;margin:10px 0;}
 
-/* CONTENT */
-.container{
-  padding:15px;
-}
-
-.price{
-  font-size:25px;
-  font-weight:bold;
-  margin:10px 0;
-}
-
-.buttons{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-}
-
+.buttons{display:flex;gap:10px;}
 .buttons button{
-  flex:1;
-  padding:12px;
-  border:none;
-  border-radius:15px;
-  background:#000;
-  color:#fff;
-  font-size:16px;
+flex:1;padding:12px;background:#000;color:#fff;border:none;border-radius:12px;
 }
 
-/* QTY */
-.qty{
-  text-align:center;
-  margin-top:15px;
+.qty{text-align:center;margin-top:15px;}
+.qty span{font-size:30px;display:block;margin-bottom:10px;}
+
+.qty button{padding:10px 25px;font-size:20px;}
+
+.cartBtn{
+width:100%;margin-top:10px;padding:15px;
+background:#ff9800;color:#fff;border:none;border-radius:12px;
 }
 
-.qty span{
-  font-size:30px;
-  display:block;
-  margin-bottom:10px;
-}
-
-.qty button{
-  padding:12px 25px;
-  font-size:20px;
-}
-
-/* ORDER */
 .order{
-  width:100%;
-  margin-top:20px;
-  padding:15px;
-  background:green;
-  color:#fff;
-  border:none;
-  border-radius:15px;
-  font-size:18px;
+width:100%;margin-top:10px;padding:15px;
+background:green;color:#fff;border:none;border-radius:12px;
 }
 </style>
 </head>
@@ -115,39 +47,35 @@ header{
 
 <header>تفاصيل المنتج</header>
 
-<!-- SLIDER -->
 <div class="slider">
-  <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png" onclick="zoom(this.src)">
-  <img src="https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png" onclick="zoom(this.src)">
-  <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png" onclick="zoom(this.src)">
+<img src="https://i.ibb.co/VWG6NSVD/1777726032086.png" onclick="zoom(this.src)">
+<img src="https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png" onclick="zoom(this.src)">
+<img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png" onclick="zoom(this.src)">
 </div>
 
-<!-- POPUP -->
 <div id="popup" onclick="closeZoom()">
-  <img id="popupImg">
+<img id="popupImg">
 </div>
 
 <div class="container">
 
 <h2>balai IP harcha</h2>
-
-<p>منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
+<p>منتج عالي الجودة للتنظيف.</p>
 
 <div class="price" id="price">DH 0</div>
 
-<!-- BUTTONS -->
 <div class="buttons">
-  <button onclick="addPiece()">قطعة</button>
-  <button onclick="addBox()">علبة</button>
+<button onclick="addPiece()">قطعة</button>
+<button onclick="addBox()">علبة</button>
 </div>
 
-<!-- QTY -->
 <div class="qty">
-  <span id="qty">0</span>
-  <button onclick="minus()">➖</button>
+<span id="qty">0</span>
+<button onclick="minus()">➖</button>
 </div>
 
-<button class="order" onclick="order()">اطلب عبر واتساب</button>
+<button class="cartBtn" onclick="addToCart()">أضف للسلة</button>
+<button class="order" onclick="goCart()">اذهب للسلة</button>
 
 </div>
 
@@ -155,53 +83,42 @@ header{
 
 let quantity = 0;
 let pricePiece = 10.25;
-let piecesInBox = 16;
 
-function updatePrice(){
-  document.getElementById("price").innerText = "DH " + (quantity * pricePiece);
-  document.getElementById("qty").innerText = quantity;
+function update(){
+document.getElementById("qty").innerText = quantity;
+document.getElementById("price").innerText = "DH " + (quantity * pricePiece);
 }
 
-/* ADD */
-function addPiece(){
-  quantity += 1;
-  updatePrice();
+function addPiece(){quantity+=1;update();}
+function addBox(){quantity+=16;update();}
+function minus(){if(quantity>0){quantity--;update();}}
+
+function addToCart(){
+if(quantity===0){alert("اختار الكمية");return;}
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+cart.push({
+name:"balai IP harcha",
+qty:quantity,
+price:pricePiece
+});
+
+localStorage.setItem("cart", JSON.stringify(cart));
+alert("تمت الإضافة للسلة");
 }
 
-function addBox(){
-  quantity += 16;
-  updatePrice();
+function goCart(){
+window.location.href="cart.html";
 }
 
-/* MINUS */
-function minus(){
-  if(quantity > 0){
-    quantity--;
-    updatePrice();
-  }
-}
-
-/* WHATSAPP */
-function order(){
-  if(quantity === 0){
-    alert("اختار الكمية");
-    return;
-  }
-
-  let msg = "السلام، بغيت نطلب balai IP harcha\n";
-  msg += "الكمية: " + quantity + " قطعة";
-
-  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(msg));
-}
-
-/* ZOOM */
+/* zoom */
 function zoom(src){
-  document.getElementById("popup").style.display="flex";
-  document.getElementById("popupImg").src = src;
+document.getElementById("popup").style.display="flex";
+document.getElementById("popupImg").src=src;
 }
-
 function closeZoom(){
-  document.getElementById("popup").style.display="none";
+document.getElementById("popup").style.display="none";
 }
 
 </script>
