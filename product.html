@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Store</title>
+<title>Product</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
-  background:#f5f5f5;
 }
 
 header{
@@ -19,17 +18,56 @@ header{
   text-align:center;
 }
 
-.product{
-  margin:20px;
-  background:#fff;
-  border-radius:15px;
-  padding:10px;
-  text-align:center;
-  cursor:pointer;
+.slider{
+  display:flex;
+  overflow-x:auto;
 }
 
-.product img{
+.slider img{
   width:100%;
+  height:250px;
+  object-fit:cover;
+}
+
+.container{
+  padding:15px;
+}
+
+.price{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.buttons button{
+  flex:1;
+  padding:10px;
+  background:#000;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+}
+
+.qty{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+}
+
+.order{
+  width:100%;
+  margin-top:20px;
+  padding:15px;
+  background:green;
+  color:#fff;
+  border:none;
   border-radius:10px;
 }
 </style>
@@ -37,17 +75,83 @@ header{
 
 <body>
 
-<header>🛒 My Store</header>
+<header>تفاصيل المنتج</header>
 
-<div class="product" onclick="openProduct()">
+<div class="slider">
   <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
-  <h2>balai IP harcha</h2>
+  <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png">
+  <img src="https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png">
+</div>
+
+<div class="container">
+
+<h2>balai IP harcha</h2>
+
+<p>منتج عملي وقوي للتنظيف اليومي.</p>
+
+<div class="price" id="price">10.25 DH</div>
+
+<div class="buttons">
+  <button onclick="setType('piece')">قطعة</button>
+  <button onclick="setType('box')">علبة</button>
+</div>
+
+<div class="qty">
+  <button onclick="minus()">➖</button>
+  <span id="qty">1</span>
+  <button onclick="plus()">➕</button>
+</div>
+
+<button class="order" onclick="order()">اطلب عبر واتساب</button>
+
 </div>
 
 <script>
-function openProduct(){
-  window.location.href = "product.html";
+
+let quantity = 1;
+let type = "piece";
+
+let pricePiece = 10.25;
+let piecesInBox = 16;
+let priceBox = pricePiece * piecesInBox;
+
+function updatePrice(){
+  let unit = (type === "piece") ? pricePiece : priceBox;
+  document.getElementById("price").innerText = (unit * quantity) + " DH";
 }
+
+function plus(){
+  quantity++;
+  document.getElementById("qty").innerText = quantity;
+  updatePrice();
+}
+
+function minus(){
+  if(quantity > 0){
+    quantity--;
+    document.getElementById("qty").innerText = quantity;
+    updatePrice();
+  }
+}
+
+function setType(t){
+  type = t;
+  updatePrice();
+}
+
+function order(){
+  if(quantity === 0){
+    alert("اختار الكمية");
+    return;
+  }
+
+  let msg = "السلام، بغيت نطلب balai IP harcha\n";
+  msg += "النوع: " + (type === "piece" ? "قطعة" : "علبة") + "\n";
+  msg += "الكمية: " + quantity;
+
+  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(msg));
+}
+
 </script>
 
 </body>
