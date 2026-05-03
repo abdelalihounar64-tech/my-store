@@ -37,6 +37,8 @@ header{
 
 .product img{
   width:100%;
+  height:150px;
+  object-fit:cover;
   border-radius:10px;
 }
 
@@ -48,18 +50,23 @@ header{
 
 <body>
 
-<header>My Store 🛒</header>
+<header>🛒 My Store</header>
 
 <div class="products">
 
   <div class="product" onclick="openProduct('asperox')">
-    <img src="https://i.imgur.com/8zQZ7ZR.jpg">
+    <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952">
     <h2>Asperox</h2>
   </div>
 
   <div class="product" onclick="openProduct('aluminium')">
-    <img src="https://i.imgur.com/ZK7y9Fh.jpg">
+    <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db">
     <h2>Aluminium</h2>
+  </div>
+
+  <div class="product" onclick="openProduct('dettol')">
+    <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5">
+    <h2>Dettol</h2>
   </div>
 
 </div>
