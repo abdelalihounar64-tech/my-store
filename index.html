@@ -33,22 +33,11 @@ header{
   padding:10px;
   text-align:center;
   cursor:pointer;
-  transition:0.3s;
-}
-
-.product:hover{
-  transform:scale(1.03);
 }
 
 .product img{
   width:100%;
-  height:150px;
-  object-fit:cover;
   border-radius:10px;
-}
-
-.product h2{
-  font-size:18px;
 }
 </style>
 </head>
@@ -59,52 +48,48 @@ header{
 
 <div class="products">
 
-<!-- 🔹 المنتج 1 -->
+<!-- Nova -->
 <div class="product" onclick="openProduct(
-  'balai IP harcha',
-  10.25,
-  16,
-  'https://i.ibb.co/VWG6NSVD/1777726032086.png',
-  'https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png',
-  'https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png',
-  'منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي'
+'Nova kh',
+36.5,
+4,
+'https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png',
+'https://i.ibb.co/tTFF2gPM/Screenshot-2026-05-03-12-29-29-195-edit-com-miui-gallery.jpg',
+'',
+'حفاضات العجازة الغنية عن التعريف'
 )">
-  <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
-  <h2>balai IP harcha</h2>
+<img src="https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png">
+<h2>Nova kh</h2>
 </div>
 
-<!-- 🔹 المنتج 2 -->
+<!-- Balai -->
 <div class="product" onclick="openProduct(
-  'Nova kh',
-  36.5,
-  4,
-  'https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png',
-  'https://i.ibb.co/tTFF2gPM/Screenshot-2026-05-03-12-29-29-195-edit-com-miui-gallery.jpg',
-  '',
-  'حفاضات العجازة الغنية عن التعريف'
+'balai IP harcha',
+10.25,
+16,
+'https://i.ibb.co/VWG6NSVD/1777726032086.png',
+'https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png',
+'https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png',
+'منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي'
 )">
-  <img src="https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png">
-  <h2>Nova kh</h2>
+<img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
+<h2>balai IP harcha</h2>
 </div>
 
 </div>
 
 <script>
-
 function openProduct(name, price, box, img1, img2, img3, desc){
-
-  let url = "product.html?";
-  url += "name=" + encodeURIComponent(name);
-  url += "&price=" + price;
-  url += "&box=" + box;
-  url += "&img1=" + encodeURIComponent(img1);
-  url += "&img2=" + encodeURIComponent(img2);
-  url += "&img3=" + encodeURIComponent(img3);
-  url += "&desc=" + encodeURIComponent(desc);
+  let url = `product.html?name=${encodeURIComponent(name)}
+  &price=${price}
+  &box=${box}
+  &img1=${encodeURIComponent(img1)}
+  &img2=${encodeURIComponent(img2)}
+  &img3=${encodeURIComponent(img3)}
+  &desc=${encodeURIComponent(desc)}`;
 
   window.location.href = url;
 }
-
 </script>
 
 </body>
