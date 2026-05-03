@@ -18,7 +18,7 @@ header{
   text-align:center;
 }
 
-/* slider */
+/* SLIDER */
 .slider{
   display:flex;
   overflow-x:auto;
@@ -31,7 +31,7 @@ header{
   cursor:pointer;
 }
 
-/* zoom */
+/* تكبير الصورة */
 .viewer{
   position:fixed;
   top:0;
@@ -65,7 +65,7 @@ header{
 
 .buttons button{
   flex:1;
-  padding:10px;
+  padding:12px;
   background:#000;
   color:#fff;
   border:none;
@@ -78,13 +78,24 @@ header{
 }
 
 .minus{
-  padding:10px;
+  padding:12px;
   margin-top:10px;
+  font-size:18px;
 }
 
 .order{
   width:100%;
   margin-top:20px;
+  padding:15px;
+  background:orange;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+}
+
+.go{
+  width:100%;
+  margin-top:10px;
   padding:15px;
   background:green;
   color:#fff;
@@ -98,6 +109,7 @@ header{
 
 <header>تفاصيل المنتج</header>
 
+<!-- الصور -->
 <div class="slider" id="slider"></div>
 
 <div class="viewer" id="viewer" onclick="closeImg()">
@@ -109,7 +121,7 @@ header{
 <h2 id="name"></h2>
 <p id="desc"></p>
 
-<div class="price" id="price"></div>
+<div class="price" id="price">0 DH</div>
 
 <div class="buttons">
   <button onclick="addPiece()">قطعة</button>
@@ -121,23 +133,14 @@ header{
   <button class="minus" onclick="minus()">➖</button>
 </div>
 
-<div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
-  
-  <button onclick="addToCart()" style="padding:15px; background:orange; color:#fff; border:none; border-radius:10px;">
-    أضف للسلة
-  </button>
-
-  <button onclick="goCart()" style="padding:15px; background:green; color:#fff; border:none; border-radius:10px;">
-    اذهب للسلة
-  </button>
-
-</div>
+<button class="order" onclick="addToCart()">أضف للسلة</button>
+<button class="go" onclick="goCart()">اذهب للسلة</button>
 
 </div>
 
 <script>
 
-// جلب البيانات من الرابط
+// جلب البيانات
 const params = new URLSearchParams(window.location.search);
 
 let name = params.get("name");
@@ -167,7 +170,7 @@ addImage(img1);
 addImage(img2);
 addImage(img3);
 
-// zoom
+// تكبير
 function openImg(src){
   document.getElementById("viewer").style.display = "flex";
   document.getElementById("bigImg").src = src;
@@ -177,7 +180,7 @@ function closeImg(){
   document.getElementById("viewer").style.display = "none";
 }
 
-// الحساب
+// الكمية
 let quantity = 0;
 
 function update(){
@@ -202,20 +205,37 @@ function minus(){
   }
 }
 
-// واتساب
-function order(){
-  if(quantity == 0){
+// السلة
+function addToCart(){
+  if(quantity === 0){
     alert("اختار الكمية");
     return;
   }
 
-  let msg = `السلام، بغيت نطلب ${name}\n`;
-  msg += `الكمية: ${quantity} قطعة`;
+  let cart = [];
 
-  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(msg));
+  try{
+    cart = JSON.parse(localStorage.getItem("cart")) || [];
+  }catch(e){
+    cart = [];
+  }
+
+  cart.push({
+    name: name,
+    qty: quantity,
+    price: quantity * pricePiece
+  });
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert("تمت الإضافة للسلة ✅");
 }
 
-// أول تحديث
+function goCart(){
+  window.location.href = "cart.html";
+}
+
+// أول تشغيل
 update();
 
 </script>
