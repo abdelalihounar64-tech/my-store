@@ -18,7 +18,6 @@ header{
   text-align:center;
 }
 
-/* SLIDER */
 .slider{
   display:flex;
   overflow-x:auto;
@@ -93,7 +92,6 @@ header{
 
 <header>تفاصيل المنتج</header>
 
-<!-- SLIDER -->
 <div class="slider">
   <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
   <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png">
@@ -108,16 +106,16 @@ header{
 
 <div class="price" id="price">10.25 DH</div>
 
-<!-- اختيار -->
+<!-- الأزرار -->
 <div class="buttons">
-  <button onclick="setType('piece')">قطعة</button>
-  <button onclick="setType('box')">علبة</button>
+  <button onclick="addPiece()">قطعة</button>
+  <button onclick="addBox()">علبة</button>
 </div>
 
 <!-- الكمية -->
 <div class="qty">
   <button onclick="minus()">➖</button>
-  <span id="qty">1</span>
+  <span id="qty">0</span>
   <button onclick="plus()">➕</button>
 </div>
 
@@ -126,58 +124,63 @@ header{
 </div>
 
 <script>
-let quantity = 1;
-let type = "piece";
+
+let quantity = 0;
 
 let pricePiece = 10.25;
 let piecesInBox = 16;
-let priceBox = pricePiece * piecesInBox;
 
+/* تحديث الثمن */
 function updatePrice(){
-  let price = (type === "piece" ? pricePiece : priceBox) * quantity;
-  document.getElementById("price").innerText = price + " DH";
+  let total = pricePiece * quantity;
+  document.getElementById("price").innerText = total + " DH";
 }
 
+/* + */
 function plus(){
   quantity++;
-  document.getElementById("qty").innerText = quantity;
-  updatePrice();
+  update();
 }
 
+/* - */
 function minus(){
   if(quantity > 0){
     quantity--;
-    document.getElementById("qty").innerText = quantity;
-    updatePrice();
+    update();
   }
 }
 
-/* هنا التعديل المهم */
-function setType(t){
-  type = t;
+/* إضافة قطعة */
+function addPiece(){
+  quantity += 1;
+  update();
+}
 
-  if(type === "box"){
-    quantity = 16;
-  }else{
-    quantity = 1;
-  }
+/* إضافة علبة */
+function addBox(){
+  quantity += 16;
+  update();
+}
 
+/* تحديث */
+function update(){
   document.getElementById("qty").innerText = quantity;
   updatePrice();
 }
 
+/* الطلب */
 function order(){
   if(quantity === 0){
     alert("اختار الكمية");
     return;
   }
 
-  let text = "السلام، بغيت نطلب balai IP harcha\n";
-  text += "النوع: " + (type === "piece" ? "قطعة" : "علبة") + "\n";
-  text += "الكمية: " + quantity;
+  let msg = "السلام، بغيت نطلب balai IP harcha\n";
+  msg += "الكمية: " + quantity + " قطعة";
 
-  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(text));
+  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(msg));
 }
+
 </script>
 
 </body>
