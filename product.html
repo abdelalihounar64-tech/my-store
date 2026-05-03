@@ -19,15 +19,23 @@ header{
   text-align:center;
 }
 
-/* الصور */
+/* SLIDER */
+.slider{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+}
+
 .slider img{
   width:100%;
   height:250px;
   object-fit:cover;
+  scroll-snap-align:center;
+  flex-shrink:0;
   cursor:pointer;
 }
 
-/* تكبير الصورة */
+/* ZOOM */
 .modal{
   display:none;
   position:fixed;
@@ -45,6 +53,7 @@ header{
   max-height:90%;
 }
 
+/* باقي التصميم */
 .container{
   padding:15px;
 }
@@ -104,8 +113,11 @@ header{
 
 <header>تفاصيل المنتج</header>
 
+<!-- الصور -->
 <div class="slider">
   <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png" onclick="zoom(this.src)">
+  <img src="https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png" onclick="zoom(this.src)">
+  <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png" onclick="zoom(this.src)">
 </div>
 
 <!-- zoom -->
@@ -147,13 +159,13 @@ function update(){
   document.getElementById("price").innerText = (quantity * pricePiece) + " DH";
 }
 
-/* قطعة = +1 */
+/* قطعة */
 function addPiece(){
   quantity += 1;
   update();
 }
 
-/* علبة = +16 */
+/* علبة */
 function addBox(){
   quantity += 16;
   update();
