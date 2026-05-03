@@ -11,7 +11,6 @@ body{
   font-family:Arial;
 }
 
-/* HEADER */
 header{
   background:#000;
   color:#fff;
@@ -19,45 +18,42 @@ header{
   text-align:center;
 }
 
-/* SLIDER */
+/* slider */
 .slider{
   display:flex;
   overflow-x:auto;
-  scroll-snap-type:x mandatory;
 }
 
 .slider img{
   width:100%;
   height:250px;
   object-fit:cover;
-  scroll-snap-align:start;
   cursor:pointer;
 }
 
-/* ZOOM */
-#popup{
-  display:none;
+/* zoom */
+.viewer{
   position:fixed;
   top:0;
   left:0;
   width:100%;
   height:100%;
-  background:rgba(0,0,0,0.9);
+  background:#000;
+  display:none;
   justify-content:center;
   align-items:center;
 }
 
-#popup img{
-  max-width:90%;
+.viewer img{
+  width:90%;
 }
 
-/* CONTENT */
 .container{
   padding:15px;
 }
 
 .price{
-  font-size:25px;
+  font-size:22px;
   font-weight:bold;
   margin:10px 0;
 }
@@ -69,49 +65,31 @@ header{
 
 .buttons button{
   flex:1;
-  padding:12px;
-  border:none;
-  border-radius:15px;
+  padding:10px;
   background:#000;
   color:#fff;
+  border:none;
+  border-radius:10px;
 }
 
-/* QTY */
 .qty{
   text-align:center;
-  margin-top:15px;
+  margin-top:20px;
 }
 
-.qty span{
-  font-size:30px;
-  display:block;
-  margin-bottom:10px;
-}
-
-.qty button{
-  padding:12px 25px;
-  font-size:20px;
-}
-
-/* CART */
-.cartBtn{
-  width:100%;
+.minus{
+  padding:10px;
   margin-top:10px;
-  padding:15px;
-  background:#ff9800;
-  color:#fff;
-  border:none;
-  border-radius:12px;
 }
 
 .order{
   width:100%;
-  margin-top:10px;
+  margin-top:20px;
   padding:15px;
   background:green;
   color:#fff;
   border:none;
-  border-radius:12px;
+  border-radius:10px;
 }
 </style>
 </head>
@@ -120,21 +98,18 @@ header{
 
 <header>تفاصيل المنتج</header>
 
-<!-- SLIDER -->
 <div class="slider" id="slider"></div>
 
-<!-- ZOOM -->
-<div id="popup" onclick="closeZoom()">
-  <img id="popupImg">
+<div class="viewer" id="viewer" onclick="closeImg()">
+  <img id="bigImg">
 </div>
 
 <div class="container">
 
 <h2 id="name"></h2>
-
 <p id="desc"></p>
 
-<div class="price" id="price">DH 0</div>
+<div class="price" id="price"></div>
 
 <div class="buttons">
   <button onclick="addPiece()">قطعة</button>
@@ -142,51 +117,62 @@ header{
 </div>
 
 <div class="qty">
-  <span id="qty">0</span>
-  <button onclick="minus()">➖</button>
+  <h1 id="qty">0</h1>
+  <button class="minus" onclick="minus()">➖</button>
 </div>
 
-<button class="cartBtn" onclick="addToCart()">أضف للسلة</button>
-<button class="order" onclick="goCart()">اذهب للسلة</button>
+<button class="order" onclick="order()">اطلب عبر واتساب</button>
 
 </div>
 
 <script>
 
-/* 🔥 جلب البيانات من الرابط */
-let params = new URLSearchParams(window.location.search);
+// جلب البيانات من الرابط
+const params = new URLSearchParams(window.location.search);
 
 let name = params.get("name");
 let pricePiece = parseFloat(params.get("price"));
 let piecesInBox = parseInt(params.get("box"));
-let desc = params.get("desc");
-
 let img1 = params.get("img1");
 let img2 = params.get("img2");
 let img3 = params.get("img3");
+let desc = params.get("desc");
 
-/* عرض البيانات */
+// عرض البيانات
 document.getElementById("name").innerText = name;
 document.getElementById("desc").innerText = desc;
 
-/* الصور */
-let images = [img1, img2, img3];
-let sliderHTML = "";
+// الصور
+let slider = document.getElementById("slider");
 
-images.forEach(img=>{
-  if(img && img !== ""){
-    sliderHTML += `<img src="${img}" onclick="zoom(this.src)">`;
-  }
-});
+function addImage(src){
+  if(!src) return;
+  let img = document.createElement("img");
+  img.src = src;
+  img.onclick = () => openImg(src);
+  slider.appendChild(img);
+}
 
-document.getElementById("slider").innerHTML = sliderHTML;
+addImage(img1);
+addImage(img2);
+addImage(img3);
 
-/* الكمية */
+// zoom
+function openImg(src){
+  document.getElementById("viewer").style.display = "flex";
+  document.getElementById("bigImg").src = src;
+}
+
+function closeImg(){
+  document.getElementById("viewer").style.display = "none";
+}
+
+// الحساب
 let quantity = 0;
 
 function update(){
   document.getElementById("qty").innerText = quantity;
-  document.getElementById("price").innerText = "DH " + (quantity * pricePiece);
+  document.getElementById("price").innerText = (quantity * pricePiece) + " DH";
 }
 
 function addPiece(){
@@ -206,38 +192,21 @@ function minus(){
   }
 }
 
-/* السلة */
-function addToCart(){
-  if(quantity === 0){
+// واتساب
+function order(){
+  if(quantity == 0){
     alert("اختار الكمية");
     return;
   }
 
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let msg = `السلام، بغيت نطلب ${name}\n`;
+  msg += `الكمية: ${quantity} قطعة`;
 
-  cart.push({
-    name:name,
-    qty:quantity,
-    price:pricePiece
-  });
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert("تمت الإضافة للسلة");
+  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(msg));
 }
 
-function goCart(){
-  window.location.href="cart.html";
-}
-
-/* zoom */
-function zoom(src){
-  document.getElementById("popup").style.display="flex";
-  document.getElementById("popupImg").src = src;
-}
-
-function closeZoom(){
-  document.getElementById("popup").style.display="none";
-}
+// أول تحديث
+update();
 
 </script>
 
