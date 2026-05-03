@@ -1,34 +1,25 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet"><title>My Store</title><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Store</title>
+
+<style>
 body{
   margin:0;
-  font-family:'Cairo', Arial;
+  font-family:Arial;
   background:#f5f5f5;
-  direction:rtl;
-  text-align:right;
 }
 
-/* HEADER */
-header{
-  background:#000;
-  color:#fff;
+.header{
+  background:black;
+  color:white;
   padding:15px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  text-align:center;
+  font-size:22px;
 }
 
-.cart-btn{
-  background:#fff;
-  color:#000;
-  padding:6px 12px;
-  border-radius:20px;
-  cursor:pointer;
-}
-
-/* PRODUCTS */
 .products{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -36,224 +27,53 @@ header{
   padding:10px;
 }
 
-.product{
-  background:#fff;
+.card{
+  background:white;
   border-radius:15px;
   overflow:hidden;
-  text-align:center;
-  padding-bottom:10px;
-  box-shadow:0 5px 10px rgba(0,0,0,0.1);
-}
-
-.product img{
-  width:100%;
-  height:180px;
-  object-fit:cover;
   cursor:pointer;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* DESCRIPTION */
-.desc{
-  font-size:13px;
-  color:#555;
-  padding:0 10px;
-}
-
-/* BUTTONS */
-.controls{
-  display:flex;
-  justify-content:center;
-  gap:5px;
-  margin:10px;
-}
-
-.controls button{
-  padding:8px;
-  border:none;
-  background:#000;
-  color:#fff;
-  border-radius:8px;
-  font-size:12px;
-}
-
-/* QTY */
-.qty{
-  font-size:14px;
-  margin-top:5px;
-}
-
-/* CART */
-#cartBox{
-  position:fixed;
-  bottom:0;
-  left:0;
+.card img{
   width:100%;
-  background:#fff;
-  border-radius:20px 20px 0 0;
-  padding:15px;
-  display:none;
-  max-height:60%;
-  overflow:auto;
 }
 
-.cart-item{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:10px;
+.card h3{
+  text-align:center;
+  padding:10px;
 }
+</style>
+</head>
 
-.send{
-  width:100%;
-  padding:12px;
-  background:green;
-  color:#fff;
-  border:none;
-  border-radius:10px;
-}
+<body>
 
-/* VIEWER */
-#viewer{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.9);
-  justify-content:center;
-  align-items:center;
-}
+<div class="header">🛒 My Store</div>
 
-#viewer img{
-  max-width:90%;
-}
-</style></head><body><header>
-<h3>🛒 My Store</h3>
-<div class="cart-btn" onclick="toggleCart()">🧺 (<span id="count">0</span>)</div>
-</header><div class="products"><!-- Asperox --><div class="product">
-<img src="https://i.ibb.co/zH6jfQfH/1777727206224.png"
-onclick="openViewer([
-'https://i.ibb.co/zH6jfQfH/1777727206224.png',
-'https://i.ibb.co/hR9pQxdj/Screenshot-2026-05-02-23-50-34-712-edit-com-miui-gallery.jpg'
-],0)"><h3>Asperox</h3><p class="desc">
-منظف قوي وفعال لإزالة الدهون الصعبة في ثواني ⚡ مناسب للمطبخ والفرن والأسطح الصعبة، يعطي لمعان فوري بدون مجهود.
-</p><div class="qty" id="qty_Asperox">0 قطعة</div><div class="controls">
-<button onclick="addPiece('Asperox',12)">+ قطعة</button>
-<button onclick="addBox('Asperox',12)">+ علبة</button>
-<button onclick="removeItem('Asperox')">-</button>
+<div class="products">
+
+<div class="card" onclick="openProduct('asperox')">
+<img src="https://i.imgur.com/8Km9tLL.jpg">
+<h3>Asperox</h3>
 </div>
-</div><!-- Aluminium --><div class="product">
-<img src="https://i.ibb.co/whQgJgF9/Screenshot-2026-05-02-23-58-24-629-edit-com-miui-gallery.jpg"><h3>Aluminium</h3><div class="qty" id="qty_Aluminium">0 قطعة</div><div class="controls">
-<button onclick="addPiece('Aluminium',24)">+ قطعة</button>
-<button onclick="addBox('Aluminium',24)">+ علبة</button>
-<button onclick="removeItem('Aluminium')">-</button>
+
+<div class="card" onclick="openProduct('aluminium')">
+<img src="https://i.imgur.com/2nCt3Sbl.jpg">
+<h3>Aluminium</h3>
 </div>
-</div><!-- Dettol --><div class="product">
-<img src="https://i.ibb.co/0j9j9JMz/file-000000005b5c71f49cfdfe39da688500.png"><h3>Dettol</h3><div class="qty" id="qty_Dettol">0 قطعة</div><div class="controls">
-<button onclick="addPiece('Dettol',6)">+ قطعة</button>
-<button onclick="addBox('Dettol',6)">+ علبة</button>
-<button onclick="removeItem('Dettol')">-</button>
+
+<div class="card" onclick="openProduct('dettol')">
+<img src="https://i.imgur.com/zYIlgBl.jpg">
+<h3>Dettol</h3>
 </div>
-</div></div><!-- CART --><div id="cartBox">
-<h3>🧺 السلة</h3>
-<div id="cartItems"></div>
-<button class="send" onclick="sendOrder()">إرسال الطلب عبر واتساب</button>
-</div><!-- VIEWER --><div id="viewer" onclick="closeViewer()">
-<img id="viewerImg">
-</div><script>
 
-let cart={};
-let startX=0;
+</div>
 
-/* ADD */
-function addPiece(name,box){
-  if(!cart[name]) cart[name]=0;
-  cart[name]+=1;
-  updateUI();
+<script>
+function openProduct(name){
+  window.location.href = "product.html?product=" + name;
 }
+</script>
 
-function addBox(name,box){
-  if(!cart[name]) cart[name]=0;
-  cart[name]+=box;
-  updateUI();
-}
-
-/* REMOVE */
-function removeItem(name){
-  if(cart[name]>0){
-    cart[name]-=1;
-    if(cart[name]==0) delete cart[name];
-    updateUI();
-  }
-}
-
-/* UPDATE */
-function updateUI(){
-  let total=0;
-  let html="";
-
-  for(let item in cart){
-    total+=cart[item];
-    document.getElementById("qty_"+item).innerText=cart[item]+" قطعة";
-
-    html+=`<div class="cart-item">
-      ${item} : ${cart[item]} قطعة
-      <button onclick="removeItem('${item}')">❌</button>
-    </div>`;
-  }
-
-  document.getElementById("count").innerText=total;
-  document.getElementById("cartItems").innerHTML=html;
-}
-
-/* CART */
-function toggleCart(){
-  let box=document.getElementById("cartBox");
-  box.style.display = box.style.display=="block" ? "none" : "block";
-}
-
-/* SEND */
-function sendOrder(){
-  let msg="طلب جديد:%0A";
-
-  for(let item in cart){
-    msg+=cart[item]+" "+item+"%0A";
-  }
-
-  window.open("https://wa.me/212613675970?text="+msg);
-}
-
-/* VIEWER */
-let currentImages=[];
-let currentIndex=0;
-
-function openViewer(images,index){
-  currentImages=images;
-  currentIndex=index;
-  viewerImg.src=images[index];
-  viewer.style.display="flex";
-}
-
-function closeViewer(){
-  viewer.style.display="none";
-}
-
-/* SWIPE */
-viewer.addEventListener("touchstart",e=>{
-  startX=e.touches[0].clientX;
-});
-
-viewer.addEventListener("touchend",e=>{
-  let diff=startX-e.changedTouches[0].clientX;
-
-  if(diff>50){
-    currentIndex=(currentIndex+1)%currentImages.length;
-  }else if(diff<-50){
-    currentIndex=(currentIndex-1+currentImages.length)%currentImages.length;
-  }
-
-  viewerImg.src=currentImages[currentIndex];
-});
-
-</script></body>
+</body>
 </html>
