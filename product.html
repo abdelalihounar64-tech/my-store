@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Product</title>
+<title>My Store</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
+  background:#f5f5f5;
 }
 
 header{
@@ -18,144 +19,34 @@ header{
   text-align:center;
 }
 
-/* SLIDER */
-.slider{
-  display:flex;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-}
-
-.slider img{
-  width:100%;
-  height:250px;
-  object-fit:cover;
-  scroll-snap-align:start;
-}
-
-.container{
-  padding:15px;
-}
-
-.price{
-  font-size:22px;
-  font-weight:bold;
-  margin:10px 0;
-}
-
-.buttons{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-}
-
-.buttons button{
-  flex:1;
+.product{
+  margin:20px;
+  background:#fff;
+  border-radius:15px;
   padding:10px;
-  border:none;
-  border-radius:10px;
-  background:#000;
-  color:#fff;
+  text-align:center;
+  cursor:pointer;
 }
 
-.qty{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin-top:15px;
-  gap:10px;
-}
-
-.qty button{
-  padding:10px;
-  font-size:18px;
-}
-
-.order{
+.product img{
   width:100%;
-  margin-top:20px;
-  padding:15px;
-  background:green;
-  color:#fff;
-  border:none;
   border-radius:10px;
-  font-size:16px;
 }
 </style>
 </head>
 
 <body>
 
-<header>تفاصيل المنتج</header>
+<header>🛒 My Store</header>
 
-<!-- SLIDER -->
-<div class="slider">
+<div class="product" onclick="openProduct()">
   <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
-  <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png">
-  <img src="https://i.ibb.co/F4vCPYrd/file-00000000a92471f4ad5860c7c41441c8.png">
-</div>
-
-<div class="container">
-
-<h2>balai IP harcha</h2>
-
-<p>منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
-
-<div class="price" id="price">10.25 DH</div>
-
-<!-- اختيار -->
-<div class="buttons">
-  <button onclick="setType('piece')">قطعة</button>
-  <button onclick="setType('box')">علبة</button>
-</div>
-
-<!-- الكمية -->
-<div class="qty">
-  <button onclick="minus()">➖</button>
-  <span id="qty">1</span>
-  <button onclick="plus()">➕</button>
-</div>
-
-<button class="order" onclick="order()">اطلب عبر واتساب</button>
-
+  <h2>balai IP harcha</h2>
 </div>
 
 <script>
-let quantity = 1;
-let type = "piece";
-
-let pricePiece = 10.25;
-let priceBox = 100; // بدلها إذا عندك ثمن العلبة
-
-function updatePrice(){
-  let price = (type === "piece" ? pricePiece : priceBox) * quantity;
-  document.getElementById("price").innerText = price + " DH";
-}
-
-function plus(){
-  quantity++;
-  document.getElementById("qty").innerText = quantity;
-  updatePrice();
-}
-
-function minus(){
-  if(quantity > 1){
-    quantity--;
-    document.getElementById("qty").innerText = quantity;
-    updatePrice();
-  }
-}
-
-function setType(t){
-  type = t;
-  updatePrice();
-}
-
-function order(){
-  let text = "السلام، بغيت نطلب balai IP harcha\n";
-  text += "النوع: " + (type === "piece" ? "قطعة" : "علبة") + "\n";
-  text += "الكمية: " + quantity;
-
-  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(text));
+function openProduct(){
+  window.location.href = "product.html";
 }
 </script>
 
