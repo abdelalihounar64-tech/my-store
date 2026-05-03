@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,66 +12,61 @@ body{
   background:#f5f5f5;
 }
 
-.header{
-  background:black;
-  color:white;
+header{
+  background:#000;
+  color:#fff;
   padding:15px;
   text-align:center;
-  font-size:22px;
+  font-size:20px;
 }
 
 .products{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
-  padding:10px;
+  gap:15px;
+  padding:15px;
 }
 
-.card{
-  background:white;
+.product{
+  background:#fff;
   border-radius:15px;
-  overflow:hidden;
-  cursor:pointer;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-
-.card img{
-  width:100%;
-}
-
-.card h3{
-  text-align:center;
   padding:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.product img{
+  width:100%;
+  border-radius:10px;
+}
+
+.product h2{
+  margin:10px 0;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">🛒 My Store</div>
+<header>My Store 🛒</header>
 
 <div class="products">
 
-<div class="card" onclick="openProduct('asperox')">
-<img src="https://i.imgur.com/8Km9tLL.jpg">
-<h3>Asperox</h3>
-</div>
+  <div class="product" onclick="openProduct('asperox')">
+    <img src="https://i.imgur.com/8zQZ7ZR.jpg">
+    <h2>Asperox</h2>
+  </div>
 
-<div class="card" onclick="openProduct('aluminium')">
-<img src="https://i.imgur.com/2nCt3Sbl.jpg">
-<h3>Aluminium</h3>
-</div>
-
-<div class="card" onclick="openProduct('dettol')">
-<img src="https://i.imgur.com/zYIlgBl.jpg">
-<h3>Dettol</h3>
-</div>
+  <div class="product" onclick="openProduct('aluminium')">
+    <img src="https://i.imgur.com/ZK7y9Fh.jpg">
+    <h2>Aluminium</h2>
+  </div>
 
 </div>
 
 <script>
 function openProduct(name){
-  window.location.href = "product.html?product=" + name;
+  window.location.href = "product.html?name=" + name;
 }
 </script>
 
