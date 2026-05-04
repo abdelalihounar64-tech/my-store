@@ -18,36 +18,55 @@ header{
   text-align:center;
 }
 
+/* MENU */
+.menu-btn{
+  position:absolute;
+  top:15px;
+  left:15px;
+  font-size:25px;
+  color:#fff;
+  cursor:pointer;
+}
+
+.menu{
+  position:fixed;
+  top:0;
+  left:-250px;
+  width:250px;
+  height:100%;
+  background:#000;
+  padding-top:60px;
+  transition:0.3s;
+  z-index:1000;
+}
+
+.menu a{
+  display:block;
+  color:#fff;
+  padding:15px;
+  text-decoration:none;
+  border-bottom:1px solid #444;
+}
+
+.menu a:hover{
+  background:#333;
+}
+
 /* SLIDER */
 .slider{
   display:flex;
   overflow-x:auto;
+  scroll-snap-type:x mandatory;
 }
 
 .slider img{
   width:100%;
   height:250px;
   object-fit:cover;
-  cursor:pointer;
+  scroll-snap-align:start;
 }
 
-/* تكبير الصورة */
-.viewer{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#000;
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-
-.viewer img{
-  width:90%;
-}
-
+/* CONTENT */
 .container{
   padding:15px;
 }
@@ -55,21 +74,28 @@ header{
 .price{
   font-size:22px;
   font-weight:bold;
-  margin:10px 0;
+  margin-top:10px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
 }
 
 .buttons{
   display:flex;
   gap:10px;
+  margin-top:10px;
 }
 
 .buttons button{
   flex:1;
   padding:12px;
-  background:#000;
-  color:#fff;
   border:none;
   border-radius:10px;
+  background:#000;
+  color:#fff;
 }
 
 .qty{
@@ -77,13 +103,16 @@ header{
   margin-top:20px;
 }
 
-.minus{
-  padding:12px;
-  margin-top:10px;
-  font-size:18px;
+.qty span{
+  font-size:30px;
 }
 
-.order{
+.qty button{
+  margin-top:10px;
+  padding:10px 20px;
+}
+
+.add{
   width:100%;
   margin-top:20px;
   padding:15px;
@@ -93,7 +122,7 @@ header{
   border-radius:10px;
 }
 
-.go{
+.cart{
   width:100%;
   margin-top:10px;
   padding:15px;
@@ -107,136 +136,132 @@ header{
 
 <body>
 
+<!-- MENU -->
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+<div class="menu" id="menu">
+  <a href="index.html">Home</a>
+  <a href="#">Products</a>
+  <a href="#">Contact</a>
+</div>
+
 <header>تفاصيل المنتج</header>
 
 <!-- الصور -->
-<div class="slider" id="slider"></div>
-
-<div class="viewer" id="viewer" onclick="closeImg()">
-  <img id="bigImg">
+<div class="slider">
+  <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
+  <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png">
 </div>
 
 <div class="container">
 
-<h2 id="name"></h2>
-<p id="desc"></p>
+<h2 id="name">balai IP harcha</h2>
+
+<p>منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
+
+<!-- إدخال الثمن -->
+<input type="number" id="priceInput" placeholder="دخل الثمن">
 
 <div class="price" id="price">0 DH</div>
 
+<!-- اختيار -->
 <div class="buttons">
-  <button onclick="addPiece()">قطعة</button>
-  <button onclick="addBox()">علبة</button>
+  <button onclick="setPiece()">قطعة</button>
+  <button onclick="setBox()">علبة</button>
 </div>
 
+<!-- الكمية -->
 <div class="qty">
-  <h1 id="qty">0</h1>
-  <button class="minus" onclick="minus()">➖</button>
+  <span id="qty">0</span><br>
+  <button onclick="minus()">➖</button>
 </div>
 
-<button class="order" onclick="addToCart()">أضف للسلة</button>
-<button class="go" onclick="goCart()">اذهب للسلة</button>
+<button class="add" onclick="addToCart()">أضف للسلة</button>
+<button class="cart" onclick="goCart()">اذهب للسلة</button>
 
 </div>
 
 <script>
 
-// جلب البيانات
-const params = new URLSearchParams(window.location.search);
-
-let name = params.get("name");
-let pricePiece = parseFloat(params.get("price"));
-let piecesInBox = parseInt(params.get("box"));
-let img1 = params.get("img1");
-let img2 = params.get("img2");
-let img3 = params.get("img3");
-let desc = params.get("desc");
-
-// عرض البيانات
-document.getElementById("name").innerText = name;
-document.getElementById("desc").innerText = desc;
-
-// الصور
-let slider = document.getElementById("slider");
-
-function addImage(src){
-  if(!src) return;
-  let img = document.createElement("img");
-  img.src = src;
-  img.onclick = () => openImg(src);
-  slider.appendChild(img);
-}
-
-addImage(img1);
-addImage(img2);
-addImage(img3);
-
-// تكبير
-function openImg(src){
-  document.getElementById("viewer").style.display = "flex";
-  document.getElementById("bigImg").src = src;
-}
-
-function closeImg(){
-  document.getElementById("viewer").style.display = "none";
-}
-
-// الكمية
+let name = "balai IP harcha";
+let piecesInBox = 16;
 let quantity = 0;
 
-function update(){
-  document.getElementById("qty").innerText = quantity;
-  document.getElementById("price").innerText = (quantity * pricePiece) + " DH";
+// MENU
+function toggleMenu(){
+  let menu = document.getElementById("menu");
+  menu.style.left = (menu.style.left === "0px") ? "-250px" : "0px";
 }
 
-function addPiece(){
+// تحديث الثمن
+function updatePrice(){
+
+  let userPrice = parseFloat(document.getElementById("priceInput").value);
+
+  if(isNaN(userPrice)){
+    userPrice = 0;
+  }
+
+  let total = quantity * userPrice;
+
+  document.getElementById("price").innerText = total + " DH";
+}
+
+// قطعة
+function setPiece(){
   quantity += 1;
-  update();
+  document.getElementById("qty").innerText = quantity;
+  updatePrice();
 }
 
-function addBox(){
+// علبة
+function setBox(){
   quantity += piecesInBox;
-  update();
+  document.getElementById("qty").innerText = quantity;
+  updatePrice();
 }
 
+// ناقص
 function minus(){
   if(quantity > 0){
     quantity--;
-    update();
+    document.getElementById("qty").innerText = quantity;
+    updatePrice();
   }
 }
 
-// السلة
+// إضافة للسلة
 function addToCart(){
+
   if(quantity === 0){
     alert("اختار الكمية");
     return;
   }
 
-  let cart = [];
+  let userPrice = parseFloat(document.getElementById("priceInput").value);
 
-  try{
-    cart = JSON.parse(localStorage.getItem("cart")) || [];
-  }catch(e){
-    cart = [];
+  if(isNaN(userPrice)){
+    userPrice = 0;
   }
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   cart.push({
     name: name,
     qty: quantity,
-    price: quantity * pricePiece
+    unitPrice: userPrice,
+    total: quantity * userPrice
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
 
-  alert("تمت الإضافة للسلة ✅");
+  alert("تزاد للسلة");
 }
 
+// الذهاب للسلة
 function goCart(){
   window.location.href = "cart.html";
 }
-
-// أول تشغيل
-update();
 
 </script>
 
