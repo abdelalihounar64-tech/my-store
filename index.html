@@ -206,19 +206,26 @@ function closeAdd(){addBox.style.display="none";}
 
 function save(){
 
-if(!name.value || !img1.value.startsWith("http")){
-alert("دخل اسم ورابط صورة صحيح");
+let image = img1.value.trim();
+
+if(!name.value.trim()){
+alert("دخل اسم المنتج");
+return;
+}
+
+if(!image || !image.includes("http")){
+alert("دخل رابط صورة صحيح");
 return;
 }
 
 let newP={
-name:name.value,
+name:name.value.trim(),
 box:parseInt(boxCount.value)||1,
 images:[
-img1.value,
-img2.value,
-img3.value,
-img4.value
+image,
+img2.value.trim(),
+img3.value.trim(),
+img4.value.trim()
 ]
 };
 
