@@ -18,17 +18,12 @@ header {
   padding: 15px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-}
-
-header h1 {
-  font-size: 20px;
 }
 
 .container {
   padding: 10px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2,1fr);
   gap: 10px;
 }
 
@@ -36,7 +31,6 @@ header h1 {
   background: white;
   border-radius: 15px;
   padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   text-align: center;
 }
 
@@ -47,22 +41,16 @@ header h1 {
   border-radius: 10px;
 }
 
-.card h3 {
-  margin: 10px 0;
-}
-
 .btn {
   background: orange;
   border: none;
   padding: 10px;
   width: 100%;
   border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
   color: white;
 }
 
-.cart-btn {
+.cart {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -71,7 +59,6 @@ header h1 {
   border: none;
   padding: 15px;
   border-radius: 50%;
-  font-size: 20px;
 }
 </style>
 
@@ -79,61 +66,54 @@ header h1 {
 <body>
 
 <header>
-  <h1>My Store 🛒</h1>
-  <button onclick="goAdmin()">Admin</button>
+<h2>My Store 🛒</h2>
+<button onclick="admin()">Admin</button>
 </header>
 
 <div class="container" id="products"></div>
 
-<button class="cart-btn" onclick="goCart()">🛒</button>
+<button class="cart" onclick="goCart()">🛒</button>
 
 <script>
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
-// ترتيب A-Z
-products.sort((a, b) => a.name.localeCompare(b.name));
+products.sort((a,b)=>a.name.localeCompare(b.name));
 
 let container = document.getElementById("products");
 
-products.forEach((p, index) => {
+products.forEach((p,i)=>{
   let div = document.createElement("div");
-  div.className = "card";
+  div.className="card";
 
-  div.innerHTML = `
-    <img src="${p.images[0]}" onclick="openProduct(${index})">
+  div.innerHTML=`
+    <img src="${p.images[0]}" onclick="openProduct(${i})">
     <h3>${p.name}</h3>
-    <button class="btn" onclick="addToCart(${index})">أضف للسلة</button>
+    <button class="btn" onclick="add(${i})">أضف للسلة</button>
   `;
 
   container.appendChild(div);
 });
 
-// إضافة للسلة
-function addToCart(index) {
+function add(i){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push(products[index]);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert("تمت الإضافة للسلة");
+  cart.push(products[i]);
+  localStorage.setItem("cart",JSON.stringify(cart));
+  alert("تمت الإضافة");
 }
 
-// فتح المنتج
-function openProduct(index) {
-  localStorage.setItem("productIndex", index);
-  window.location.href = "product.html";
+function openProduct(i){
+  localStorage.setItem("productIndex",i);
+  location="product.html";
 }
 
-// الذهاب للسلة
-function goCart() {
-  window.location.href = "cart.html";
+function goCart(){
+  location="cart.html";
 }
 
-// admin
-function goAdmin() {
-  let pass = prompt("ادخل الكود");
-  if (pass == "1234") {
-    window.location.href = "admin.html";
-  } else {
-    alert("كود خاطئ");
+function admin(){
+  let p = prompt("الكود");
+  if(p=="1234"){
+    location="admin.html";
   }
 }
 </script>
