@@ -5,7 +5,13 @@
 <title>My Store</title>
 
 <style>
-body{font-family:Arial; background:#f2f2f2;}
+body{margin:0;font-family:Arial;background:#f2f2f2;}
+
+header{
+background:black;color:white;
+padding:15px;text-align:center;
+}
+
 .grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
@@ -15,7 +21,7 @@ padding:10px;
 
 .card{
 background:white;
-border-radius:10px;
+border-radius:15px;
 padding:10px;
 text-align:center;
 }
@@ -27,44 +33,182 @@ object-fit:cover;
 border-radius:10px;
 }
 
-.btn{
-background:orange;
-color:white;
+.zoom{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:black;
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.zoom img{width:90%;}
+
+.detail{
+position:fixed;
+bottom:0;
+width:100%;
+background:white;
+border-radius:20px 20px 0 0;
+padding:15px;
+display:none;
+}
+
+.type-btn{
+width:48%;
 padding:10px;
 border:none;
 border-radius:10px;
-width:100%;
 }
+
+.active{background:orange;color:white;}
+
+.qty{
+display:flex;
+justify-content:center;
+gap:10px;
+margin:10px;
+}
+
+.qty button{padding:10px;}
+
+.btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:10px;
+margin-top:10px;
+}
+
+.add{background:orange;color:white;}
+.go{background:green;color:white;}
 </style>
+
 </head>
 
 <body>
 
-<h2 style="text-align:center;">My Store 🛒</h2>
+<header>My Store 🛒</header>
 
 <div class="grid" id="products"></div>
+
+<!-- zoom -->
+<div class="zoom" id="zoom" onclick="this.style.display='none'">
+<img id="zoomImg">
+</div>
+
+<!-- detail -->
+<div class="detail" id="detail">
+<h3 id="name"></h3>
+
+<div style="display:flex; gap:5px;">
+<button class="type-btn active" id="piece" onclick="setType('piece')">قطعة</button>
+<button class="type-btn" id="box" onclick="setType('box')">علبة</button>
+</div>
+
+<div class="qty">
+<button onclick="minus()">-</button>
+<span id="q">1</span>
+<button onclick="plus()">+</button>
+</div>
+
+<button class="btn add" onclick="addCart()">أضف للسلة</button>
+<button class="btn go" onclick="go()">اطلب عبر واتساب</button>
+</div>
 
 <script>
 
 let products = JSON.parse(localStorage.getItem("products")) || [];
+let current=null;
+let qty=1;
+let type="piece";
+let cart=[];
 
+// عرض المنتجات
+function load(){
 let html="";
-
 products.forEach(p=>{
-  html+=`
-  <div class="card">
-    <img src="${p.img}">
-    <h3>${p.name}</h3>
-    <button class="btn" onclick="buy('${p.name}')">اطلب</button>
-  </div>
-  `;
+html+=`
+<div class="card" onclick="openDetail(${p.id})">
+<img src="${p.img}" 
+onclick="event.stopPropagation();zoom('${p.img}')"
+onerror="this.src='https://via.placeholder.com/300'">
+<h3>${p.name}</h3>
+</div>`;
 });
-
 document.getElementById("products").innerHTML=html;
+}
+load();
 
-function buy(name){
-  let msg="بغيت نشري: "+name;
-  window.open("https://wa.me/212XXXXXXXXX?text="+msg);
+// zoom
+function zoom(src){
+document.getElementById("zoomImg").src=src;
+document.getElementById("zoom").style.display="flex";
+}
+
+// detail
+function openDetail(id){
+current = products.find(p=>p.id==id);
+document.getElementById("name").innerText=current.name;
+document.getElementById("detail").style.display="block";
+qty=1;
+update();
+}
+
+// type
+function setType(t){
+type=t;
+document.getElementById("piece").classList.remove("active");
+document.getElementById("box").classList.remove("active");
+
+if(t=="piece"){
+document.getElementById("piece").classList.add("active");
+qty=1;
+}else{
+document.getElementById("box").classList.add("active");
+qty=current.box;
+}
+update();
+}
+
+// +
+function plus(){
+if(type=="box"){
+qty+=current.box;
+}else{
+qty++;
+}
+update();
+}
+
+// -
+function minus(){
+if(type=="box"){
+qty=Math.max(current.box, qty-current.box);
+}else{
+qty=Math.max(1, qty-1);
+}
+update();
+}
+
+function update(){
+document.getElementById("q").innerText=qty;
+}
+
+// cart
+function addCart(){
+cart.push({name:current.name,qty});
+alert("تمت الإضافة");
+}
+
+// whatsapp
+function go(){
+let msg="السلام عليكم\n";
+cart.forEach(i=>{
+msg+=i.name+" x "+i.qty+"\n";
+});
+window.open("https://wa.me/212613675970?text="+encodeURIComponent(msg));
 }
 
 </script>
