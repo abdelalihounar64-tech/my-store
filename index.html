@@ -166,15 +166,26 @@ z-index:1000;
 </div>
 
 <script>
+
 function toggleMenu(){
   let menu = document.getElementById("menu");
+  menu.style.left = menu.style.left === "0px" ? "-250px" : "0px";
+}
 
-  if(menu.style.left === "0px"){
-    menu.style.left = "-250px";
+function openAdmin(){
+  let code = prompt("دخل الكود");
+
+  if(code === "36427239"){
+    document.getElementById("adminPanel").style.display = "block";
   }else{
-    menu.style.left = "0px";
+    alert("كود خاطئ ❌");
   }
 }
+
+function closeAdmin(){
+  document.getElementById("adminPanel").style.display = "none";
+}
+
 </script>
 
 </body>
