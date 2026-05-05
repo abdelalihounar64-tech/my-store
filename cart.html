@@ -3,52 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>السلة</title>
+<title>Cart</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#f5f5f5;
-}
+body{font-family:Arial;margin:0;background:#f5f5f5;}
 
 header{
   background:#000;
   color:#fff;
   padding:15px;
   text-align:center;
-  font-size:20px;
-}
-
-.cart{
-  padding:15px;
 }
 
 .item{
   background:#fff;
-  border-radius:15px;
+  margin:10px;
   padding:15px;
-  margin-bottom:10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  border-radius:10px;
+  position:relative;
 }
 
-.remove{
+.delete{
+  position:absolute;
+  left:10px;
+  top:10px;
   background:red;
   color:#fff;
   border:none;
   border-radius:50%;
-  width:35px;
-  height:35px;
-  font-size:18px;
+  width:30px;
+  height:30px;
 }
 
 .total{
   text-align:center;
-  font-size:24px;
-  font-weight:bold;
-  margin-top:20px;
+  font-size:22px;
+  margin:20px;
 }
 
 .order{
@@ -60,7 +50,6 @@ header{
   color:#fff;
   border:none;
   border-radius:10px;
-  font-size:16px;
 }
 </style>
 </head>
@@ -69,7 +58,7 @@ header{
 
 <header>🛒 السلة</header>
 
-<div class="cart" id="cart"></div>
+<div id="cart"></div>
 
 <div class="total" id="total"></div>
 
@@ -77,69 +66,50 @@ header{
 
 <script>
 
-let cart = [];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let container = document.getElementById("cart");
 
-try{
-  cart = JSON.parse(localStorage.getItem("cart")) || [];
-}catch(e){
-  cart = [];
-}
-
-let cartDiv = document.getElementById("cart");
 let total = 0;
 
-function renderCart(){
-  cartDiv.innerHTML = "";
-  total = 0;
+function loadCart(){
+  container.innerHTML="";
+  total=0;
 
-  cart.forEach((item, index) => {
+  cart.forEach((item,index)=>{
+    total += item.price;
 
-    let div = document.createElement("div");
-    div.className = "item";
-
-    div.innerHTML = `
-      <button class="remove" onclick="removeItem(${index})">❌</button>
-      <div>
+    container.innerHTML += `
+      <div class="item">
+        <button class="delete" onclick="removeItem(${index})">X</button>
         <h3>${item.name}</h3>
-        <p>الكمية: ${item.qty}</p>
-        <p>الثمن: ${item.total} DH</p>
+        <p>الكمية: ${item.quantity}</p>
+        <p>الثمن: DH ${item.price}</p>
       </div>
     `;
-
-    cartDiv.appendChild(div);
-
-    total += item.total;
   });
 
-  document.getElementById("total").innerText = "المجموع: " + total + " DH";
+  document.getElementById("total").innerText = "المجموع: DH " + total;
 }
 
-function removeItem(index){
-  cart.splice(index,1);
+function removeItem(i){
+  cart.splice(i,1);
   localStorage.setItem("cart", JSON.stringify(cart));
-  renderCart();
+  loadCart();
 }
 
 function order(){
-  if(cart.length === 0){
-    alert("السلة فارغة");
-    return;
-  }
+  let text="السلام، بغيت نطلب:\n";
 
-  let msg = "السلام، بغيت نطلب:\n\n";
-
-  cart.forEach(item => {
-    msg += `${item.name}\n`;
-    msg += `الكمية: ${item.qty}\n`;
-    msg += `الثمن: ${item.total} DH\n\n`;
+  cart.forEach(item=>{
+    text += item.name + " - " + item.quantity + "\n";
   });
 
-  msg += `المجموع: ${total} DH`;
+  text += "المجموع: " + total + " DH";
 
-  window.open("https://wa.me/212613675970?text=" + encodeURIComponent(msg));
+  window.open("https://wa.me/212613675970?text="+encodeURIComponent(text));
 }
 
-renderCart();
+loadCart();
 
 </script>
 
