@@ -6,128 +6,136 @@
 <title>My Store</title>
 
 <style>
-
-body{
-margin:0;
-font-family:Arial;
-background:#f3f4f6;
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f5f5f5;
 }
 
-/* HEADER */
-header{
-background:#111;
-color:white;
-padding:15px;
-text-align:center;
-font-size:20px;
+header {
+  background: black;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* GRID */
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-padding:12px;
+header h1 {
+  font-size: 20px;
 }
 
-/* CARD */
-.card{
-background:white;
-border-radius:15px;
-padding:8px;
-box-shadow:0 4px 12px rgba(0,0,0,0.1);
-cursor:pointer;
-transition:0.3s;
+.container {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
-.card:hover{
-transform:scale(1.03);
+.card {
+  background: white;
+  border-radius: 15px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
-/* IMAGE */
-.card img{
-width:100%;
-height:140px;
-object-fit:cover;
-border-radius:10px;
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
-/* TITLE */
-.title{
-text-align:center;
-font-weight:bold;
-margin-top:5px;
-font-size:15px;
+.card h3 {
+  margin: 10px 0;
 }
 
-/* EMPTY */
-.empty{
-text-align:center;
-margin-top:50px;
-color:#777;
+.btn {
+  background: orange;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  color: white;
 }
 
+.cart-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: green;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 20px;
+}
 </style>
 
 </head>
-
 <body>
 
-<header>My Store 🛒</header>
+<header>
+  <h1>My Store 🛒</h1>
+  <button onclick="goAdmin()">Admin</button>
+</header>
 
-<div class="grid" id="products"></div>
+<div class="container" id="products"></div>
 
-<div id="empty" class="empty" style="display:none;">
-ماكاين حتى منتج دابا
-</div>
+<button class="cart-btn" onclick="goCart()">🛒</button>
 
 <script>
-
-// جلب المنتجات
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
-// ترتيب A → Z
-products.sort((a,b)=>a.name.localeCompare(b.name));
+// ترتيب A-Z
+products.sort((a, b) => a.name.localeCompare(b.name));
 
-// عرض المنتجات
-function load(){
+let container = document.getElementById("products");
 
-let html="";
+products.forEach((p, index) => {
+  let div = document.createElement("div");
+  div.className = "card";
 
-if(products.length === 0){
-document.getElementById("empty").style.display="block";
-return;
-}
+  div.innerHTML = `
+    <img src="${p.images[0]}" onclick="openProduct(${index})">
+    <h3>${p.name}</h3>
+    <button class="btn" onclick="addToCart(${index})">أضف للسلة</button>
+  `;
 
-products.forEach(p=>{
-
-let img = (p.images && p.images[0]) 
-? p.images[0] 
-: "https://via.placeholder.com/300";
-
-html += `
-<div class="card" onclick="openProduct(${p.id})">
-
-<img src="${img}" onerror="this.src='https://via.placeholder.com/300'">
-
-<div class="title">${p.name}</div>
-
-</div>
-`;
-
+  container.appendChild(div);
 });
 
-document.getElementById("products").innerHTML = html;
+// إضافة للسلة
+function addToCart(index) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.push(products[index]);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("تمت الإضافة للسلة");
 }
-
-load();
 
 // فتح المنتج
-function openProduct(id){
-localStorage.setItem("current", id);
-window.location="product.html";
+function openProduct(index) {
+  localStorage.setItem("productIndex", index);
+  window.location.href = "product.html";
 }
 
+// الذهاب للسلة
+function goCart() {
+  window.location.href = "cart.html";
+}
+
+// admin
+function goAdmin() {
+  let pass = prompt("ادخل الكود");
+  if (pass == "1234") {
+    window.location.href = "admin.html";
+  } else {
+    alert("كود خاطئ");
+  }
+}
 </script>
 
 </body>
