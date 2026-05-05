@@ -1,126 +1,185 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Store</title>
 
 <style>
-body{margin:0;font-family:sans-serif;background:#f5f5f5}
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f2f2f2;
+}
 
-/* HEADER */
 header{
-background:#000;
-color:#fff;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+  background:black;
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
-.admin{background:red;color:#fff;padding:8px 15px;border:none;border-radius:20px}
 
-/* PRODUCTS */
-.products{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-padding:15px;
+.admin-btn{
+  background:red;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  border-radius:10px;
 }
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+  padding:15px;
+}
+
 .card{
-background:#fff;
-border-radius:15px;
-padding:10px;
-text-align:center;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  background:white;
+  border-radius:15px;
+  padding:10px;
+  text-align:center;
 }
+
 .card img{
-width:100%;
-height:150px;
-object-fit:cover;
-border-radius:10px;
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border-radius:10px;
 }
 
-/* BUTTONS */
+.card h3{
+  margin:10px 0;
+}
+
+.btns{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
 .btn{
-padding:12px;
-border:none;
-border-radius:10px;
-margin:5px;
-font-weight:bold;
-}
-.add{background:#ff9800;color:#fff;width:100%}
-.go{background:#4caf50;color:#fff;width:100%}
-
-/* FLOAT */
-.fab{
-position:fixed;
-bottom:20px;
-right:20px;
-width:60px;height:60px;
-background:#ff9800;
-color:#fff;
-font-size:30px;
-border:none;
-border-radius:50%;
+  padding:8px 12px;
+  border:none;
+  border-radius:10px;
+  color:white;
 }
 
-/* MODAL */
+.delete{background:red;}
+.edit{background:orange;}
+
+.add-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:orange;
+  color:white;
+  font-size:25px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  border:none;
+}
+
 .modal{
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,0.5);
-display:none;
-justify-content:center;
-align-items:center;
-}
-.box{
-background:#fff;
-padding:20px;
-border-radius:15px;
-width:90%;
-}
-.box input{
-width:100%;
-margin:5px 0;
-padding:10px;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000000aa;
+  display:none;
+  justify-content:center;
+  align-items:center;
 }
 
-/* VIEW */
-.viewer{
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:#fff;
-display:none;
-overflow:auto;
-}
-.big{
-width:100%;
-height:250px;
-object-fit:cover;
-}
-.thumbs img{
-width:60px;height:60px;margin:5px;border-radius:10px;
+.modal-content{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  width:90%;
 }
 
-/* CART */
-.cart{
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:#fff;
-display:none;
-padding:15px;
+input{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
 }
-.item{
-background:#eee;
-padding:10px;
-margin:10px 0;
-border-radius:10px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+
+.save{
+  background:green;
+  color:white;
+  padding:10px;
+  border:none;
+}
+
+.zoom{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.zoom img{
+  width:90%;
+}
+
+.detail{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:white;
+  border-radius:20px 20px 0 0;
+  padding:15px;
+  display:none;
+}
+
+.type-btn{
+  width:48%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+}
+
+.active{
+  background:orange;
+  color:white;
+}
+
+.qty{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:10px;
+}
+
+.qty button{
+  padding:10px;
+}
+
+.cart-btn{
+  background:orange;
+  color:white;
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:10px;
+}
+
+.go{
+  background:green;
+  color:white;
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:10px;
 }
 </style>
 </head>
@@ -129,245 +188,194 @@ align-items:center;
 
 <header>
 <h2>My Store 🛒</h2>
-<button class="admin" onclick="admin()">Admin</button>
+<button class="admin-btn" onclick="admin()">Admin</button>
 </header>
 
-<div class="products" id="products"></div>
+<div class="grid" id="products"></div>
 
-<button class="fab" onclick="openAdd()">+</button>
+<button class="add-btn" onclick="openModal()">+</button>
 
 <!-- ADD -->
-<div class="modal" id="addBox">
-<div class="box">
-<input id="name" placeholder="اسم المنتج">
-<input id="boxCount" placeholder="عدد القطع في العلبة">
-<input id="img1" placeholder="رابط صورة 1">
-<input id="img2" placeholder="رابط صورة 2">
-<input id="img3" placeholder="رابط صورة 3">
-<input id="img4" placeholder="رابط صورة 4">
-<button onclick="save()">حفظ</button>
-<button onclick="closeAdd()">إغلاق</button>
+<div class="modal" id="modal">
+<div class="modal-content">
+<input id="name" placeholder="اسم">
+<input id="price" placeholder="الثمن">
+<input id="box" placeholder="عدد القطع في العلبة (مثال 16)">
+<input id="img" placeholder="رابط الصورة">
+<button class="save" onclick="save()">حفظ</button>
 </div>
 </div>
 
-<!-- PRODUCT -->
-<div class="viewer" id="viewer">
-<img id="big" class="big">
-<div class="thumbs" id="thumbs"></div>
+<!-- ZOOM -->
+<div class="zoom" id="zoom" onclick="this.style.display='none'">
+<img id="zoomImg">
+</div>
 
-<br>
+<!-- DETAIL -->
+<div class="detail" id="detail">
+<h3 id="dName"></h3>
 
-<button onclick="setType('piece')">قطعة</button>
-<button onclick="setType('box')">علبة</button>
+<div style="display:flex; gap:5px;">
+<button class="type-btn active" id="pieceBtn" onclick="setType('piece')">قطعة</button>
+<button class="type-btn" id="boxBtn" onclick="setType('box')">علبة</button>
+</div>
 
-<h2 id="qty">1</h2>
-
-<button onclick="plus()">+</button>
+<div class="qty">
 <button onclick="minus()">-</button>
-
-<button class="btn add" onclick="addCart()">أضف للسلة</button>
-<button class="btn go" onclick="openCart()">اذهب للسلة</button>
-
-<button onclick="closeViewer()">رجوع</button>
+<span id="q">1</span>
+<button onclick="plus()">+</button>
 </div>
 
-<!-- CART -->
-<div class="cart" id="cart"></div>
+<button class="cart-btn" onclick="addCart()">أضف للسلة</button>
+<button class="go" onclick="goCart()">اذهب للسلة</button>
+</div>
 
 <script>
 
-/* STORAGE */
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let cart = [];
+let current = null;
+let type = "piece";
+let qty = 1;
 
-/* RENDER */
-function render(){
-let html="";
-products.forEach((p,i)=>{
-let img = (p.images && p.images[0] && p.images[0].startsWith("http")) 
-? p.images[0] 
-: "https://via.placeholder.com/150";
+function load(){
+  let html="";
+  products.sort((a,b)=>a.name.localeCompare(b.name));
 
-html+=`
-<div class="card">
-<img src="${img}" onclick="openProduct(${i})">
-<h3>${p.name}</h3>
-<button onclick="del(${i})">❌</button>
-</div>
-`;
-});
-document.getElementById("products").innerHTML=html;
+  products.forEach(p=>{
+    html+=`
+    <div class="card" onclick="openDetail(${p.id})">
+      <img src="${p.img}" 
+           onerror="this.src='https://via.placeholder.com/300'"
+           onclick="event.stopPropagation(); zoom('${p.img}')">
+      <h3>${p.name}</h3>
+
+      <div class="btns">
+        <button class="btn delete" onclick="event.stopPropagation(); del(${p.id})">X</button>
+        <button class="btn edit" onclick="event.stopPropagation(); edit(${p.id})">✏️</button>
+      </div>
+    </div>
+    `;
+  });
+
+  document.getElementById("products").innerHTML=html;
 }
-render();
 
-/* ADD */
-function openAdd(){addBox.style.display="flex";}
-function closeAdd(){addBox.style.display="none";}
+load();
+
+function openModal(){
+  document.getElementById("modal").style.display="flex";
+}
 
 function save(){
+  let name=document.getElementById("name").value;
+  let price=document.getElementById("price").value;
+  let img=document.getElementById("img").value;
+  let box=document.getElementById("box").value;
 
-let image = img1.value.trim();
+  if(!name || !img){
+    alert("دخل الاسم والصورة");
+    return;
+  }
 
-if(!name.value.trim()){
-alert("دخل اسم المنتج");
-return;
+  products.push({
+    id:Date.now(),
+    name,
+    price:price||0,
+    img,
+    box:parseInt(box)||1
+  });
+
+  localStorage.setItem("products",JSON.stringify(products));
+  document.getElementById("modal").style.display="none";
+  load();
 }
 
-if(!image || !image.includes("http")){
-alert("دخل رابط صورة صحيح");
-return;
+function del(id){
+  products = products.filter(p=>p.id!=id);
+  localStorage.setItem("products",JSON.stringify(products));
+  load();
 }
 
-let newP={
-name:name.value.trim(),
-box:parseInt(boxCount.value)||1,
-images:[
-image,
-img2.value.trim(),
-img3.value.trim(),
-img4.value.trim()
-]
-};
+function edit(id){
+  let p = products.find(x=>x.id==id);
+  document.getElementById("name").value=p.name;
+  document.getElementById("price").value=p.price;
+  document.getElementById("img").value=p.img;
+  document.getElementById("box").value=p.box;
 
-products.push(newP);
-localStorage.setItem("products",JSON.stringify(products));
-
-closeAdd();
-render();
+  del(id);
+  openModal();
 }
 
-/* DELETE */
-function del(i){
-if(confirm("حذف المنتج؟")){
-products.splice(i,1);
-localStorage.setItem("products",JSON.stringify(products));
-render();
-}
+function zoom(src){
+  document.getElementById("zoomImg").src=src;
+  document.getElementById("zoom").style.display="flex";
 }
 
-/* VIEW */
-let current;
-let quantity=1;
-let type="piece";
-
-function openProduct(i){
-current=products[i];
-
-if(!current.images || !current.images[0]){
-alert("الصورة غير موجودة");
-return;
+function openDetail(id){
+  current = products.find(p=>p.id==id);
+  document.getElementById("dName").innerText=current.name;
+  document.getElementById("detail").style.display="block";
+  qty=1;
+  document.getElementById("q").innerText=qty;
 }
 
-viewer.style.display="block";
-
-big.src=current.images[0];
-
-let t="";
-current.images.forEach(img=>{
-if(img && img.startsWith("http")){
-t+=`<img src="${img}" onclick="big.src='${img}'">`;
-}
-});
-thumbs.innerHTML=t;
-
-quantity=1;
-update();
-}
-
-function closeViewer(){viewer.style.display="none";}
-
-/* TYPE */
 function setType(t){
-type=t;
+  type=t;
+  document.getElementById("pieceBtn").classList.remove("active");
+  document.getElementById("boxBtn").classList.remove("active");
 
-if(type=="box"){
-quantity=current.box;
-}else{
-quantity=1;
-}
-update();
+  if(t=="piece") document.getElementById("pieceBtn").classList.add("active");
+  else document.getElementById("boxBtn").classList.add("active");
+
+  qty=1;
+  updateQty();
 }
 
-/* + - */
 function plus(){
-if(type=="box"){
-quantity+=current.box;
-}else{
-quantity++;
-}
-update();
+  if(type=="box"){
+    qty+=current.box;
+  }else{
+    qty++;
+  }
+  updateQty();
 }
 
 function minus(){
-if(type=="box"){
-quantity-=current.box;
-if(quantity<current.box) quantity=current.box;
-}else{
-quantity--;
-if(quantity<1) quantity=1;
-}
-update();
+  if(type=="box"){
+    qty=Math.max(current.box, qty-current.box);
+  }else{
+    qty=Math.max(1, qty-1);
+  }
+  updateQty();
 }
 
-function update(){
-qty.innerText=quantity;
+function updateQty(){
+  document.getElementById("q").innerText=qty;
 }
 
-/* CART */
 function addCart(){
-cart.push({
-name:current.name,
-qty:quantity,
-img:current.images[0]
-});
-alert("تمت الإضافة");
+  cart.push({name:current.name, qty});
+  alert("تمت الإضافة");
 }
 
-function openCart(){
-let html="";
+function goCart(){
+  let msg="طلب:\n";
+  cart.forEach(i=>{
+    msg+=i.name+" x "+i.qty+"\n";
+  });
 
-cart.forEach((c,i)=>{
-html+=`
-<div class="item">
-<img src="${c.img}" width="50">
-<div>${c.name} × ${c.qty}</div>
-<button onclick="removeItem(${i})">❌</button>
-</div>
-`;
-});
-
-html+=`
-<h2>المجموع: ${cart.reduce((a,b)=>a+b.qty,0)}</h2>
-<button onclick="whatsapp()">اطلب عبر واتساب</button>
-<button onclick="closeCart()">رجوع</button>
-`;
-
-cart.innerHTML=html;
-cart.style.display="block";
+  window.open("https://wa.me/212613675970?text="+encodeURIComponent(msg));
 }
 
-function closeCart(){cart.style.display="none";}
-
-function removeItem(i){
-cart.splice(i,1);
-openCart();
-}
-
-/* WHATSAPP */
-function whatsapp(){
-let msg="طلب:\n";
-cart.forEach(i=>{
-msg+=i.name+" × "+i.qty+"\n";
-});
-window.open("https://wa.me/212XXXXXXXXX?text="+encodeURIComponent(msg));
-}
-
-/* ADMIN */
 function admin(){
-let p=prompt("password");
-if(p!="123@123"){
-alert("خطأ");
-}
+  let pass = prompt("Password");
+  if(pass!="1234"){
+    alert("خطأ");
+  }else{
+    alert("Admin Mode");
+  }
 }
 
 </script>
