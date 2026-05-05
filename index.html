@@ -6,21 +6,42 @@
 <title>My Store</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#f5f5f5;}
-header{background:#000;color:#fff;padding:15px;text-align:center;}
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f5f5f5;
+}
+
+header{
+  background:#000;
+  color:#fff;
+  padding:15px;
+  text-align:center;
+}
+
+.admin-btn{
+  position:fixed;
+  top:10px;
+  left:10px;
+  background:red;
+  color:#fff;
+  border:none;
+  padding:8px;
+  border-radius:8px;
+}
 
 .products{
   display:grid;
   grid-template-columns:1fr 1fr;
+  gap:10px;
+  padding:10px;
 }
 
 .product{
-  margin:10px;
   background:#fff;
   border-radius:15px;
   padding:10px;
   text-align:center;
-  cursor:pointer;
 }
 
 .product img{
@@ -28,35 +49,15 @@ header{background:#000;color:#fff;padding:15px;text-align:center;}
   border-radius:10px;
 }
 
-.addBtn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#000;
-  color:#fff;
+.product button{
+  margin:5px;
+  padding:5px 10px;
   border:none;
-  padding:15px;
-  border-radius:50%;
-  font-size:20px;
+  border-radius:8px;
 }
 
-#admin{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#fff;
-  padding:20px;
-  overflow:auto;
-}
-
-input,textarea{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-}
+.edit{background:orange;color:#fff;}
+.delete{background:red;color:#fff;}
 </style>
 </head>
 
@@ -64,107 +65,99 @@ input,textarea{
 
 <header>🛒 My Store</header>
 
+<button class="admin-btn" onclick="loginAdmin()">Admin</button>
+
 <div class="products" id="products"></div>
-
-<button class="addBtn" onclick="openAdmin()">+</button>
-
-<div id="admin">
-<h2>إضافة منتج</h2>
-
-<input id="name" placeholder="اسم المنتج">
-<input id="price" placeholder="الثمن">
-<input id="pieces" placeholder="عدد القطع في العلبة">
-<textarea id="desc" placeholder="الوصف"></textarea>
-
-<input id="img1" placeholder="رابط الصورة 1">
-<input id="img2" placeholder="رابط الصورة 2">
-<input id="img3" placeholder="رابط الصورة 3">
-<input id="img4" placeholder="رابط الصورة 4">
-
-<button onclick="saveProduct()">حفظ</button>
-<button onclick="closeAdmin()">إغلاق</button>
-</div>
 
 <script>
 
-let products = JSON.parse(localStorage.getItem("products"));
-if(!products){
-  products = [];
-  localStorage.setItem("products", JSON.stringify(products));
-}
+// ================== تحميل المنتجات ==================
+let products = JSON.parse(localStorage.getItem("products")) || [
+  {
+    name:"balai IP harcha",
+    price:10.25,
+    img:"https://i.ibb.co/VWG6NSVD/1777726032086.png"
+  },
+  {
+    name:"Nova kh",
+    price:36.5,
+    img:"https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png"
+  }
+];
 
-function loadProducts(){
-  let container = document.getElementById("products");
+// ================== ترتيب A-Z ==================
+products.sort((a,b)=>a.name.localeCompare(b.name));
+
+// ================== عرض المنتجات ==================
+let container = document.getElementById("products");
+let isAdmin = localStorage.getItem("admin") === "true";
+
+function display(){
   container.innerHTML = "";
 
-  if(products.length === 0){
-    container.innerHTML = "<p style='text-align:center'>لا يوجد منتجات</p>";
-    return;
-  }
+  products.forEach((p,i)=>{
 
-  products.forEach((p,index)=>{
+    let adminBtns = "";
+
+    if(isAdmin){
+      adminBtns = `
+        <button class="edit" onclick="editProduct(${i})">✏️</button>
+        <button class="delete" onclick="deleteProduct(${i})">❌</button>
+      `;
+    }
+
     container.innerHTML += `
-      <div class="product" onclick="openProduct(${index})">
-        <img src="${p.images[0]}">
+      <div class="product">
+        <img src="${p.img}">
         <h3>${p.name}</h3>
+        <p>${p.price} DH</p>
+        ${adminBtns}
       </div>
     `;
   });
 }
 
-function openProduct(i){
-  localStorage.setItem("selectedProduct", i);
-  window.location.href = "product.html";
-}
+display();
 
-function openAdmin(){
-  let pass = prompt("كلمة السر");
+// ================== ADMIN LOGIN ==================
+function loginAdmin(){
+  let pass = prompt("دخل الباسورد");
+
   if(pass === "123@123"){
-    document.getElementById("admin").style.display = "block";
+    localStorage.setItem("admin","true");
+    alert("مرحبا Admin");
+    location.reload();
   }else{
-    alert("كلمة سر خاطئة");
+    alert("خطأ");
   }
 }
 
-function closeAdmin(){
-  document.getElementById("admin").style.display = "none";
+// ================== حذف ==================
+function deleteProduct(i){
+  if(confirm("حذف المنتج؟")){
+    products.splice(i,1);
+    save();
+  }
 }
 
-function saveProduct(){
+// ================== تعديل ==================
+function editProduct(i){
+  let name = prompt("اسم جديد", products[i].name);
+  let price = prompt("ثمن جديد", products[i].price);
 
-  let name = document.getElementById("name").value.trim();
-  let price = parseFloat(document.getElementById("price").value);
-  let pieces = parseInt(document.getElementById("pieces").value);
-  let desc = document.getElementById("desc").value;
-
-  let images = [
-    document.getElementById("img1").value,
-    document.getElementById("img2").value,
-    document.getElementById("img3").value,
-    document.getElementById("img4").value
-  ].filter(img => img !== "");
-
-  if(!name || images.length === 0){
-    alert("دخل المعلومات مزيان");
-    return;
+  if(name){
+    products[i].name = name;
+    products[i].price = price;
   }
 
-  let newProduct = {
-    name,
-    price: price || 0,
-    description: desc,
-    pieces: pieces || 1,
-    images
-  };
+  save();
+}
 
-  products.push(newProduct);
+// ================== حفظ ==================
+function save(){
   localStorage.setItem("products", JSON.stringify(products));
-
-  alert("تمت الإضافة ✅");
   location.reload();
 }
-
-loadProducts();
 
 </script>
 
