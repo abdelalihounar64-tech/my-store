@@ -6,262 +6,161 @@
 <title>Product</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-}
+body{margin:0;font-family:Arial;}
+header{background:#000;color:#fff;padding:15px;text-align:center;}
 
-header{
-  background:#000;
-  color:#fff;
-  padding:15px;
-  text-align:center;
-}
-
-/* MENU */
-.menu-btn{
-  position:absolute;
-  top:15px;
-  left:15px;
-  font-size:25px;
-  color:#fff;
-  cursor:pointer;
-}
-
-.menu{
-  position:fixed;
-  top:0;
-  left:-250px;
-  width:250px;
-  height:100%;
-  background:#000;
-  padding-top:60px;
-  transition:0.3s;
-  z-index:1000;
-}
-
-.menu a{
-  display:block;
-  color:#fff;
-  padding:15px;
-  text-decoration:none;
-  border-bottom:1px solid #444;
-}
-
-.menu a:hover{
-  background:#333;
-}
-
-/* SLIDER */
 .slider{
   display:flex;
   overflow-x:auto;
   scroll-snap-type:x mandatory;
 }
-
 .slider img{
   width:100%;
   height:250px;
   object-fit:cover;
   scroll-snap-align:start;
+  cursor:pointer;
 }
 
-/* CONTENT */
-.container{
-  padding:15px;
-}
+.container{padding:15px;}
 
-.price{
-  font-size:22px;
-  font-weight:bold;
-  margin-top:10px;
-}
+.price{font-size:22px;font-weight:bold;}
 
-input{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-}
-
-.buttons{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-}
-
+.buttons{display:flex;gap:10px;margin-top:10px;}
 .buttons button{
   flex:1;
-  padding:12px;
-  border:none;
-  border-radius:10px;
+  padding:10px;
   background:#000;
   color:#fff;
+  border:none;
+  border-radius:10px;
 }
 
-.qty{
-  text-align:center;
-  margin-top:20px;
+.qty{text-align:center;margin-top:20px;font-size:28px;}
+
+.minus{
+  display:block;
+  margin:10px auto;
+  padding:10px;
+  font-size:20px;
 }
 
-.qty span{
-  font-size:30px;
-}
-
-.qty button{
-  margin-top:10px;
-  padding:10px 20px;
-}
-
-.add{
+.addCart{
   width:100%;
-  margin-top:20px;
   padding:15px;
   background:orange;
   color:#fff;
   border:none;
   border-radius:10px;
+  margin-top:10px;
 }
 
-.cart{
+.goCart{
   width:100%;
-  margin-top:10px;
   padding:15px;
   background:green;
   color:#fff;
   border:none;
   border-radius:10px;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- MENU -->
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
-
-<div class="menu" id="menu">
-  <a href="index.html">Home</a>
-  <a href="#">Products</a>
-  <a href="#">Contact</a>
-</div>
-
 <header>تفاصيل المنتج</header>
 
-<!-- الصور -->
-<div class="slider">
-  <img src="https://i.ibb.co/VWG6NSVD/1777726032086.png">
-  <img src="https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png">
-</div>
+<div class="slider" id="slider"></div>
 
 <div class="container">
 
-<h2 id="name">balai IP harcha</h2>
+<h2 id="name"></h2>
+<p id="desc"></p>
+<div class="price" id="price"></div>
 
-<p>منتج عالي الجودة للتنظيف، عملي وقوي للاستعمال اليومي.</p>
-
-<!-- إدخال الثمن -->
-<input type="number" id="priceInput" placeholder="دخل الثمن">
-
-<div class="price" id="price">0 DH</div>
-
-<!-- اختيار -->
 <div class="buttons">
-  <button onclick="setPiece()">قطعة</button>
-  <button onclick="setBox()">علبة</button>
+<button onclick="addBox()">علبة</button>
+<button onclick="addPiece()">قطعة</button>
 </div>
 
-<!-- الكمية -->
-<div class="qty">
-  <span id="qty">0</span><br>
-  <button onclick="minus()">➖</button>
-</div>
+<div class="qty" id="qty">0</div>
 
-<button class="add" onclick="addToCart()">أضف للسلة</button>
-<button class="cart" onclick="goCart()">اذهب للسلة</button>
+<button class="minus" onclick="minus()">➖</button>
+
+<button class="addCart" onclick="addToCart()">أضف للسلة</button>
+<button class="goCart" onclick="goCart()">اذهب للسلة</button>
 
 </div>
 
 <script>
 
-let name = "balai IP harcha";
-let piecesInBox = 16;
+let products = JSON.parse(localStorage.getItem("products"));
+let i = localStorage.getItem("selectedProduct");
+let p = products[i];
+
 let quantity = 0;
 
-// MENU
-function toggleMenu(){
-  let menu = document.getElementById("menu");
-  menu.style.left = (menu.style.left === "0px") ? "-250px" : "0px";
+document.getElementById("name").innerText = p.name;
+document.getElementById("desc").innerText = p.description;
+
+let slider = document.getElementById("slider");
+p.images.forEach(img=>{
+  slider.innerHTML += `<img src="${img}" onclick="zoom('${img}')">`;
+});
+
+function update(){
+  let total = quantity * p.price;
+  document.getElementById("price").innerText = "DH " + total;
+  document.getElementById("qty").innerText = quantity;
 }
 
-// تحديث الثمن
-function updatePrice(){
-
-  let userPrice = parseFloat(document.getElementById("priceInput").value);
-
-  if(isNaN(userPrice)){
-    userPrice = 0;
-  }
-
-  let total = quantity * userPrice;
-
-  document.getElementById("price").innerText = total + " DH";
-}
-
-// قطعة
-function setPiece(){
+function addPiece(){
   quantity += 1;
-  document.getElementById("qty").innerText = quantity;
-  updatePrice();
+  update();
 }
 
-// علبة
-function setBox(){
-  quantity += piecesInBox;
-  document.getElementById("qty").innerText = quantity;
-  updatePrice();
+function addBox(){
+  quantity += p.pieces;
+  update();
 }
 
-// ناقص
 function minus(){
-  if(quantity > 0){
+  if(quantity>0){
     quantity--;
-    document.getElementById("qty").innerText = quantity;
-    updatePrice();
+    update();
   }
 }
 
-// إضافة للسلة
 function addToCart(){
-
-  if(quantity === 0){
+  if(quantity==0){
     alert("اختار الكمية");
     return;
-  }
-
-  let userPrice = parseFloat(document.getElementById("priceInput").value);
-
-  if(isNaN(userPrice)){
-    userPrice = 0;
   }
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   cart.push({
-    name: name,
-    qty: quantity,
-    unitPrice: userPrice,
-    total: quantity * userPrice
+    name:p.name,
+    quantity:quantity,
+    price:p.price * quantity
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
 
-  alert("تزاد للسلة");
+  alert("تمت الإضافة للسلة");
 }
 
-// الذهاب للسلة
 function goCart(){
-  window.location.href = "cart.html";
+  window.location.href="cart.html";
 }
+
+function zoom(src){
+  let win = window.open("");
+  win.document.write("<img src='"+src+"' style='width:100%'>");
+}
+
+update();
 
 </script>
 
