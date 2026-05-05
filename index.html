@@ -13,6 +13,17 @@ header{
   color:#fff;
   padding:15px;
   text-align:center;
+  position:relative;
+}
+
+.admin-btn{
+  position:absolute;
+  left:10px;
+  top:10px;
+  background:red;
+  color:#fff;
+  border:none;
+  padding:5px 10px;
 }
 
 .grid{
@@ -27,6 +38,7 @@ header{
   border-radius:15px;
   padding:10px;
   text-align:center;
+  position:relative;
 }
 
 .card img{
@@ -34,6 +46,18 @@ header{
   height:150px;
   object-fit:cover;
   border-radius:10px;
+}
+
+.del{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  background:red;
+  color:#fff;
+  border:none;
+  border-radius:50%;
+  width:30px;
+  height:30px;
 }
 
 .add{
@@ -48,26 +72,48 @@ header{
   font-size:30px;
   border:none;
 }
+
+.box{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#0008;
+  justify-content:center;
+  align-items:center;
+}
+
+.box div{
+  background:#fff;
+  padding:20px;
+  width:90%;
+}
 </style>
 </head>
 
 <body>
 
-<header>My Store 🛒</header>
+<header>
+My Store 🛒
+<button class="admin-btn" onclick="login()">Admin</button>
+</header>
 
 <div class="grid" id="products"></div>
 
 <button class="add" onclick="openAdd()">+</button>
 
 <!-- إضافة -->
-<div id="box" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0008;justify-content:center;align-items:center">
+<div class="box" id="box">
+<div>
 
-<div style="background:#fff;padding:20px;width:90%">
 <h3>إضافة منتج</h3>
 
 <input id="name" placeholder="اسم"><br><br>
 <input id="price" placeholder="الثمن"><br><br>
 <input id="desc" placeholder="الوصف"><br><br>
+<input id="boxCount" placeholder="عدد القطع في العلبة"><br><br>
 
 <input id="img1" placeholder="رابط صورة 1"><br>
 <input id="img2" placeholder="رابط صورة 2"><br>
@@ -83,6 +129,7 @@ header{
 <script>
 
 let products = JSON.parse(localStorage.getItem("products")) || [];
+let admin = false;
 
 function show(){
 
@@ -91,14 +138,20 @@ function show(){
   products.forEach((p,i)=>{
 
     html+=`
-    <div class="card" onclick="openProduct(${i})">
-      <img src="${p.images[0] || ''}">
+    <div class="card">
+
+      <img src="${p.images[0] || ''}" onclick="openProduct(${i})">
+
       <h3>${p.name}</h3>
-      <p>DH ${p.price}</p>
+      <p>DH ${p.price || 0}</p>
+
+      ${admin ? `<button class="del" onclick="del(${i})">X</button>` : ""}
+
     </div>
     `;
-
   });
+
+  products.sort((a,b)=>a.name.localeCompare(b.name));
 
   document.getElementById("products").innerHTML = html;
 }
@@ -111,19 +164,21 @@ function openProduct(i){
 }
 
 function openAdd(){
-  document.getElementById("box").style.display="flex";
+  if(!admin){ alert("خاصك تدخل Admin"); return;}
+  box.style.display="flex";
 }
 
 function closeAdd(){
-  document.getElementById("box").style.display="none";
+  box.style.display="none";
 }
 
 function save(){
 
   let newP={
-    name: name.value,
-    price: price.value,
-    desc: desc.value,
+    name:name.value,
+    price:price.value,
+    desc:desc.value,
+    box:parseInt(boxCount.value) || 1,
     images:[
       img1.value,
       img2.value,
@@ -137,6 +192,21 @@ function save(){
   localStorage.setItem("products",JSON.stringify(products));
 
   location.reload();
+}
+
+function del(i){
+  products.splice(i,1);
+  localStorage.setItem("products",JSON.stringify(products));
+  show();
+}
+
+function login(){
+  let pass = prompt("دخل كلمة السر");
+  if(pass=="123@123"){
+    admin=true;
+    alert("Admin مفعل");
+    show();
+  }
 }
 
 </script>
