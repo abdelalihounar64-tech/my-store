@@ -6,95 +6,206 @@
 <title>Admin</title>
 
 <style>
-body{font-family:Arial;background:#eee;margin:0;}
+body{margin:0;font-family:Arial;background:#f5f5f5;}
 
-.container{
-padding:20px;
+header{
+background:#111;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{padding:10px;}
+
+.card{
+background:white;
+padding:10px;
+margin:10px 0;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.card img{
+width:60px;
+height:60px;
+border-radius:10px;
+object-fit:cover;
+}
+
+.btn{
+padding:10px;
+border:none;
+border-radius:10px;
+margin-top:10px;
+width:100%;
+}
+
+.add{background:green;color:white;}
+.delete{background:red;color:white;}
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000000aa;
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.box{
+background:white;
+padding:15px;
+border-radius:12px;
+width:90%;
 }
 
 input{
 width:100%;
-padding:12px;
-margin:10px 0;
+padding:10px;
+margin:5px 0;
 border-radius:8px;
 border:1px solid #ccc;
 }
-
-button{
-width:100%;
-padding:15px;
-border:none;
-border-radius:10px;
-margin-top:10px;
-font-size:16px;
-}
-
-.save{background:green;color:white;}
-.close{background:red;color:white;}
 
 </style>
 </head>
 
 <body>
 
+<header>Admin Panel 🔐</header>
+
 <div class="container">
 
-<h2>إضافة منتج</h2>
+<button class="btn add" onclick="openModal()">➕ إضافة منتج</button>
+
+<div id="list"></div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+<div class="box">
 
 <input id="name" placeholder="اسم المنتج">
-<input id="price" placeholder="الثمن">
-<input id="box" placeholder="عدد القطع في العلبة">
-<input id="image" type="file">
 
-<button class="save" onclick="saveProduct()">حفظ</button>
-<button class="close" onclick="back()">رجوع</button>
+<input id="boxCount" type="number" placeholder="عدد القطع في العلبة">
 
+<input type="file" id="images" multiple>
+
+<button class="btn add" onclick="save()">حفظ</button>
+<button class="btn delete" onclick="closeModal()">إغلاق</button>
+
+</div>
 </div>
 
 <script>
 
-function back(){
-window.location="index.html";
+// 🔐 حماية Admin
+let pass = prompt("دخل الكود");
+
+if(pass !== "1234"){
+alert("خطأ ❌");
+document.body.innerHTML="";
 }
 
-function saveProduct(){
+// 📦 المنتجات
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+// عرض المنتجات
+function show(){
+
+products.sort((a,b)=>a.name.localeCompare(b.name));
+
+let html="";
+
+products.forEach(p=>{
+html+=`
+<div class="card">
+<div>
+<img src="${p.images[0]}">
+<h4>${p.name}</h4>
+</div>
+
+<button class="delete" onclick="del(${p.id})">❌</button>
+</div>
+`;
+});
+
+document.getElementById("list").innerHTML = html;
+}
+
+show();
+
+// فتح modal
+function openModal(){
+document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+
+// حفظ المنتج
+function save(){
 
 let name = document.getElementById("name").value;
-let price = document.getElementById("price").value;
-let box = document.getElementById("box").value;
-let file = document.getElementById("image").files[0];
+let box = document.getElementById("boxCount").value;
+let files = document.getElementById("images").files;
 
-if(!name || !file){
-alert("دخل الاسم والصورة");
+if(!name || files.length == 0){
+alert("دخل الاسم والصور");
 return;
 }
 
-// تحويل الصورة
+// تحويل الصور
+let images = [];
+let loaded = 0;
+
+for(let i=0;i<files.length && i<5;i++){
+
 let reader = new FileReader();
 
 reader.onload = function(e){
 
-let imgBase64 = e.target.result;
+images.push(e.target.result);
+loaded++;
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
+if(loaded === Math.min(files.length,5)){
 
 products.push({
 id: Date.now(),
 name: name,
-price: price,
-box: box,
-img: imgBase64
+box: parseInt(box) || 1,
+images: images
 });
 
 localStorage.setItem("products", JSON.stringify(products));
 
-alert("تم الحفظ ✅");
-window.location="index.html";
+closeModal();
+show();
 
+}
 };
 
-reader.readAsDataURL(file);
+reader.readAsDataURL(files[i]);
+}
 
+}
+
+// حذف
+function del(id){
+
+products = products.filter(p=>p.id != id);
+
+localStorage.setItem("products", JSON.stringify(products));
+
+show();
 }
 
 </script>
