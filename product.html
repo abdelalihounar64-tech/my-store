@@ -23,7 +23,6 @@ header{background:#000;color:#fff;padding:15px;text-align:center;}
 }
 
 .container{padding:15px;}
-
 .price{font-size:22px;font-weight:bold;}
 
 .buttons{display:flex;gap:10px;margin-top:10px;}
@@ -36,13 +35,12 @@ header{background:#000;color:#fff;padding:15px;text-align:center;}
   border-radius:10px;
 }
 
-.qty{text-align:center;margin-top:20px;font-size:28px;}
+.qty{text-align:center;font-size:30px;margin-top:20px;}
 
 .minus{
   display:block;
   margin:10px auto;
   padding:10px;
-  font-size:20px;
 }
 
 .addCart{
@@ -77,7 +75,10 @@ header{background:#000;color:#fff;padding:15px;text-align:center;}
 
 <h2 id="name"></h2>
 <p id="desc"></p>
-<div class="price" id="price"></div>
+
+<input id="customPrice" placeholder="دخل الثمن" oninput="update()">
+
+<div class="price" id="price">DH 0</div>
 
 <div class="buttons">
 <button onclick="addBox()">علبة</button>
@@ -104,27 +105,38 @@ let quantity = 0;
 document.getElementById("name").innerText = p.name;
 document.getElementById("desc").innerText = p.description;
 
+// الصور
 let slider = document.getElementById("slider");
+slider.innerHTML = "";
+
 p.images.forEach(img=>{
   slider.innerHTML += `<img src="${img}" onclick="zoom('${img}')">`;
 });
 
+// تحديث الثمن
 function update(){
-  let total = quantity * p.price;
+  let custom = parseFloat(document.getElementById("customPrice").value);
+  let unit = isNaN(custom) ? 0 : custom;
+
+  let total = unit * quantity;
+
   document.getElementById("price").innerText = "DH " + total;
   document.getElementById("qty").innerText = quantity;
 }
 
+// قطعة
 function addPiece(){
   quantity += 1;
   update();
 }
 
+// علبة (حسب العدد)
 function addBox(){
   quantity += p.pieces;
   update();
 }
 
+// ناقص
 function minus(){
   if(quantity>0){
     quantity--;
@@ -132,18 +144,23 @@ function minus(){
   }
 }
 
+// سلة
 function addToCart(){
-  if(quantity==0){
+
+  if(quantity === 0){
     alert("اختار الكمية");
     return;
   }
+
+  let custom = parseFloat(document.getElementById("customPrice").value);
+  let unit = isNaN(custom) ? 0 : custom;
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   cart.push({
     name:p.name,
     quantity:quantity,
-    price:p.price * quantity
+    price: unit * quantity
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -151,10 +168,12 @@ function addToCart(){
   alert("تمت الإضافة للسلة");
 }
 
+// الذهاب للسلة
 function goCart(){
   window.location.href="cart.html";
 }
 
+// تكبير الصورة
 function zoom(src){
   let win = window.open("");
   win.document.write("<img src='"+src+"' style='width:100%'>");
