@@ -6,26 +6,49 @@
 <title>Product</title>
 
 <style>
-body{margin:0;font-family:Arial;}
-header{background:#000;color:#fff;padding:15px;text-align:center;}
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f5f5f5;
+}
 
+header{
+  background:#000;
+  color:#fff;
+  padding:15px;
+  text-align:center;
+}
+
+/* SLIDER */
 .slider{
   display:flex;
   overflow-x:auto;
   scroll-snap-type:x mandatory;
 }
+
 .slider img{
   width:100%;
   height:250px;
   object-fit:cover;
+  flex-shrink:0;
   scroll-snap-align:start;
-  cursor:pointer;
 }
 
-.container{padding:15px;}
-.price{font-size:22px;font-weight:bold;}
+.container{
+  padding:15px;
+}
 
-.buttons{display:flex;gap:10px;margin-top:10px;}
+.price{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
 .buttons button{
   flex:1;
   padding:10px;
@@ -35,32 +58,58 @@ header{background:#000;color:#fff;padding:15px;text-align:center;}
   border-radius:10px;
 }
 
-.qty{text-align:center;font-size:30px;margin-top:20px;}
-
-.minus{
-  display:block;
-  margin:10px auto;
-  padding:10px;
+.qty{
+  text-align:center;
+  margin-top:15px;
 }
 
-.addCart{
+.qty span{
+  font-size:30px;
+  display:block;
+}
+
+.qty button{
+  padding:10px 20px;
+  font-size:20px;
+}
+
+.order{
   width:100%;
+  margin-top:15px;
   padding:15px;
   background:orange;
   color:#fff;
   border:none;
   border-radius:10px;
-  margin-top:10px;
 }
 
 .goCart{
   width:100%;
+  margin-top:10px;
   padding:15px;
   background:green;
   color:#fff;
   border:none;
   border-radius:10px;
-  margin-top:10px;
+}
+
+/* ZOOM */
+#zoomBox{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+#zoomBox img{
+  width:90%;
+  border-radius:10px;
 }
 </style>
 </head>
@@ -69,6 +118,7 @@ header{background:#000;color:#fff;padding:15px;text-align:center;}
 
 <header>تفاصيل المنتج</header>
 
+<!-- SLIDER -->
 <div class="slider" id="slider"></div>
 
 <div class="container">
@@ -76,75 +126,87 @@ header{background:#000;color:#fff;padding:15px;text-align:center;}
 <h2 id="name"></h2>
 <p id="desc"></p>
 
-<input id="customPrice" placeholder="دخل الثمن" oninput="update()">
+<input type="number" id="priceInput" placeholder="دخل الثمن" oninput="updatePrice()">
 
 <div class="price" id="price">DH 0</div>
 
 <div class="buttons">
-<button onclick="addBox()">علبة</button>
-<button onclick="addPiece()">قطعة</button>
+  <button onclick="setType('piece')">قطعة</button>
+  <button onclick="setType('box')">علبة</button>
 </div>
 
-<div class="qty" id="qty">0</div>
+<div class="qty">
+  <span id="qty">0</span>
+  <button onclick="minus()">➖</button>
+</div>
 
-<button class="minus" onclick="minus()">➖</button>
-
-<button class="addCart" onclick="addToCart()">أضف للسلة</button>
+<button class="order" onclick="addToCart()">أضف للسلة</button>
 <button class="goCart" onclick="goCart()">اذهب للسلة</button>
 
 </div>
 
+<!-- ZOOM -->
+<div id="zoomBox" onclick="closeZoom()">
+  <img id="zoomImg">
+</div>
+
 <script>
 
-let products = JSON.parse(localStorage.getItem("products"));
-let i = localStorage.getItem("selectedProduct");
-let p = products[i];
+// ================== DATA ==================
+let product = JSON.parse(localStorage.getItem("selectedProduct"));
 
 let quantity = 0;
+let type = "piece";
+let piecesInBox = product?.pieces || 1;
 
-document.getElementById("name").innerText = p.name;
-document.getElementById("desc").innerText = p.description;
+// ================== LOAD ==================
+document.getElementById("name").innerText = product?.name || "";
+document.getElementById("desc").innerText = product?.desc || "";
 
-// الصور
+// ================== IMAGES ==================
 let slider = document.getElementById("slider");
-slider.innerHTML = "";
 
-p.images.forEach(img=>{
-  slider.innerHTML += `<img src="${img}" onclick="zoom('${img}')">`;
+(product.images || []).forEach(img=>{
+  slider.innerHTML += `
+    <img src="${img}" onclick="zoom(this.src)">
+  `;
 });
 
-// تحديث الثمن
-function update(){
-  let custom = parseFloat(document.getElementById("customPrice").value);
-  let unit = isNaN(custom) ? 0 : custom;
-
-  let total = unit * quantity;
-
-  document.getElementById("price").innerText = "DH " + total;
-  document.getElementById("qty").innerText = quantity;
+// ================== PRICE ==================
+function updatePrice(){
+  let price = parseFloat(document.getElementById("priceInput").value) || 0;
+  document.getElementById("price").innerText = "DH " + (price * quantity);
 }
 
-// قطعة
-function addPiece(){
-  quantity += 1;
-  update();
-}
+// ================== TYPE ==================
+function setType(t){
+  type = t;
 
-// علبة (حسب العدد)
-function addBox(){
-  quantity += p.pieces;
-  update();
-}
-
-// ناقص
-function minus(){
-  if(quantity>0){
-    quantity--;
-    update();
+  if(t === "box"){
+    quantity += piecesInBox;
+  }else{
+    quantity += 1;
   }
+
+  document.getElementById("qty").innerText = quantity;
+  updatePrice();
 }
 
-// سلة
+// ================== MINUS ==================
+function minus(){
+  if(quantity > 1){
+    quantity--;
+  }else{
+    if(confirm("حذف المنتج؟")){
+      quantity = 0;
+    }
+  }
+
+  document.getElementById("qty").innerText = quantity;
+  updatePrice();
+}
+
+// ================== CART ==================
 function addToCart(){
 
   if(quantity === 0){
@@ -152,34 +214,36 @@ function addToCart(){
     return;
   }
 
-  let custom = parseFloat(document.getElementById("customPrice").value);
-  let unit = isNaN(custom) ? 0 : custom;
+  let price = parseFloat(document.getElementById("priceInput").value) || 0;
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   cart.push({
-    name:p.name,
-    quantity:quantity,
-    price: unit * quantity
+    name: product.name,
+    qty: quantity,
+    price: price * quantity,
+    image: product.images[0]
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
 
-  alert("تمت الإضافة للسلة");
+  alert("تزاد للسلة");
 }
 
-// الذهاب للسلة
+// ================== GO CART ==================
 function goCart(){
-  window.location.href="cart.html";
+  window.location.href = "cart.html";
 }
 
-// تكبير الصورة
+// ================== ZOOM ==================
 function zoom(src){
-  let win = window.open("");
-  win.document.write("<img src='"+src+"' style='width:100%'>");
+  document.getElementById("zoomBox").style.display = "flex";
+  document.getElementById("zoomImg").src = src;
 }
 
-update();
+function closeZoom(){
+  document.getElementById("zoomBox").style.display = "none";
+}
 
 </script>
 
