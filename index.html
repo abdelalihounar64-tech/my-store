@@ -17,12 +17,13 @@ header{
   color:#fff;
   padding:15px;
   text-align:center;
+  position:relative;
 }
 
 .admin-btn{
-  position:fixed;
-  top:10px;
+  position:absolute;
   left:10px;
+  top:10px;
   background:red;
   color:#fff;
   border:none;
@@ -42,10 +43,13 @@ header{
   border-radius:15px;
   padding:10px;
   text-align:center;
+  cursor:pointer;
 }
 
 .product img{
   width:100%;
+  height:150px;
+  object-fit:cover;
   border-radius:10px;
 }
 
@@ -63,35 +67,44 @@ header{
 
 <body>
 
-<header>🛒 My Store</header>
-
+<header>
+🛒 My Store
 <button class="admin-btn" onclick="loginAdmin()">Admin</button>
+</header>
 
 <div class="products" id="products"></div>
 
 <script>
 
-// ================== تحميل المنتجات ==================
+// ================== منتجات ==================
 let products = JSON.parse(localStorage.getItem("products")) || [
   {
     name:"balai IP harcha",
     price:10.25,
-    img:"https://i.ibb.co/VWG6NSVD/1777726032086.png"
+    images:[
+      "https://i.ibb.co/VWG6NSVD/1777726032086.png"
+    ],
+    desc:"منتج تنظيف قوي",
+    pieces:16
   },
   {
     name:"Nova kh",
     price:36.5,
-    img:"https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png"
+    images:[
+      "https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png"
+    ],
+    desc:"حفاضات",
+    pieces:4
   }
 ];
 
-// ================== ترتيب A-Z ==================
+// ترتيب A-Z
 products.sort((a,b)=>a.name.localeCompare(b.name));
 
-// ================== عرض المنتجات ==================
 let container = document.getElementById("products");
 let isAdmin = localStorage.getItem("admin") === "true";
 
+// ================== عرض ==================
 function display(){
   container.innerHTML = "";
 
@@ -101,16 +114,16 @@ function display(){
 
     if(isAdmin){
       adminBtns = `
-        <button class="edit" onclick="editProduct(${i})">✏️</button>
-        <button class="delete" onclick="deleteProduct(${i})">❌</button>
+        <button class="edit" onclick="event.stopPropagation(); editProduct(${i})">✏️</button>
+        <button class="delete" onclick="event.stopPropagation(); deleteProduct(${i})">❌</button>
       `;
     }
 
     container.innerHTML += `
-      <div class="product">
-        <img src="${p.img}">
+      <div class="product" onclick="openProduct(${i})">
+        <img src="${p.images[0] || ''}">
         <h3>${p.name}</h3>
-        <p>${p.price} DH</p>
+        <p>${p.price || 0} DH</p>
         ${adminBtns}
       </div>
     `;
@@ -119,13 +132,18 @@ function display(){
 
 display();
 
-// ================== ADMIN LOGIN ==================
+// ================== فتح المنتج ==================
+function openProduct(i){
+  localStorage.setItem("selectedProduct", JSON.stringify(products[i]));
+  window.location.href = "product.html";
+}
+
+// ================== ADMIN ==================
 function loginAdmin(){
-  let pass = prompt("دخل الباسورد");
+  let pass = prompt("الباسورد");
 
   if(pass === "123@123"){
     localStorage.setItem("admin","true");
-    alert("مرحبا Admin");
     location.reload();
   }else{
     alert("خطأ");
@@ -134,7 +152,7 @@ function loginAdmin(){
 
 // ================== حذف ==================
 function deleteProduct(i){
-  if(confirm("حذف المنتج؟")){
+  if(confirm("حذف؟")){
     products.splice(i,1);
     save();
   }
@@ -142,12 +160,14 @@ function deleteProduct(i){
 
 // ================== تعديل ==================
 function editProduct(i){
-  let name = prompt("اسم جديد", products[i].name);
-  let price = prompt("ثمن جديد", products[i].price);
+  let name = prompt("اسم", products[i].name);
+  let price = prompt("ثمن", products[i].price);
+  let img = prompt("رابط الصورة", products[i].images[0]);
 
   if(name){
     products[i].name = name;
-    products[i].price = price;
+    products[i].price = parseFloat(price) || 0;
+    products[i].images = [img];
   }
 
   save();
