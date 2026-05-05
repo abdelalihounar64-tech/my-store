@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>My Store</title>
+
+<style>
+body{margin:0;font-family:sans-serif;background:#f2f2f2;}
+
+header{
+background:#000;
+color:#fff;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+padding:15px;
+}
+
+.card{
+background:#fff;
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card img{
+width:100%;
+height:150px;
+object-fit:cover;
+}
+
+.card h3{text-align:center;}
+.card p{text-align:center;color:green;}
+
+.card button{
+width:100%;
+padding:10px;
+border:none;
+background:#28a745;
+color:#fff;
+font-size:16px;
+}
+
+.cart{
+position:fixed;
+bottom:20px;
+right:20px;
+background:orange;
+width:60px;
+height:60px;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:25px;
+color:#fff;
+}
+
+#adminPanel{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000000aa;
+justify-content:center;
+align-items:center;
+}
+
+#adminBox{
+background:#fff;
+padding:20px;
+border-radius:10px;
+width:90%;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:5px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>My Store 🛒</h2>
+<button onclick="openAdmin()">Admin</button>
+</header>
+
+<div class="grid" id="products"></div>
+
+<div class="cart" onclick="goCart()">🛒</div>
+
+<div id="adminPanel">
+<div id="adminBox">
+
+<h3>Admin</h3>
+
+<input id="name" placeholder="اسم المنتج">
+<input id="price" placeholder="الثمن">
+<input id="count" placeholder="عدد القطع">
+
+<input type="file" id="images" multiple>
+
+<button onclick="addProduct()">➕ إضافة</button>
+<button onclick="deleteProduct()">❌ حذف آخر منتج</button>
+<button onclick="closeAdmin()">إغلاق</button>
+
+</div>
+</div>
+
+<script>
+
+function showProducts(){
+let container=document.getElementById("products");
+container.innerHTML="";
+
+let products=JSON.parse(localStorage.getItem("products"))||[];
+
+products.forEach((p,i)=>{
+let div=document.createElement("div");
+div.className="card";
+
+div.innerHTML=`
+<img src="${p.images[0]}">
+<h3>${p.name}</h3>
+<p>${p.price} DH</p>
+<button onclick="addToCart(${i})">أضف للسلة</button>
+`;
+
+container.appendChild(div);
+});
+}
+
+function addToCart(i){
+let products=JSON.parse(localStorage.getItem("products"))||[];
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+
+cart.push(products[i]);
+localStorage.setItem("cart",JSON.stringify(cart));
+
+alert("تمت الإضافة");
+}
+
+function goCart(){
+window.location.href="cart.html";
+}
+
+function openAdmin(){
+let pass=prompt("دخل الكود");
+if(pass==="1234"){
+document.getElementById("adminPanel").style.display="flex";
+}else{
+alert("كود خاطئ");
+}
+}
+
+function closeAdmin(){
+document.getElementById("adminPanel").style.display="none";
+}
+
+function addProduct(){
+let name=document.getElementById("name").value;
+let price=document.getElementById("price").value;
+let count=document.getElementById("count").value;
+let files=document.getElementById("images").files;
+
+if(!name||files.length==0){
+alert("دخل المعلومات");
+return;
+}
+
+let images=[];
+
+for(let i=0;i<files.length;i++){
+let reader=new FileReader();
+
+reader.onload=function(e){
+images.push(e.target.result);
+
+if(images.length===files.length){
+saveProduct(images);
+}
+}
+
+reader.readAsDataURL(files[i]);
+}
+
+function saveProduct(images){
+let products=JSON.parse(localStorage.getItem("products"))||[];
+
+products.push({name,price,count,images});
+
+products.sort((a,b)=>a.name.localeCompare(b.name));
+
+localStorage.setItem("products",JSON.stringify(products));
+
+alert("تزاد المنتج");
+location.reload();
+}
+}
+
+function deleteProduct(){
+let products=JSON.parse(localStorage.getItem("products"))||[];
+
+products.pop();
+
+localStorage.setItem("products",JSON.stringify(products));
+
+alert("تحيد");
+location.reload();
+}
+
+showProducts();
+
+</script>
+
+</body>
+</html>
