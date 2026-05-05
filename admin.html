@@ -5,20 +5,20 @@
 <title>Admin</title>
 <style>
 body{font-family:Arial; padding:20px; background:#f2f2f2;}
-input{display:block; margin:10px 0; padding:10px; width:100%;}
-button{padding:10px; margin:5px;}
-.card{background:white; padding:10px; margin:10px 0;}
-img{width:100px;}
+input{width:100%; padding:10px; margin:5px 0;}
+button{padding:10px; margin-top:10px;}
+.card{background:white; padding:10px; margin:10px 0; border-radius:10px;}
+img{width:80px;}
 </style>
 </head>
 
 <body>
 
-<h2>Admin Panel 🔧</h2>
+<h2>لوحة التحكم 🔧</h2>
 
 <input id="name" placeholder="اسم المنتج">
 <input id="price" placeholder="الثمن">
-<input id="box" placeholder="عدد القطع فالعلبة (مثلا 16)">
+<input id="box" placeholder="عدد القطع في العلبة (مثلا 16)">
 <input id="img" placeholder="رابط الصورة">
 
 <button onclick="add()">➕ إضافة</button>
@@ -28,7 +28,6 @@ img{width:100px;}
 <div id="list"></div>
 
 <script>
-
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
 function show(){
@@ -36,22 +35,19 @@ function show(){
   products.forEach(p=>{
     html+=`
     <div class="card">
-      <img src="${p.img}">
+      <img src="${p.img}" onerror="this.src='https://via.placeholder.com/100'">
       <h3>${p.name}</h3>
       <button onclick="del(${p.id})">❌ حذف</button>
-    </div>
-    `;
+    </div>`;
   });
   document.getElementById("list").innerHTML=html;
 }
 
-show();
-
 function add(){
-  let name=nameInput.value;
-  let price=priceInput.value;
-  let img=imgInput.value;
-  let box=boxInput.value;
+  let name=document.getElementById("name").value.trim();
+  let price=document.getElementById("price").value.trim();
+  let img=document.getElementById("img").value.trim();
+  let box=document.getElementById("box").value.trim();
 
   if(!name || !img){
     alert("دخل الاسم والصورة");
@@ -76,6 +72,7 @@ function del(id){
   show();
 }
 
+show();
 </script>
 
 </body>
