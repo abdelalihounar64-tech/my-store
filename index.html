@@ -2,380 +2,69 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Store</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#f2f2f2;
-}
-
-header{
-  background:black;
-  color:white;
-  padding:15px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.admin-btn{
-  background:red;
-  color:white;
-  border:none;
-  padding:10px 15px;
-  border-radius:10px;
-}
-
+body{font-family:Arial; background:#f2f2f2;}
 .grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
-  padding:15px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding:10px;
 }
 
 .card{
-  background:white;
-  border-radius:15px;
-  padding:10px;
-  text-align:center;
+background:white;
+border-radius:10px;
+padding:10px;
+text-align:center;
 }
 
 .card img{
-  width:100%;
-  height:140px;
-  object-fit:cover;
-  border-radius:10px;
-}
-
-.card h3{
-  margin:10px 0;
-}
-
-.btns{
-  display:flex;
-  justify-content:center;
-  gap:10px;
+width:100%;
+height:150px;
+object-fit:cover;
+border-radius:10px;
 }
 
 .btn{
-  padding:8px 12px;
-  border:none;
-  border-radius:10px;
-  color:white;
-}
-
-.delete{background:red;}
-.edit{background:orange;}
-
-.add-btn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:orange;
-  color:white;
-  font-size:25px;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  border:none;
-}
-
-.modal{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#000000aa;
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-
-.modal-content{
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  width:90%;
-}
-
-input{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-}
-
-.save{
-  background:green;
-  color:white;
-  padding:10px;
-  border:none;
-}
-
-.zoom{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:black;
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-
-.zoom img{
-  width:90%;
-}
-
-.detail{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  background:white;
-  border-radius:20px 20px 0 0;
-  padding:15px;
-  display:none;
-}
-
-.type-btn{
-  width:48%;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-}
-
-.active{
-  background:orange;
-  color:white;
-}
-
-.qty{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin:10px;
-}
-
-.qty button{
-  padding:10px;
-}
-
-.cart-btn{
-  background:orange;
-  color:white;
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:10px;
-}
-
-.go{
-  background:green;
-  color:white;
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:10px;
+background:orange;
+color:white;
+padding:10px;
+border:none;
+border-radius:10px;
+width:100%;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<h2>My Store 🛒</h2>
-<button class="admin-btn" onclick="admin()">Admin</button>
-</header>
+<h2 style="text-align:center;">My Store 🛒</h2>
 
 <div class="grid" id="products"></div>
-
-<button class="add-btn" onclick="openModal()">+</button>
-
-<!-- ADD -->
-<div class="modal" id="modal">
-<div class="modal-content">
-<input id="name" placeholder="اسم">
-<input id="price" placeholder="الثمن">
-<input id="box" placeholder="عدد القطع في العلبة (مثال 16)">
-<input id="img" placeholder="رابط الصورة">
-<button class="save" onclick="save()">حفظ</button>
-</div>
-</div>
-
-<!-- ZOOM -->
-<div class="zoom" id="zoom" onclick="this.style.display='none'">
-<img id="zoomImg">
-</div>
-
-<!-- DETAIL -->
-<div class="detail" id="detail">
-<h3 id="dName"></h3>
-
-<div style="display:flex; gap:5px;">
-<button class="type-btn active" id="pieceBtn" onclick="setType('piece')">قطعة</button>
-<button class="type-btn" id="boxBtn" onclick="setType('box')">علبة</button>
-</div>
-
-<div class="qty">
-<button onclick="minus()">-</button>
-<span id="q">1</span>
-<button onclick="plus()">+</button>
-</div>
-
-<button class="cart-btn" onclick="addCart()">أضف للسلة</button>
-<button class="go" onclick="goCart()">اذهب للسلة</button>
-</div>
 
 <script>
 
 let products = JSON.parse(localStorage.getItem("products")) || [];
-let cart = [];
-let current = null;
-let type = "piece";
-let qty = 1;
 
-function load(){
-  let html="";
-  products.sort((a,b)=>a.name.localeCompare(b.name));
+let html="";
 
-  products.forEach(p=>{
-    html+=`
-    <div class="card" onclick="openDetail(${p.id})">
-      <img src="${p.img}" 
-           onerror="this.src='https://via.placeholder.com/300'"
-           onclick="event.stopPropagation(); zoom('${p.img}')">
-      <h3>${p.name}</h3>
+products.forEach(p=>{
+  html+=`
+  <div class="card">
+    <img src="${p.img}">
+    <h3>${p.name}</h3>
+    <button class="btn" onclick="buy('${p.name}')">اطلب</button>
+  </div>
+  `;
+});
 
-      <div class="btns">
-        <button class="btn delete" onclick="event.stopPropagation(); del(${p.id})">X</button>
-        <button class="btn edit" onclick="event.stopPropagation(); edit(${p.id})">✏️</button>
-      </div>
-    </div>
-    `;
-  });
+document.getElementById("products").innerHTML=html;
 
-  document.getElementById("products").innerHTML=html;
-}
-
-load();
-
-function openModal(){
-  document.getElementById("modal").style.display="flex";
-}
-
-function save(){
-  let name=document.getElementById("name").value;
-  let price=document.getElementById("price").value;
-  let img=document.getElementById("img").value;
-  let box=document.getElementById("box").value;
-
-  if(!name || !img){
-    alert("دخل الاسم والصورة");
-    return;
-  }
-
-  products.push({
-    id:Date.now(),
-    name,
-    price:price||0,
-    img,
-    box:parseInt(box)||1
-  });
-
-  localStorage.setItem("products",JSON.stringify(products));
-  document.getElementById("modal").style.display="none";
-  load();
-}
-
-function del(id){
-  products = products.filter(p=>p.id!=id);
-  localStorage.setItem("products",JSON.stringify(products));
-  load();
-}
-
-function edit(id){
-  let p = products.find(x=>x.id==id);
-  document.getElementById("name").value=p.name;
-  document.getElementById("price").value=p.price;
-  document.getElementById("img").value=p.img;
-  document.getElementById("box").value=p.box;
-
-  del(id);
-  openModal();
-}
-
-function zoom(src){
-  document.getElementById("zoomImg").src=src;
-  document.getElementById("zoom").style.display="flex";
-}
-
-function openDetail(id){
-  current = products.find(p=>p.id==id);
-  document.getElementById("dName").innerText=current.name;
-  document.getElementById("detail").style.display="block";
-  qty=1;
-  document.getElementById("q").innerText=qty;
-}
-
-function setType(t){
-  type=t;
-  document.getElementById("pieceBtn").classList.remove("active");
-  document.getElementById("boxBtn").classList.remove("active");
-
-  if(t=="piece") document.getElementById("pieceBtn").classList.add("active");
-  else document.getElementById("boxBtn").classList.add("active");
-
-  qty=1;
-  updateQty();
-}
-
-function plus(){
-  if(type=="box"){
-    qty+=current.box;
-  }else{
-    qty++;
-  }
-  updateQty();
-}
-
-function minus(){
-  if(type=="box"){
-    qty=Math.max(current.box, qty-current.box);
-  }else{
-    qty=Math.max(1, qty-1);
-  }
-  updateQty();
-}
-
-function updateQty(){
-  document.getElementById("q").innerText=qty;
-}
-
-function addCart(){
-  cart.push({name:current.name, qty});
-  alert("تمت الإضافة");
-}
-
-function goCart(){
-  let msg="طلب:\n";
-  cart.forEach(i=>{
-    msg+=i.name+" x "+i.qty+"\n";
-  });
-
-  window.open("https://wa.me/212613675970?text="+encodeURIComponent(msg));
-}
-
-function admin(){
-  let pass = prompt("Password");
-  if(pass!="1234"){
-    alert("خطأ");
-  }else{
-    alert("Admin Mode");
-  }
+function buy(name){
+  let msg="بغيت نشري: "+name;
+  window.open("https://wa.me/212XXXXXXXXX?text="+msg);
 }
 
 </script>
