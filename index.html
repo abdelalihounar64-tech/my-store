@@ -3,258 +3,344 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Store</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#f5f5f5;
-}
+body{margin:0;font-family:sans-serif;background:#f3f3f3}
 
-/* header */
-.header{
-  background:#000;
-  color:#fff;
-  padding:15px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+/* HEADER */
+header{
+background:#000;
+color:#fff;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
-
 .admin{
-  background:red;
-  padding:8px 12px;
-  border-radius:10px;
-  border:none;
-  color:#fff;
+background:red;
+color:#fff;
+padding:8px 15px;
+border-radius:20px;
+border:none;
 }
 
-/* grid */
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  padding:10px;
+/* PRODUCTS */
+.products{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+padding:15px;
 }
-
 .card{
-  background:#fff;
-  border-radius:15px;
-  padding:10px;
-  text-align:center;
-  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+background:#fff;
+border-radius:15px;
+padding:10px;
+text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
-
 .card img{
-  width:100%;
-  height:120px;
-  object-fit:cover;
-  border-radius:10px;
+width:100%;
+height:150px;
+object-fit:cover;
+border-radius:10px;
 }
 
-/* buttons */
-.actions{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-top:10px;
+/* BUTTONS */
+.btn{
+padding:10px;
+border:none;
+border-radius:10px;
+margin:5px;
+}
+.add{background:orange;color:#fff;width:100%}
+.go{background:green;color:#fff;width:100%}
+
+/* FLOAT + */
+.fab{
+position:fixed;
+bottom:20px;
+right:20px;
+width:60px;
+height:60px;
+background:orange;
+color:#fff;
+font-size:30px;
+border-radius:50%;
+border:none;
 }
 
-.delete{
-  background:red;
-  color:#fff;
-  border:none;
-  padding:8px;
-  border-radius:10px;
-}
-
-.edit{
-  background:orange;
-  border:none;
-  padding:8px;
-  border-radius:10px;
-}
-
-/* add button */
-.addBtn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  border:none;
-  background:orange;
-  color:#fff;
-  font-size:30px;
-}
-
-/* modal */
+/* MODAL */
 .modal{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.5);
-  display:none;
-  justify-content:center;
-  align-items:center;
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,0.5);
+display:none;
+justify-content:center;
+align-items:center;
 }
-
 .box{
-  background:#fff;
-  padding:15px;
-  border-radius:15px;
-  width:90%;
+background:#fff;
+padding:20px;
+border-radius:15px;
+width:90%;
 }
 
-input{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
+/* PRODUCT PAGE */
+.viewer{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:#fff;
+display:none;
+overflow:auto;
+}
+.big{
+width:100%;
+height:250px;
+object-fit:cover;
+}
+.thumbs img{
+width:60px;height:60px;margin:5px;border-radius:10px;
+}
+
+/* CART */
+.cart{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:#fff;
+display:none;
+padding:15px;
+}
+.item{
+background:#eee;
+padding:10px;
+margin:10px 0;
+border-radius:10px;
+display:flex;
+justify-content:space-between;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <button class="admin" onclick="adminLogin()">Admin</button>
-  <h2>🛒 My Store</h2>
+<header>
+<h2>My Store 🛒</h2>
+<button class="admin" onclick="admin()">Admin</button>
+</header>
+
+<div class="products" id="products"></div>
+
+<button class="fab" onclick="openAdd()">+</button>
+
+<!-- ADD -->
+<div class="modal" id="addBox">
+<div class="box">
+<input id="name" placeholder="اسم"><br>
+<input id="boxCount" placeholder="عدد القطع في العلبة"><br>
+<input id="img1" placeholder="صورة 1"><br>
+<input id="img2" placeholder="صورة 2"><br>
+<input id="img3" placeholder="صورة 3"><br>
+<input id="img4" placeholder="صورة 4"><br>
+<button onclick="save()">حفظ</button>
+<button onclick="closeAdd()">إغلاق</button>
+</div>
 </div>
 
-<div class="grid" id="grid"></div>
+<!-- PRODUCT -->
+<div class="viewer" id="viewer">
+<img id="big" class="big">
+<div class="thumbs" id="thumbs"></div>
 
-<button class="addBtn" onclick="openModal()">+</button>
+<br>
 
-<!-- modal -->
-<div class="modal" id="modal">
-  <div class="box">
-    <h3>إضافة منتج</h3>
+<button onclick="setType('piece')">قطعة</button>
+<button onclick="setType('box')">علبة</button>
 
-    <input id="name" placeholder="اسم">
-    <input id="boxCount" placeholder="عدد القطع في العلبة (مثلا 16)">
-    <input id="img1" placeholder="رابط صورة 1">
-    <input id="img2" placeholder="رابط صورة 2">
-    <input id="img3" placeholder="رابط صورة 3">
-    <input id="img4" placeholder="رابط صورة 4">
+<h2 id="qty">1</h2>
 
-    <button onclick="save()">حفظ</button>
-    <button onclick="closeModal()">إغلاق</button>
-  </div>
+<button onclick="plus()">+</button>
+<button onclick="minus()">-</button>
+
+<button class="btn add" onclick="addCart()">أضف للسلة</button>
+<button class="btn go" onclick="openCart()">اذهب للسلة</button>
+
+<button onclick="closeViewer()">رجوع</button>
 </div>
+
+<!-- CART -->
+<div class="cart" id="cart"></div>
 
 <script>
-
-// ===== admin login =====
-function adminLogin(){
-  let pass = prompt("دخل كلمة السر");
-
-  if(pass === "123@123"){
-    localStorage.setItem("admin","true");
-    alert("مرحبا Admin");
-    location.reload();
-  }else{
-    alert("كلمة السر خاطئة");
-  }
-}
-
-// ===== data =====
 let products = JSON.parse(localStorage.getItem("products")) || [];
+let cart = [];
 
+function render(){
+let box="";
+products.forEach((p,i)=>{
+box+=`
+<div class="card">
+<img src="${p.images[0]}" onclick="openProduct(${i})">
+<h3>${p.name}</h3>
+<button onclick="del(${i})">❌</button>
+</div>
+`;
+});
+document.getElementById("products").innerHTML=box;
+}
 render();
 
-// ===== render =====
-function render(){
+/* ADD */
+function openAdd(){addBox.style.display="flex";}
+function closeAdd(){addBox.style.display="none";}
 
-  // ترتيب A-Z
-  products.sort((a,b)=>a.name.localeCompare(b.name));
-
-  let html="";
-
-  products.forEach((p,i)=>{
-    html+=`
-    <div class="card" onclick="openProduct(${i})">
-      <img src="${p.images[0]}">
-      <h3>${p.name}</h3>
-
-      <div class="actions">
-        <button class="delete" onclick="del(event,${i})">❌</button>
-        <button class="edit" onclick="edit(event,${i})">✏️</button>
-      </div>
-    </div>
-    `;
-  });
-
-  grid.innerHTML=html;
-}
-
-// ===== open product =====
-function openProduct(i){
-  localStorage.setItem("current",i);
-  window.location="product.html";
-}
-
-// ===== delete =====
-function del(e,i){
-  e.stopPropagation();
-  products.splice(i,1);
-  localStorage.setItem("products",JSON.stringify(products));
-  render();
-}
-
-// ===== edit =====
-function edit(e,i){
-  e.stopPropagation();
-
-  let p=products[i];
-
-  document.getElementById("name").value=p.name;
-  document.getElementById("boxCount").value=p.box||"";
-  document.getElementById("img1").value=p.images[0]||"";
-  document.getElementById("img2").value=p.images[1]||"";
-  document.getElementById("img3").value=p.images[2]||"";
-  document.getElementById("img4").value=p.images[3]||"";
-
-  modal.style.display="flex";
-
-  save = function(){
-    products[i]={
-      name:name.value,
-      box:parseInt(boxCount.value)||1,
-      images:[img1.value,img2.value,img3.value,img4.value]
-    };
-
-    localStorage.setItem("products",JSON.stringify(products));
-    closeModal();
-    render();
-  }
-}
-
-// ===== modal =====
-function openModal(){
-  modal.style.display="flex";
-}
-
-function closeModal(){
-  modal.style.display="none";
-}
-
-// ===== save =====
 function save(){
-
-  products.push({
-    name:name.value,
-    box:parseInt(boxCount.value)||1,
-    images:[img1.value,img2.value,img3.value,img4.value]
-  });
-
-  localStorage.setItem("products",JSON.stringify(products));
-  closeModal();
-  render();
+if(!name.value || !img1.value){
+alert("دخل الاسم وصورة");
+return;
 }
 
+let newP={
+name:name.value,
+box:parseInt(boxCount.value)||1,
+images:[img1.value,img2.value,img3.value,img4.value]
+};
+
+products.push(newP);
+localStorage.setItem("products",JSON.stringify(products));
+
+closeAdd();
+render();
+}
+
+/* DELETE */
+function del(i){
+if(confirm("حذف؟")){
+products.splice(i,1);
+localStorage.setItem("products",JSON.stringify(products));
+render();
+}
+}
+
+/* VIEW */
+let current;
+let type="piece";
+let quantity=1;
+
+function openProduct(i){
+current=products[i];
+viewer.style.display="block";
+big.src=current.images[0];
+
+let t="";
+current.images.forEach(img=>{
+if(img){
+t+=`<img src="${img}" onclick="big.src='${img}'">`;
+}
+});
+thumbs.innerHTML=t;
+
+quantity=1;
+update();
+}
+
+function closeViewer(){viewer.style.display="none";}
+
+/* TYPE */
+function setType(t){
+type=t;
+if(type=="box"){
+quantity=current.box;
+}else{
+quantity=1;
+}
+update();
+}
+
+/* PLUS MINUS */
+function plus(){
+if(type=="box"){
+quantity+=current.box;
+}else{
+quantity++;
+}
+update();
+}
+
+function minus(){
+if(type=="box"){
+quantity-=current.box;
+if(quantity<current.box) quantity=current.box;
+}else{
+quantity--;
+if(quantity<1) quantity=1;
+}
+update();
+}
+
+function update(){
+qty.innerText=quantity;
+}
+
+/* CART */
+function addCart(){
+cart.push({
+name:current.name,
+qty:quantity,
+img:current.images[0]
+});
+alert("تمت الإضافة");
+}
+
+function openCart(){
+let c="";
+cart.forEach((i,index)=>{
+c+=`
+<div class="item">
+<img src="${i.img}" width="50">
+<div>${i.name} (${i.qty})</div>
+<button onclick="remove(${index})">❌</button>
+</div>
+`;
+});
+
+c+=`
+<button onclick="whatsapp()">اطلب عبر واتساب</button>
+<button onclick="closeCart()">رجوع</button>
+`;
+
+cart.innerHTML=c;
+cart.style.display="block";
+}
+
+function closeCart(){
+cart.style.display="none";
+}
+
+function remove(i){
+cart.splice(i,1);
+openCart();
+}
+
+/* WHATSAPP */
+function whatsapp(){
+let msg="طلب:\n";
+cart.forEach(i=>{
+msg+=i.name+" x "+i.qty+"\n";
+});
+window.open("https://wa.me/212XXXXXXXXX?text="+encodeURIComponent(msg));
+}
+
+/* ADMIN */
+function admin(){
+let p=prompt("password");
+if(p!="123@123"){
+alert("خطأ");
+}
+}
 </script>
 
 </body>
