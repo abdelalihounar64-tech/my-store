@@ -22,10 +22,7 @@ header{
   box-shadow:0 2px 5px rgba(0,0,0,0.1);
 }
 
-header span{
-  font-size:22px;
-  cursor:pointer;
-}
+header h2{margin:0}
 
 /* MENU */
 .menu{
@@ -37,7 +34,7 @@ header span{
   background:white;
   box-shadow:2px 0 5px rgba(0,0,0,0.2);
   transition:0.3s;
-  z-index:1000;
+  padding-top:60px;
 }
 
 .menu a{
@@ -50,19 +47,20 @@ header span{
 
 /* HERO */
 .hero{
-  height:200px;
+  height:220px;
   background:url("https://images.unsplash.com/photo-1581578731548-c64695cc6952") center/cover;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
 }
 
 .hero button{
-  padding:10px 20px;
-  border-radius:20px;
+  padding:15px 25px;
+  border-radius:30px;
   border:2px solid white;
   background:transparent;
   color:white;
+  font-size:16px;
 }
 
 /* PRODUCTS */
@@ -78,7 +76,7 @@ header span{
 
 .card{
   background:white;
-  border-radius:12px;
+  border-radius:15px;
   padding:10px;
   text-align:center;
 }
@@ -91,8 +89,7 @@ header span{
 }
 
 /* ADMIN */
-#adminPanel{
-  display:none;
+.adminPanel{
   position:fixed;
   top:10%;
   left:5%;
@@ -100,7 +97,7 @@ header span{
   background:white;
   padding:15px;
   border-radius:15px;
-  z-index:2000;
+  display:none;
 }
 
 input{
@@ -108,11 +105,18 @@ input{
   padding:10px;
   margin:5px 0;
 }
+
+button{
+  border:none;
+  padding:10px;
+  border-radius:10px;
+}
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header>
   <span onclick="toggleMenu()">☰</span>
   <h2>My Store</h2>
@@ -121,7 +125,7 @@ input{
 
 <!-- MENU -->
 <div class="menu" id="menu">
-  <a href="index.html">Home</a>
+  <a href="#">Home</a>
   <a href="#">Products</a>
   <a href="#" onclick="openAdmin()">Admin</a>
   <a href="#">Contact</a>
@@ -130,33 +134,29 @@ input{
 
 <!-- HERO -->
 <div class="hero">
-  <button>تصفح المنتجات</button>
+  <button onclick="scrollProducts()">تصفح المنتجات</button>
 </div>
 
 <!-- PRODUCTS -->
-<div class="section">
+<div class="section" id="productsSection">
   <h2>Products</h2>
 
-  <div class="products"></div>
+  <div class="products" id="products"></div>
 </div>
 
 <!-- ADMIN PANEL -->
-<div id="adminPanel">
+<div class="adminPanel" id="adminPanel">
+  <h3>إضافة منتج</h3>
 
-<h3>إضافة منتج</h3>
+  <input id="name" placeholder="اسم المنتج">
+  <input id="price" placeholder="الثمن">
+  <input id="pieces" placeholder="عدد القطع">
 
-<input id="name" placeholder="اسم المنتج">
-<input id="price" placeholder="الثمن">
-<input id="pieces" placeholder="عدد القطع في العلبة">
+  <input type="file" id="images" multiple>
 
-<input type="file" id="images" multiple>
-
-<br>
-
-<button onclick="addProduct()" style="background:green;color:white">إضافة</button>
-<button onclick="deleteProduct()" style="background:red;color:white">حذف آخر منتج</button>
-<button onclick="closeAdmin()">إغلاق</button>
-
+  <button onclick="addProduct()" style="background:green;color:white">إضافة</button>
+  <button onclick="deleteProduct()" style="background:red;color:white">حذف آخر منتج</button>
+  <button onclick="closeAdmin()">إغلاق</button>
 </div>
 
 <script>
@@ -165,18 +165,18 @@ let products = JSON.parse(localStorage.getItem("products")) || [];
 
 /* MENU */
 function toggleMenu(){
-  let menu = document.getElementById("menu");
-  menu.style.left = menu.style.left === "0px" ? "-250px" : "0px";
+  let m = document.getElementById("menu");
+  m.style.left = (m.style.left === "0px") ? "-250px" : "0px";
 }
 
 /* ADMIN */
 function openAdmin(){
   let code = prompt("دخل الكود");
 
-  if(code === "36427239"){
+  if(code == "1234"){
     document.getElementById("adminPanel").style.display = "block";
   }else{
-    alert("كود خاطئ ❌");
+    alert("كود خاطئ");
   }
 }
 
@@ -184,63 +184,49 @@ function closeAdmin(){
   document.getElementById("adminPanel").style.display = "none";
 }
 
-/* STORAGE */
+/* SAVE */
 function saveProducts(){
   localStorage.setItem("products", JSON.stringify(products));
 }
 
 /* RENDER */
 function render(){
-  let container = document.querySelector(".products");
+  let container = document.getElementById("products");
   container.innerHTML = "";
 
   products.forEach((p,i)=>{
-    let div = document.createElement("div");
-    div.className = "card";
-
-    div.innerHTML = `
-      <img src="${p.images[0]}">
-      <h3>${p.name}</h3>
-      <p>${p.price} dh</p>
-      <small>العلبة: ${p.pieces}</small>
+    container.innerHTML += `
+      <div class="card" onclick="goProduct(${i})">
+        <img src="${p.images[0]}">
+        <h3>${p.name}</h3>
+        <p>${p.price} dh</p>
+      </div>
     `;
-
-    container.appendChild(div);
   });
 }
 
-/* ADD PRODUCT */
+/* ADD */
 function addProduct(){
   let name = document.getElementById("name").value;
   let price = document.getElementById("price").value;
   let pieces = document.getElementById("pieces").value;
   let files = document.getElementById("images").files;
 
-  if(!name || !price || files.length === 0){
-    alert("عمر جميع الخانات");
-    return;
-  }
-
-  if(files.length > 8){
-    alert("يمكنك إدخال حتى 8 صور فقط");
-    return;
-  }
-
   let images = [];
-  let loaded = 0;
+  let count = 0;
 
   for(let i=0;i<files.length;i++){
     let reader = new FileReader();
 
     reader.onload = function(e){
       images.push(e.target.result);
-      loaded++;
+      count++;
 
-      if(loaded === files.length){
+      if(count === files.length){
         products.push({name, price, pieces, images});
         saveProducts();
         render();
-        alert("تمت الإضافة ✅");
+        alert("تمت الإضافة");
       }
     }
 
@@ -255,7 +241,17 @@ function deleteProduct(){
   render();
 }
 
-/* START */
+/* GO PRODUCT */
+function goProduct(i){
+  localStorage.setItem("selectedProduct", JSON.stringify(products[i]));
+  window.location.href = "product.html";
+}
+
+/* SCROLL */
+function scrollProducts(){
+  document.getElementById("productsSection").scrollIntoView({behavior:"smooth"});
+}
+
 render();
 
 </script>
