@@ -214,6 +214,70 @@ function closeAdmin(){
   document.getElementById("adminPanel").style.display = "none";
 }
 
+<script>
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+// حفظ
+function saveProducts(){
+  localStorage.setItem("products", JSON.stringify(products));
+}
+
+// عرض
+function render(){
+  let container = document.querySelector(".products");
+  container.innerHTML = "";
+
+  products.forEach((p,i)=>{
+    let div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <img src="${p.image}">
+      <h3>${p.name}</h3>
+      <p>${p.price} dh</p>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+// إضافة
+function addProduct(){
+  let name = document.getElementById("name").value;
+  let price = document.getElementById("price").value;
+  let file = document.getElementById("image").files[0];
+
+  if(!name || !price || !file){
+    alert("عمر جميع الخانات");
+    return;
+  }
+
+  let reader = new FileReader();
+
+  reader.onload = function(e){
+    let image = e.target.result;
+
+    products.push({name, price, image});
+    saveProducts();
+    render();
+
+    alert("تمت الإضافة ✅");
+  }
+
+  reader.readAsDataURL(file);
+}
+
+// حذف آخر منتج
+function deleteProduct(){
+  products.pop();
+  saveProducts();
+  render();
+}
+
+// أول تشغيل
+render();
+
 </script>
 
 </body>
