@@ -37,6 +37,38 @@ header{
   width:100%;
   border-radius:10px;
 }
+
+/* زر + */
+.addBtn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#000;
+  color:#fff;
+  border:none;
+  padding:15px;
+  border-radius:50%;
+  font-size:20px;
+}
+
+/* ADMIN */
+#admin{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#fff;
+  padding:20px;
+  overflow:auto;
+}
+
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+}
 </style>
 </head>
 
@@ -46,36 +78,33 @@ header{
 
 <div class="products" id="products"></div>
 
+<!-- زر + -->
+<button class="addBtn" onclick="openAdmin()">+</button>
+
+<!-- ADMIN PANEL -->
+<div id="admin">
+
+<h2>إضافة منتج</h2>
+
+<input id="name" placeholder="اسم المنتج">
+<input id="price" placeholder="الثمن">
+<input id="pieces" placeholder="عدد القطع في العلبة">
+<textarea id="desc" placeholder="الوصف"></textarea>
+
+<input id="img1" placeholder="رابط الصورة 1">
+<input id="img2" placeholder="رابط الصورة 2">
+
+<button onclick="saveProduct()">حفظ</button>
+<button onclick="closeAdmin()">إغلاق</button>
+
+</div>
+
 <script>
 
-let products = [
+// تحميل المنتجات
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
-{
-  name:"balai IP harcha",
-  price:10.25,
-  description:"منتج عالي الجودة للتنظيف",
-  pieces:16,
-  images:[
-    "https://i.ibb.co/VWG6NSVD/1777726032086.png",
-    "https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png"
-  ]
-},
-
-{
-  name:"Nova kh",
-  price:36.5,
-  description:"حفاضات العجزة الغنية عن التعريف",
-  pieces:4,
-  images:[
-    "https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png",
-    "https://i.ibb.co/tTFF2gPM/Screenshot-2026-05-03-12-29-29-195-edit-com-miui-gallery.jpg"
-  ]
-}
-
-];
-
-localStorage.setItem("products", JSON.stringify(products));
-
+// عرض المنتجات
 function loadProducts(){
   let container = document.getElementById("products");
   container.innerHTML = "";
@@ -84,15 +113,53 @@ function loadProducts(){
     container.innerHTML += `
       <div class="product" onclick="openProduct(${index})">
         <img src="${p.images[0]}">
-        <h2>${p.name}</h2>
+        <h3>${p.name}</h3>
       </div>
     `;
   });
 }
 
+// فتح المنتج
 function openProduct(i){
   localStorage.setItem("selectedProduct", i);
   window.location.href = "product.html";
+}
+
+// ADMIN
+function openAdmin(){
+  let pass = prompt("كلمة السر");
+  if(pass === "123@123"){
+    document.getElementById("admin").style.display = "block";
+  }else{
+    alert("كلمة سر خاطئة");
+  }
+}
+
+function closeAdmin(){
+  document.getElementById("admin").style.display = "none";
+}
+
+// حفظ المنتج
+function saveProduct(){
+
+  let newProduct = {
+    name: document.getElementById("name").value,
+    price: parseFloat(document.getElementById("price").value),
+    description: document.getElementById("desc").value,
+    pieces: parseInt(document.getElementById("pieces").value),
+    images: [
+      document.getElementById("img1").value,
+      document.getElementById("img2").value
+    ]
+  };
+
+  products.push(newProduct);
+
+  localStorage.setItem("products", JSON.stringify(products));
+
+  alert("تمت الإضافة ✅");
+
+  location.reload();
 }
 
 loadProducts();
