@@ -115,7 +115,29 @@ header h2{
   <a href="#">Contact</a>
   <a href="#">Catalog</a>
 </div>
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="
+display:none;
+position:fixed;
+top:20%;
+left:10%;
+width:80%;
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 10px rgba(0,0,0,0.3);
+z-index:1000;
+">
 
+<h3>لوحة التحكم</h3>
+
+<input id="productName" placeholder="اسم المنتج"><br><br>
+<input id="productPrice" placeholder="الثمن"><br><br>
+
+<button onclick="addProduct()" style="background:green;color:white">إضافة</button>
+<button onclick="closeAdmin()" style="background:red;color:white">إغلاق</button>
+
+</div>
 <!-- HERO -->
 <div class="hero">
   <button>تصفح المنتجات</button>
