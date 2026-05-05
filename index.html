@@ -2,48 +2,92 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>My Store</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Store PRO</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#f2f2f2;}
+body{margin:0;font-family:Arial;background:#f5f5f5;}
 
 header{
-background:black;color:white;
-padding:15px;text-align:center;
+background:#111;color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 .grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
-gap:10px;
-padding:10px;
+gap:12px;
+padding:12px;
 }
 
 .card{
 background:white;
 border-radius:15px;
 padding:10px;
-text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
 .card img{
 width:100%;
-height:150px;
+height:140px;
 object-fit:cover;
 border-radius:10px;
 }
 
-.zoom{
+.card h3{
+font-size:16px;
+margin:8px 0;
+}
+
+.add-btn{
+position:fixed;
+bottom:20px;
+right:20px;
+background:orange;
+color:white;
+font-size:25px;
+width:60px;
+height:60px;
+border-radius:50%;
+border:none;
+}
+
+.modal{
 position:fixed;
 top:0;left:0;
 width:100%;height:100%;
-background:black;
+background:#000000aa;
 display:none;
 justify-content:center;
 align-items:center;
 }
 
-.zoom img{width:90%;}
+.box{
+background:white;
+padding:15px;
+border-radius:15px;
+width:90%;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:5px 0;
+}
+
+.btn{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+margin-top:10px;
+}
+
+.save{background:green;color:white;}
+.close{background:red;color:white;}
 
 .detail{
 position:fixed;
@@ -71,40 +115,51 @@ gap:10px;
 margin:10px;
 }
 
-.qty button{padding:10px;}
-
-.btn{
+.cart{
+position:fixed;
+top:0;
+right:0;
 width:100%;
+height:100%;
+background:white;
+display:none;
 padding:15px;
-border:none;
-border-radius:10px;
-margin-top:10px;
+overflow:auto;
 }
-
-.add{background:orange;color:white;}
-.go{background:green;color:white;}
 </style>
-
 </head>
 
 <body>
 
-<header>My Store 🛒</header>
+<header>
+<h2>My Store 🛒</h2>
+<button onclick="admin()">Admin</button>
+</header>
 
 <div class="grid" id="products"></div>
 
-<!-- zoom -->
-<div class="zoom" id="zoom" onclick="this.style.display='none'">
-<img id="zoomImg">
+<button class="add-btn" onclick="openModal()">+</button>
+
+<!-- ADD -->
+<div class="modal" id="modal">
+<div class="box">
+<input id="name" placeholder="اسم المنتج">
+<input id="price" placeholder="الثمن">
+<input id="boxCount" placeholder="عدد القطع فالعلبة">
+<input type="file" id="imgFile">
+
+<button class="btn save" onclick="save()">حفظ</button>
+<button class="btn close" onclick="closeModal()">إغلاق</button>
+</div>
 </div>
 
-<!-- detail -->
+<!-- DETAIL -->
 <div class="detail" id="detail">
-<h3 id="name"></h3>
+<h3 id="dName"></h3>
 
-<div style="display:flex; gap:5px;">
-<button class="type-btn active" id="piece" onclick="setType('piece')">قطعة</button>
-<button class="type-btn" id="box" onclick="setType('box')">علبة</button>
+<div style="display:flex;gap:5px;">
+<button class="type-btn active" id="pieceBtn" onclick="setType('piece')">قطعة</button>
+<button class="type-btn" id="boxBtn" onclick="setType('box')">علبة</button>
 </div>
 
 <div class="qty">
@@ -113,27 +168,35 @@ margin-top:10px;
 <button onclick="plus()">+</button>
 </div>
 
-<button class="btn add" onclick="addCart()">أضف للسلة</button>
-<button class="btn go" onclick="go()">اطلب عبر واتساب</button>
+<button class="btn save" onclick="addCart()">أضف للسلة</button>
+<button class="btn close" onclick="openCart()">اذهب للسلة</button>
+</div>
+
+<!-- CART -->
+<div class="cart" id="cart">
+<h2>السلة</h2>
+<div id="cartItems"></div>
+<h3 id="total"></h3>
+<button class="btn save" onclick="send()">اطلب عبر واتساب</button>
+<button class="btn close" onclick="closeCart()">رجوع</button>
 </div>
 
 <script>
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
+let products = JSON.parse(localStorage.getItem("products"))||[];
+let cart=[];
 let current=null;
 let qty=1;
 let type="piece";
-let cart=[];
 
-// عرض المنتجات
+// LOAD
 function load(){
+products.sort((a,b)=>a.name.localeCompare(b.name));
 let html="";
 products.forEach(p=>{
 html+=`
 <div class="card" onclick="openDetail(${p.id})">
-<img src="${p.img}" 
-onclick="event.stopPropagation();zoom('${p.img}')"
-onerror="this.src='https://via.placeholder.com/300'">
+<img src="${p.img}">
 <h3>${p.name}</h3>
 </div>`;
 });
@@ -141,32 +204,72 @@ document.getElementById("products").innerHTML=html;
 }
 load();
 
-// zoom
-function zoom(src){
-document.getElementById("zoomImg").src=src;
-document.getElementById("zoom").style.display="flex";
+// ADMIN
+function admin(){
+let pass=prompt("كود admin");
+if(pass!="1234"){
+alert("خطأ");
+}else{
+alert("يمكنك الإضافة");
+}
 }
 
-// detail
+// MODAL
+function openModal(){
+document.getElementById("modal").style.display="flex";
+}
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+
+// SAVE
+function save(){
+let name=nameInput.value;
+let price=priceInput.value;
+let boxCount=boxCountInput.value;
+let file=imgFile.files[0];
+
+if(!name || !file){
+alert("دخل الاسم والصورة");
+return;
+}
+
+let reader=new FileReader();
+reader.onload=function(e){
+products.push({
+id:Date.now(),
+name,
+price:price||0,
+box:parseInt(boxCount)||1,
+img:e.target.result
+});
+localStorage.setItem("products",JSON.stringify(products));
+closeModal();
+load();
+};
+reader.readAsDataURL(file);
+}
+
+// DETAIL
 function openDetail(id){
-current = products.find(p=>p.id==id);
-document.getElementById("name").innerText=current.name;
+current=products.find(p=>p.id==id);
+document.getElementById("dName").innerText=current.name;
 document.getElementById("detail").style.display="block";
 qty=1;
 update();
 }
 
-// type
+// TYPE
 function setType(t){
 type=t;
-document.getElementById("piece").classList.remove("active");
-document.getElementById("box").classList.remove("active");
+pieceBtn.classList.remove("active");
+boxBtn.classList.remove("active");
 
 if(t=="piece"){
-document.getElementById("piece").classList.add("active");
+pieceBtn.classList.add("active");
 qty=1;
 }else{
-document.getElementById("box").classList.add("active");
+boxBtn.classList.add("active");
 qty=current.box;
 }
 update();
@@ -174,39 +277,63 @@ update();
 
 // +
 function plus(){
-if(type=="box"){
-qty+=current.box;
-}else{
-qty++;
-}
+if(type=="box") qty+=current.box;
+else qty++;
 update();
 }
 
 // -
 function minus(){
-if(type=="box"){
-qty=Math.max(current.box, qty-current.box);
-}else{
-qty=Math.max(1, qty-1);
-}
+if(type=="box") qty=Math.max(current.box,qty-current.box);
+else qty=Math.max(1,qty-1);
 update();
 }
 
 function update(){
-document.getElementById("q").innerText=qty;
+q.innerText=qty;
 }
 
-// cart
+// CART
 function addCart(){
 cart.push({name:current.name,qty});
 alert("تمت الإضافة");
 }
 
-// whatsapp
-function go(){
-let msg="السلام عليكم\n";
-cart.forEach(i=>{
-msg+=i.name+" x "+i.qty+"\n";
+function openCart(){
+detail.style.display="none";
+cartDiv=document.getElementById("cart");
+cartDiv.style.display="block";
+
+let html="";
+let total=0;
+
+cart.forEach((c,i)=>{
+html+=`
+<div>
+${c.name} x ${c.qty}
+<button onclick="remove(${i})">❌</button>
+</div>`;
+});
+
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("total").innerText="المجموع: "+total+" DH";
+}
+
+function remove(i){
+cart.splice(i,1);
+openCart();
+}
+
+function closeCart(){
+cart.style.display="none";
+location.reload();
+}
+
+// SEND
+function send(){
+let msg="السلام عليكم\nطلب:\n";
+cart.forEach(c=>{
+msg+=c.name+" x "+c.qty+"\n";
 });
 window.open("https://wa.me/212613675970?text="+encodeURIComponent(msg));
 }
