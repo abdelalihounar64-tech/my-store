@@ -2,77 +2,101 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin</title>
+
 <style>
-body{font-family:Arial; padding:20px; background:#f2f2f2;}
-input{width:100%; padding:10px; margin:5px 0;}
-button{padding:10px; margin-top:10px;}
-.card{background:white; padding:10px; margin:10px 0; border-radius:10px;}
-img{width:80px;}
+body{font-family:Arial;background:#eee;margin:0;}
+
+.container{
+padding:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:10px;
+margin-top:10px;
+font-size:16px;
+}
+
+.save{background:green;color:white;}
+.close{background:red;color:white;}
+
 </style>
 </head>
 
 <body>
 
-<h2>لوحة التحكم 🔧</h2>
+<div class="container">
+
+<h2>إضافة منتج</h2>
 
 <input id="name" placeholder="اسم المنتج">
 <input id="price" placeholder="الثمن">
-<input id="box" placeholder="عدد القطع في العلبة (مثلا 16)">
-<input id="img" placeholder="رابط الصورة">
+<input id="box" placeholder="عدد القطع في العلبة">
+<input id="image" type="file">
 
-<button onclick="add()">➕ إضافة</button>
+<button class="save" onclick="saveProduct()">حفظ</button>
+<button class="close" onclick="back()">رجوع</button>
 
-<hr>
-
-<div id="list"></div>
+</div>
 
 <script>
+
+function back(){
+window.location="index.html";
+}
+
+function saveProduct(){
+
+let name = document.getElementById("name").value;
+let price = document.getElementById("price").value;
+let box = document.getElementById("box").value;
+let file = document.getElementById("image").files[0];
+
+if(!name || !file){
+alert("دخل الاسم والصورة");
+return;
+}
+
+// تحويل الصورة
+let reader = new FileReader();
+
+reader.onload = function(e){
+
+let imgBase64 = e.target.result;
+
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
-function show(){
-  let html="";
-  products.forEach(p=>{
-    html+=`
-    <div class="card">
-      <img src="${p.img}" onerror="this.src='https://via.placeholder.com/100'">
-      <h3>${p.name}</h3>
-      <button onclick="del(${p.id})">❌ حذف</button>
-    </div>`;
-  });
-  document.getElementById("list").innerHTML=html;
+products.push({
+id: Date.now(),
+name: name,
+price: price,
+box: box,
+img: imgBase64
+});
+
+localStorage.setItem("products", JSON.stringify(products));
+
+alert("تم الحفظ ✅");
+window.location="index.html";
+
+};
+
+reader.readAsDataURL(file);
+
 }
 
-function add(){
-  let name=document.getElementById("name").value.trim();
-  let price=document.getElementById("price").value.trim();
-  let img=document.getElementById("img").value.trim();
-  let box=document.getElementById("box").value.trim();
-
-  if(!name || !img){
-    alert("دخل الاسم والصورة");
-    return;
-  }
-
-  products.push({
-    id:Date.now(),
-    name,
-    price:price||0,
-    img,
-    box:parseInt(box)||1
-  });
-
-  localStorage.setItem("products",JSON.stringify(products));
-  show();
-}
-
-function del(id){
-  products = products.filter(p=>p.id!=id);
-  localStorage.setItem("products",JSON.stringify(products));
-  show();
-}
-
-show();
 </script>
 
 </body>
