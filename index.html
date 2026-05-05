@@ -22,11 +22,10 @@ header{
 .products{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:15px;
-  padding:15px;
 }
 
 .product{
+  margin:15px;
   background:#fff;
   border-radius:15px;
   padding:10px;
@@ -36,39 +35,7 @@ header{
 
 .product img{
   width:100%;
-  height:150px;
-  object-fit:cover;
-}
-
-/* زر + */
-.addBtn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  background:green;
-  color:#fff;
-  font-size:30px;
-  border:none;
-}
-
-/* الفورم */
-.form{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:#fff;
-  padding:15px;
-  display:none;
-}
-
-.form input{
-  width:100%;
-  margin:5px 0;
-  padding:10px;
+  border-radius:10px;
 }
 </style>
 </head>
@@ -79,66 +46,56 @@ header{
 
 <div class="products" id="products"></div>
 
-<button class="addBtn" onclick="openForm()">+</button>
-
-<div class="form" id="form">
-  <input id="name" placeholder="اسم المنتج">
-  <input id="price" placeholder="الثمن">
-  <input id="box" placeholder="عدد القطع فالعلبة">
-  <input id="img" placeholder="رابط الصورة">
-  <button onclick="addProduct()">حفظ</button>
-</div>
-
 <script>
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
+let products = [
 
-function render(){
+{
+  name:"balai IP harcha",
+  price:10.25,
+  description:"منتج عالي الجودة للتنظيف",
+  pieces:16,
+  images:[
+    "https://i.ibb.co/VWG6NSVD/1777726032086.png",
+    "https://i.ibb.co/zWcrwtGZ/file-000000007b1c7246a9c52dbdf91a5119.png"
+  ]
+},
 
+{
+  name:"Nova kh",
+  price:36.5,
+  description:"حفاضات العجزة الغنية عن التعريف",
+  pieces:4,
+  images:[
+    "https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png",
+    "https://i.ibb.co/tTFF2gPM/Screenshot-2026-05-03-12-29-29-195-edit-com-miui-gallery.jpg"
+  ]
+}
+
+];
+
+localStorage.setItem("products", JSON.stringify(products));
+
+function loadProducts(){
   let container = document.getElementById("products");
   container.innerHTML = "";
 
   products.forEach((p,index)=>{
-
     container.innerHTML += `
-    <div class="product" onclick="openProduct(${index})">
-      <img src="${p.img}">
-      <h3>${p.name}</h3>
-    </div>
+      <div class="product" onclick="openProduct(${index})">
+        <img src="${p.images[0]}">
+        <h2>${p.name}</h2>
+      </div>
     `;
   });
 }
 
-function openForm(){
-  document.getElementById("form").style.display = "block";
+function openProduct(i){
+  localStorage.setItem("selectedProduct", i);
+  window.location.href = "product.html";
 }
 
-function addProduct(){
-
-  let name = document.getElementById("name").value;
-  let price = document.getElementById("price").value;
-  let box = document.getElementById("box").value;
-  let img = document.getElementById("img").value;
-
-  products.push({name,price,box,img});
-
-  localStorage.setItem("products", JSON.stringify(products));
-
-  render();
-
-  document.getElementById("form").style.display = "none";
-}
-
-function openProduct(index){
-
-  let p = products[index];
-
-  let url = `product.html?name=${p.name}&price=${p.price}&box=${p.box}&img1=${p.img}`;
-
-  window.location.href = url;
-}
-
-render();
+loadProducts();
 
 </script>
 
