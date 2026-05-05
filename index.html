@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>My Store</title>
 
 <style>
@@ -20,164 +21,240 @@ header{
   position:relative;
 }
 
-.admin-btn{
+.admin{
   position:absolute;
   left:10px;
   top:10px;
   background:red;
   color:#fff;
   border:none;
-  padding:8px;
+  padding:8px 12px;
   border-radius:8px;
 }
 
-.products{
+.container{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(2,1fr);
   gap:10px;
   padding:10px;
 }
 
-.product{
+.card{
   background:#fff;
   border-radius:15px;
   padding:10px;
   text-align:center;
-  cursor:pointer;
 }
 
-.product img{
+.card img{
   width:100%;
   height:150px;
   object-fit:cover;
   border-radius:10px;
 }
 
-.product button{
-  margin:5px;
-  padding:5px 10px;
-  border:none;
-  border-radius:8px;
+.name{
+  font-weight:bold;
+  margin:10px 0;
 }
 
-.edit{background:orange;color:#fff;}
-.delete{background:red;color:#fff;}
+.actions{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.del{
+  background:red;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  padding:8px;
+}
+
+.edit{
+  background:orange;
+  border:none;
+  border-radius:8px;
+  padding:8px;
+}
+
+/* زر + */
+.addBtn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:#ff9800;
+  color:#fff;
+  font-size:30px;
+  border:none;
+}
+
+/* popup */
+.popup{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:#fff;
+  padding:15px;
+  display:none;
+}
+
+.popup input{
+  width:100%;
+  margin:5px 0;
+  padding:10px;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-🛒 My Store
-<button class="admin-btn" onclick="loginAdmin()">Admin</button>
+<button class="admin" onclick="login()">Admin</button>
+My Store 🛒
 </header>
 
-<div class="products" id="products"></div>
+<div class="container" id="products"></div>
+
+<button class="addBtn" onclick="openPopup()">+</button>
+
+<div class="popup" id="popup">
+
+<h3>إضافة منتج</h3>
+
+<input id="name" placeholder="اسم">
+<input id="box" placeholder="عدد القطع في العلبة">
+<input id="img1" placeholder="رابط صورة 1">
+<input id="img2" placeholder="رابط صورة 2">
+<input id="img3" placeholder="رابط صورة 3">
+<input id="img4" placeholder="رابط صورة 4">
+
+<button onclick="save()">حفظ</button>
+<button onclick="closePopup()">إغلاق</button>
+
+</div>
 
 <script>
 
-// ================== منتجات ==================
-let products = JSON.parse(localStorage.getItem("products")) || [
-  {
-    name:"balai IP harcha",
-    price:10.25,
-    images:[
-      "https://i.ibb.co/VWG6NSVD/1777726032086.png"
-    ],
-    desc:"منتج تنظيف قوي",
-    pieces:16
-  },
-  {
-    name:"Nova kh",
-    price:36.5,
-    images:[
-      "https://i.ibb.co/qLwx7Pyp/file-000000004c74724394121c6f1dbce3b5.png"
-    ],
-    desc:"حفاضات",
-    pieces:4
-  }
-];
+let isAdmin = false;
 
-// ترتيب A-Z
-products.sort((a,b)=>a.name.localeCompare(b.name));
-
-let container = document.getElementById("products");
-let isAdmin = localStorage.getItem("admin") === "true";
-
-// ================== عرض ==================
-function display(){
-  container.innerHTML = "";
-
-  products.forEach((p,i)=>{
-
-    let adminBtns = "";
-
-    if(isAdmin){
-      adminBtns = `
-        <button class="edit" onclick="event.stopPropagation(); editProduct(${i})">✏️</button>
-        <button class="delete" onclick="event.stopPropagation(); deleteProduct(${i})">❌</button>
-      `;
-    }
-
-    container.innerHTML += `
-      <div class="product" onclick="openProduct(${i})">
-        <img src="${p.images[0] || ''}">
-        <h3>${p.name}</h3>
-        <p>${p.price || 0} DH</p>
-        ${adminBtns}
-      </div>
-    `;
-  });
-}
-
-display();
-
-// ================== فتح المنتج ==================
-function openProduct(i){
-  localStorage.setItem("selectedProduct", JSON.stringify(products[i]));
-  window.location.href = "product.html";
-}
-
-// ================== ADMIN ==================
-function loginAdmin(){
-  let pass = prompt("الباسورد");
-
-  if(pass === "123@123"){
-    localStorage.setItem("admin","true");
-    location.reload();
-  }else{
-    alert("خطأ");
+function login(){
+  let pass = prompt("Password");
+  if(pass==="123"){
+    isAdmin=true;
+    load();
   }
 }
 
-// ================== حذف ==================
-function deleteProduct(i){
-  if(confirm("حذف؟")){
-    products.splice(i,1);
-    save();
+function openPopup(){
+  if(!isAdmin){
+    alert("Admin فقط");
+    return;
   }
+  document.getElementById("popup").style.display="block";
 }
 
-// ================== تعديل ==================
-function editProduct(i){
-  let name = prompt("اسم", products[i].name);
-  let price = prompt("ثمن", products[i].price);
-  let img = prompt("رابط الصورة", products[i].images[0]);
-
-  if(name){
-    products[i].name = name;
-    products[i].price = parseFloat(price) || 0;
-    products[i].images = [img];
-  }
-
-  save();
+function closePopup(){
+  document.getElementById("popup").style.display="none";
 }
 
-// ================== حفظ ==================
 function save(){
-  localStorage.setItem("products", JSON.stringify(products));
+
+  let p = {
+    name: name.value,
+    box: box.value,
+    images: [img1.value,img2.value,img3.value,img4.value]
+  };
+
+  let data = JSON.parse(localStorage.getItem("products")) || [];
+  data.push(p);
+
+  localStorage.setItem("products", JSON.stringify(data));
+
   location.reload();
 }
+
+function load(){
+
+  let data = JSON.parse(localStorage.getItem("products")) || [];
+
+  // ترتيب A → Z
+  data.sort((a,b)=>a.name.localeCompare(b.name));
+
+  let html="";
+
+  data.forEach((p,i)=>{
+
+    html+=`
+    <div class="card" onclick="openProduct(${i})">
+
+      <img src="${p.images[0]}">
+
+      <div class="name">${p.name}</div>
+
+      ${
+        isAdmin ?
+        `<div class="actions">
+          <button class="del" onclick="del(event,${i})">❌</button>
+          <button class="edit" onclick="edit(event,${i})">✏️</button>
+        </div>` : ""
+      }
+
+    </div>
+    `;
+  });
+
+  document.getElementById("products").innerHTML = html;
+}
+
+function del(e,i){
+  e.stopPropagation();
+
+  let data = JSON.parse(localStorage.getItem("products"));
+  data.splice(i,1);
+
+  localStorage.setItem("products", JSON.stringify(data));
+  load();
+}
+
+function edit(e,i){
+  e.stopPropagation();
+
+  let data = JSON.parse(localStorage.getItem("products"));
+  let p = data[i];
+
+  name.value = p.name;
+  box.value = p.box;
+  img1.value = p.images[0];
+  img2.value = p.images[1];
+  img3.value = p.images[2];
+  img4.value = p.images[3];
+
+  openPopup();
+
+  save = function(){
+    data[i] = {
+      name:name.value,
+      box:box.value,
+      images:[img1.value,img2.value,img3.value,img4.value]
+    };
+
+    localStorage.setItem("products", JSON.stringify(data));
+    location.reload();
+  }
+}
+
+function openProduct(i){
+  localStorage.setItem("current", i);
+  window.location.href="product.html";
+}
+
+load();
 
 </script>
 
