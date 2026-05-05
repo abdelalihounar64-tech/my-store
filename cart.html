@@ -10,31 +10,48 @@ body{font-family:Arial;background:#f5f5f5;margin:0}
 header{
   background:#000;
   color:#fff;
-  padding:15px;
   text-align:center;
+  padding:15px;
 }
 
-.item{
+.card{
   background:#fff;
   margin:10px;
   padding:10px;
   border-radius:10px;
   display:flex;
-  gap:10px;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.item img{
+.card img{
   width:70px;
   height:70px;
+  border-radius:10px;
 }
 
 .del{
   background:red;
   color:#fff;
   border:none;
-  width:30px;
-  height:30px;
   border-radius:50%;
+  width:40px;
+  height:40px;
+}
+
+.total{
+  text-align:center;
+  font-size:25px;
+  margin:20px;
+}
+
+.whatsapp{
+  background:green;
+  color:#fff;
+  padding:15px;
+  margin:20px;
+  text-align:center;
+  border-radius:10px;
 }
 </style>
 </head>
@@ -45,43 +62,60 @@ header{
 
 <div id="cart"></div>
 
-<h2 id="total" style="text-align:center"></h2>
+<div class="total" id="total"></div>
+
+<div class="whatsapp" onclick="send()">اطلب عبر واتساب</div>
 
 <script>
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
 
-function show(){
+let html="";
+let sum=0;
 
-  let html="";
-  let total=0;
+cart.forEach((p,i)=>{
 
-  cart.forEach((p,i)=>{
+  html+=`
+  <div class="card">
 
-    total += p.price;
+    <img src="${p.image}">
 
-    html+=`
-    <div class="item">
-      <img src="${p.image}">
-      <div>
-        <h3>${p.name}</h3>
-        <p>DH ${p.price}</p>
-      </div>
-      <button class="del" onclick="del(${i})">X</button>
+    <div>
+      <h3>${p.name}</h3>
+      <p>الكمية: ${p.qty}</p>
+      <p>DH ${p.price}</p>
     </div>
-    `;
-  });
 
-  document.getElementById("cart").innerHTML=html;
-  document.getElementById("total").innerText="المجموع: DH "+total;
-}
+    <button class="del" onclick="del(${i})">X</button>
 
-show();
+  </div>
+  `;
+
+  sum+=p.price;
+});
+
+document.getElementById("cart").innerHTML=html;
+document.getElementById("total").innerText="المجموع: DH "+sum;
 
 function del(i){
   cart.splice(i,1);
   localStorage.setItem("cart",JSON.stringify(cart));
-  show();
+  location.reload();
+}
+
+function send(){
+
+  let msg="طلب:\n";
+
+  cart.forEach(p=>{
+    msg+=`${p.name} x ${p.qty} = ${p.price} DH\n`;
+  });
+
+  msg+="\nالمجموع: "+sum;
+
+  let num="212XXXXXXXXX"; // حط رقمك
+
+  window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`);
 }
 
 </script>
