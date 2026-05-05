@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>تفاصيل المنتج</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f5f5f5;
+}
+
+/* header */
+.header{
+  background:black;
+  color:white;
+  text-align:center;
+  padding:15px;
+  font-size:20px;
+}
+
+/* slider */
+.swiper img{
+  width:100%;
+  height:250px;
+  object-fit:cover;
+}
+
+/* box */
+.box{
+  background:white;
+  padding:15px;
+}
+
+/* buttons */
+.choice{
+  display:flex;
+  gap:10px;
+}
+
+.choice button{
+  flex:1;
+  padding:15px;
+  border:none;
+  border-radius:15px;
+  background:black;
+  color:white;
+  font-size:16px;
+}
+
+/* counter */
+.counter{
+  text-align:center;
+  margin:20px 0;
+}
+
+.counter button{
+  width:50px;
+  height:50px;
+  font-size:20px;
+}
+
+.total{
+  font-size:22px;
+  font-weight:bold;
+}
+
+/* actions */
+.action{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:15px;
+  margin-top:10px;
+  font-size:16px;
+}
+
+.add{
+  background:orange;
+  color:white;
+}
+
+.cart{
+  background:green;
+  color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">تفاصيل المنتج</div>
+
+<!-- SLIDER -->
+<div class="swiper">
+  <div class="swiper-wrapper" id="slider"></div>
+</div>
+
+<div class="box">
+
+<h2 id="name"></h2>
+
+<input id="priceInput" placeholder="دخل الثمن" style="width:100%;padding:10px">
+
+<h2 class="total" id="total">DH 0</h2>
+
+<div class="choice">
+  <button onclick="setType('piece')">قطعة</button>
+  <button onclick="setType('box')">علبة</button>
+</div>
+
+<div class="counter">
+  <h1 id="qty">1</h1>
+  <button onclick="changeQty(-1)">-</button>
+  <button onclick="changeQty(1)">+</button>
+</div>
+
+<button class="action add" onclick="addToCart()">أضف للسلة</button>
+<button class="action cart" onclick="goCart()">اذهب للسلة</button>
+
+</div>
+
+<script>
+
+let product = JSON.parse(localStorage.getItem("selectedProduct"));
+let qty = 1;
+let type = "piece";
+
+document.getElementById("name").innerText = product.name;
+
+// slider
+let slider = document.getElementById("slider");
+
+product.images.forEach(img=>{
+  slider.innerHTML += `
+    <div class="swiper-slide">
+      <img src="${img}" onclick="zoom('${img}')">
+    </div>
+  `;
+});
+
+new Swiper(".swiper", {loop:true});
+
+// اختيار
+function setType(t){
+  type = t;
+  calc();
+}
+
+// تغيير الكمية
+function changeQty(n){
+  qty += n;
+  if(qty < 1) qty = 1;
+  document.getElementById("qty").innerText = qty;
+  calc();
+}
+
+// الحساب
+function calc(){
+  let price = document.getElementById("priceInput").value || 0;
+  let total = price * qty;
+
+  document.getElementById("total").innerText = "DH " + total;
+}
+
+// zoom
+function zoom(src){
+  let z = document.createElement("div");
+
+  z.style = `
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+  `;
+
+  z.innerHTML = `<img src="${src}" style="max-width:100%;max-height:100%">`;
+
+  z.onclick = ()=>z.remove();
+
+  document.body.appendChild(z);
+}
+
+// cart
+function addToCart(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  let price = document.getElementById("priceInput").value;
+
+  cart.push({
+    ...product,
+    qty,
+    type,
+    price
+  });
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert("تمت الإضافة للسلة");
+}
+
+function goCart(){
+  window.location.href="cart.html";
+}
+
+</script>
+
+</body>
+</html>
