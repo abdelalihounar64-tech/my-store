@@ -1,9 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-  <title>Test</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Store</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial;
+  background:#f5f5f5;
+}
+
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  background:white;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+header h2{
+  margin:0;
+}
+
+/* HERO */
+.hero{
+  position:relative;
+  height:220px;
+  background:url('https://images.unsplash.com/photo-1581578731548-c64695cc6952') center/cover;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.hero button{
+  padding:12px 25px;
+  border-radius:25px;
+  border:2px solid white;
+  background:transparent;
+  color:white;
+  font-size:16px;
+}
+
+/* PRODUCTS */
+.section{
+  padding:15px;
+}
+
+.section h2{
+  margin-bottom:10px;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.card{
+  background:white;
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+}
+
+.card img{
+  width:100%;
+  height:130px;
+  object-fit:cover;
+  border-radius:10px;
+}
+</style>
+
 </head>
+
 <body>
+
+<header>
+  <span>☰</span>
+  <h2>My Store</h2>
+  <span>🛒</span>
+</header>
+
+<!-- صورة النظافة -->
+<div class="hero">
+  <button>تصفح المنتجات</button>
+</div>
+
+<!-- المنتجات -->
+<div class="section">
+  <h2>Products</h2>
+
+  <div class="products">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1584473457493-17c6d4b5f1d7">
+      <h3>منظف أرضيات</h3>
+      <p>20 dh</p>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1604335399105-a0c585fd81a1">
+      <h3>سائل غسيل</h3>
+      <p>15 dh</p>
+    </div>
+
+  </div>
+
+</div>
 
 </body>
 </html>
