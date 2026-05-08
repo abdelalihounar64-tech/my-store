@@ -1,8 +1,14 @@
+// =========================
+// MOSTAFA STORE
+// =========================
+
+
 // المنتج الوحيد
 
 const products = [
 
   {
+
     id:1,
 
     name:"Shampooing Chapo",
@@ -10,21 +16,24 @@ const products = [
     description:
     "شامبو مغذي للشعر العادي يمنح نعومة ولمعان طبيعي مع تركيبة غنية بالبروتينات.",
 
-    image:"images/product5.jpg",
+    image:"images/images/product5.jpg",
 
     images:[
 
-      "images/product5.jpg",
+      "images/images/product5.jpg",
 
-      "images/product5-2.jpg"
+      "images/images/product5-2.jpg"
 
     ]
+
   }
 
 ];
 
 
-// عرض المنتجات فالصفحة الرئيسية
+// =========================
+// الصفحة الرئيسية
+// =========================
 
 const productsContainer =
 document.getElementById("productsContainer");
@@ -87,7 +96,7 @@ function displayProducts(items){
 }
 
 
-// الذهاب للمنتج
+// فتح صفحة المنتج
 
 function goToProduct(id){
 
@@ -98,7 +107,9 @@ function goToProduct(id){
 
 
 
-// ================= PRODUCT PAGE =================
+// =========================
+// صفحة المنتج
+// =========================
 
 
 // عدد القطع داخل العلبة
@@ -106,7 +117,7 @@ function goToProduct(id){
 const piecesPerBox = 12;
 
 
-// الكمية
+// الكمية الحالية
 
 let quantity = 1;
 
@@ -139,6 +150,8 @@ if(productName){
 
 }
 
+
+// تحميل المنتج
 
 function loadProduct(product){
 
@@ -182,7 +195,9 @@ function changeImage(src){
 }
 
 
+// =========================
 // تكبير الصورة
+// =========================
 
 const mainImage =
 document.getElementById("mainProductImage");
@@ -215,7 +230,10 @@ function closeZoom(){
 }
 
 
-// اختيار قطعة أو علبة
+
+// =========================
+// قطعة أو علبة
+// =========================
 
 function selectType(type){
 
@@ -246,7 +264,10 @@ function selectType(type){
 }
 
 
+
+// =========================
 // زيادة العدد
+// =========================
 
 function increaseQuantity(){
 
@@ -265,7 +286,10 @@ function increaseQuantity(){
 }
 
 
+
+// =========================
 // نقصان العدد
+// =========================
 
 function decreaseQuantity(){
 
@@ -292,7 +316,10 @@ function decreaseQuantity(){
 }
 
 
+
+// =========================
 // تحديث الثمن
+// =========================
 
 const priceInput =
 document.getElementById("priceInput");
@@ -319,7 +346,10 @@ function updateTotal(){
 }
 
 
+
+// =========================
 // واتساب
+// =========================
 
 function sendWhatsApp(){
 
