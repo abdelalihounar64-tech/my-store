@@ -1,14 +1,174 @@
+// المنتج الوحيد
+
+const products = [
+
+  {
+    id:1,
+
+    name:"Shampooing Chapo",
+
+    description:
+    "شامبو مغذي للشعر العادي يمنح نعومة ولمعان طبيعي مع تركيبة غنية بالبروتينات.",
+
+    image:"images/product5.jpg",
+
+    images:[
+
+      "images/product5.jpg",
+
+      "images/product5-2.jpg"
+
+    ]
+  }
+
+];
+
+
+// عرض المنتجات فالصفحة الرئيسية
+
+const productsContainer =
+document.getElementById("productsContainer");
+
+if(productsContainer){
+
+  displayProducts(products);
+
+}
+
+
+function displayProducts(items){
+
+  productsContainer.innerHTML = "";
+
+  items.forEach(product => {
+
+    productsContainer.innerHTML += `
+
+      <div class="card">
+
+        <a href="product.html?id=${product.id}">
+
+          <img
+          src="${product.image}"
+          class="main-image">
+
+        </a>
+
+        <div class="small-images">
+
+          ${product.images.map(img => `
+
+            <img src="${img}">
+
+          `).join("")}
+
+        </div>
+
+        <div class="card-content">
+
+          <h2>${product.name}</h2>
+
+        </div>
+
+        <button
+        class="whatsapp-btn"
+        onclick="goToProduct(${product.id})">
+
+        أضف للسلة
+
+        </button>
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+
+// الذهاب للمنتج
+
+function goToProduct(id){
+
+  window.location.href =
+  `product.html?id=${id}`;
+
+}
+
+
+
+// ================= PRODUCT PAGE =================
+
+
 // عدد القطع داخل العلبة
 
 const piecesPerBox = 12;
+
 
 // الكمية
 
 let quantity = 1;
 
-// النوع
+
+// النوع الحالي
 
 let currentType = "piece";
+
+
+// تحميل بيانات المنتج
+
+const productName =
+document.getElementById("productName");
+
+if(productName){
+
+  const params =
+  new URLSearchParams(window.location.search);
+
+  const id = params.get("id");
+
+  const product =
+  products.find(p => p.id == id);
+
+  if(product){
+
+    loadProduct(product);
+
+  }
+
+}
+
+
+function loadProduct(product){
+
+  document.getElementById("productName")
+  .innerText = product.name;
+
+  document.getElementById("productDescription")
+  .innerText = product.description;
+
+  document.getElementById("mainProductImage")
+  .src = product.image;
+
+  const thumbs =
+  document.getElementById("productThumbs");
+
+  thumbs.innerHTML = "";
+
+  product.images.forEach(img => {
+
+    thumbs.innerHTML += `
+
+      <img
+      src="${img}"
+      onclick="changeImage('${img}')">
+
+    `;
+
+  });
+
+}
 
 
 // تغيير الصورة
@@ -27,17 +187,21 @@ function changeImage(src){
 const mainImage =
 document.getElementById("mainProductImage");
 
-mainImage.addEventListener("click", () => {
+if(mainImage){
 
-  document
-  .getElementById("zoomModal")
-  .style.display = "flex";
+  mainImage.addEventListener("click", () => {
 
-  document
-  .getElementById("zoomedImage")
-  .src = mainImage.src;
+    document
+    .getElementById("zoomModal")
+    .style.display = "flex";
 
-});
+    document
+    .getElementById("zoomedImage")
+    .src = mainImage.src;
+
+  });
+
+}
 
 
 // إغلاق التكبير
@@ -82,7 +246,7 @@ function selectType(type){
 }
 
 
-// زيادة
+// زيادة العدد
 
 function increaseQuantity(){
 
@@ -96,12 +260,12 @@ function increaseQuantity(){
 
   }
 
-  updateQuantity();
+  updateTotal();
 
 }
 
 
-// نقصان
+// نقصان العدد
 
 function decreaseQuantity(){
 
@@ -123,18 +287,34 @@ function decreaseQuantity(){
 
   }
 
-  updateQuantity();
+  updateTotal();
 
 }
 
 
-// تحديث الرقم
+// تحديث الثمن
 
-function updateQuantity(){
+const priceInput =
+document.getElementById("priceInput");
+
+if(priceInput){
+
+  priceInput.addEventListener("input", updateTotal);
+
+}
+
+
+function updateTotal(){
+
+  const price =
+  Number(document.getElementById("priceInput").value);
+
+  const total =
+  price * quantity;
 
   document
   .getElementById("quantity")
-  .innerText = quantity;
+  .innerText = `DH ${total}`;
 
 }
 
