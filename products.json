@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "منظف الأرض",
+    "description": "منظف قوي لإزالة الأوساخ مع رائحة منعشة تدوم طويلا.",
+    "image": "images/product1.jpg",
+    "images": [
+      "images/product1.jpg",
+      "images/product1-2.jpg",
+      "images/product1-3.jpg"
+    ]
+  },
+
+  {
+    "id": 2,
+    "name": "سائل غسل الملابس",
+    "description": "يحافظ على نظافة ولمعان الملابس برائحة رائعة.",
+    "image": "images/product2.jpg",
+    "images": [
+      "images/product2.jpg",
+      "images/product2-2.jpg",
+      "images/product2-3.jpg"
+    ]
+  },
+
+  {
+    "id": 3,
+    "name": "معطر المنزل",
+    "description": "معطر فاخر لجميع الغرف يدوم لساعات طويلة.",
+    "image": "images/product3.jpg",
+    "images": [
+      "images/product3.jpg",
+      "images/product3-2.jpg",
+      "images/product3-3.jpg"
+    ]
+  }
+]
