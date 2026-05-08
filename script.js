@@ -1,230 +1,186 @@
-const products = [
+// عدد القطع داخل العلبة
 
-  {
-    id:1,
-    name:"Aluminium",
-    description:"منتج عالي الجودة للاستعمال اليومي.",
-    image:"images/product1.jpg",
+const piecesPerBox = 12;
 
-    images:[
-      "images/product1.jpg",
-      "images/product1-2.jpg",
-      "images/product1-3.jpg"
-    ]
-  },
+// الكمية
 
-  {
-    id:2,
-    name:"Asperox",
-    description:"منظف قوي لإزالة الدهون والأوساخ.",
+let quantity = 1;
 
-    image:"images/product2.jpg",
+// النوع
 
-    images:[
-      "images/product2.jpg",
-      "images/product2-2.jpg",
-      "images/product2-3.jpg"
-    ]
-  },
+let currentType = "piece";
 
-  {
-    id:3,
-    name:"balai IP harcha",
-    description:"فرشاة تنظيف قوية وعملية.",
 
-    image:"images/product3.jpg",
-
-    images:[
-      "images/product3.jpg",
-      "images/product3-2.jpg",
-      "images/product3-3.jpg"
-    ]
-  },
-
-  {
-    id:4,
-    name:"Dettol",
-    description:"صابون نظافة وحماية فعالة.",
-
-    image:"images/product4.jpg",
-
-    images:[
-      "images/product4.jpg",
-      "images/product4-2.jpg",
-      "images/product4-3.jpg"
-    ]
-  }
-
-];
-
-
-// INDEX PAGE
-
-const productsContainer =
-document.getElementById("productsContainer");
-
-if(productsContainer){
-
-  displayProducts(products);
-
-}
-
-function displayProducts(items){
-
-  productsContainer.innerHTML = "";
-
-  items.forEach(product => {
-
-    productsContainer.innerHTML += `
-
-      <div class="card">
-
-        <a href="product.html?id=${product.id}">
-
-          <img
-          src="${product.image}"
-          class="main-image">
-
-        </a>
-
-        <div class="small-images">
-
-          ${product.images.map(img => `
-
-            <img src="${img}">
-
-          `).join("")}
-
-        </div>
-
-        <div class="card-content">
-
-          <h2>${product.name}</h2>
-
-        </div>
-
-        <button
-        class="whatsapp-btn"
-        onclick="sendWhatsApp('${product.name}')">
-
-        أضف للسلة
-
-        </button>
-
-      </div>
-
-    `;
-
-  });
-
-}
-
-
-// WHATSAPP
-
-function sendWhatsApp(productName){
-
-  const message = `
-مرحبا أريد طلب:
-${productName}
-`;
-
-  const phone = "212600000000";
-
-  const url =
-  `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-
-  window.open(url,"_blank");
-
-}
-
-
-// PRODUCT PAGE
-
-const productName =
-document.getElementById("productName");
-
-if(productName){
-
-  const params =
-  new URLSearchParams(window.location.search);
-
-  const id = params.get("id");
-
-  const product =
-  products.find(p => p.id == id);
-
-  if(product){
-
-    loadProduct(product);
-
-  }
-
-}
-
-function loadProduct(product){
-
-  document.getElementById("productName")
-  .innerText = product.name;
-
-  document.getElementById("productDescription")
-  .innerText = product.description;
-
-  document.getElementById("mainProductImage")
-  .src = product.image;
-
-  const thumbs =
-  document.getElementById("productThumbs");
-
-  thumbs.innerHTML = "";
-
-  product.images.forEach(img => {
-
-    thumbs.innerHTML += `
-
-      <img
-      src="${img}"
-      onclick="changeImage('${img}')">
-
-    `;
-
-  });
-
-}
-
-
-// CHANGE IMAGE
+// تغيير الصورة
 
 function changeImage(src){
 
-  document.getElementById("mainProductImage")
+  document
+  .getElementById("mainProductImage")
   .src = src;
 
 }
 
 
-// ZOOM
+// تكبير الصورة
 
 const mainImage =
 document.getElementById("mainProductImage");
 
-if(mainImage){
+mainImage.addEventListener("click", () => {
 
-  mainImage.addEventListener("click", () => {
+  document
+  .getElementById("zoomModal")
+  .style.display = "flex";
 
-    document.getElementById("zoomModal")
-    .style.display = "flex";
+  document
+  .getElementById("zoomedImage")
+  .src = mainImage.src;
 
-    document.getElementById("zoomedImage")
-    .src = mainImage.src;
+});
 
-  });
 
-}
+// إغلاق التكبير
 
 function closeZoom(){
 
-  document.getElementById("zoomModal")
+  document
+  .getElementById("zoomModal")
   .style.display = "none";
+
+}
+
+
+// اختيار قطعة أو علبة
+
+function selectType(type){
+
+  currentType = type;
+
+  document
+  .getElementById("pieceBtn")
+  .classList.remove("active");
+
+  document
+  .getElementById("boxBtn")
+  .classList.remove("active");
+
+  if(type === "piece"){
+
+    document
+    .getElementById("pieceBtn")
+    .classList.add("active");
+
+  }else{
+
+    document
+    .getElementById("boxBtn")
+    .classList.add("active");
+
+  }
+
+}
+
+
+// زيادة
+
+function increaseQuantity(){
+
+  if(currentType === "piece"){
+
+    quantity += 1;
+
+  }else{
+
+    quantity += piecesPerBox;
+
+  }
+
+  updateQuantity();
+
+}
+
+
+// نقصان
+
+function decreaseQuantity(){
+
+  if(currentType === "piece"){
+
+    if(quantity > 1){
+
+      quantity -= 1;
+
+    }
+
+  }else{
+
+    if(quantity > piecesPerBox){
+
+      quantity -= piecesPerBox;
+
+    }
+
+  }
+
+  updateQuantity();
+
+}
+
+
+// تحديث الرقم
+
+function updateQuantity(){
+
+  document
+  .getElementById("quantity")
+  .innerText = quantity;
+
+}
+
+
+// واتساب
+
+function sendWhatsApp(){
+
+  const product =
+  document
+  .getElementById("productName")
+  .innerText;
+
+  const price =
+  document
+  .getElementById("priceInput")
+  .value;
+
+  const type =
+  currentType === "piece"
+  ? "قطعة"
+  : "علبة";
+
+  const message = `
+
+مرحبا
+أريد طلب:
+
+${product}
+
+الكمية:
+${quantity}
+
+النوع:
+${type}
+
+الثمن:
+${price} DH
+
+`;
+
+  const phone = "212613675970";
+
+  const url =
+  `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+  window.open(url,"_blank");
 
 }
