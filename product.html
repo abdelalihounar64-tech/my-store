@@ -1,219 +1,301 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mostafa Store</title>
 
-<title>تفاصيل المنتج</title>
+  <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial;
+    }
 
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#f5f5f5;
-}
+    body{
+      background:#f5f7fa;
+    }
 
-/* header */
-.header{
-  background:black;
-  color:white;
-  text-align:center;
-  padding:15px;
-  font-size:20px;
-}
+    header{
+      background:white;
+      padding:15px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
 
-/* slider */
-.swiper img{
-  width:100%;
-  height:250px;
-  object-fit:cover;
-}
+    .logo{
+      font-size:28px;
+      font-weight:bold;
+      color:#00a884;
+    }
 
-/* box */
-.box{
-  background:white;
-  padding:15px;
-}
+    .search-box{
+      width:250px;
+    }
 
-/* buttons */
-.choice{
-  display:flex;
-  gap:10px;
-}
+    .search-box input{
+      width:100%;
+      padding:10px;
+      border:none;
+      border-radius:10px;
+      background:#edf2f7;
+      outline:none;
+    }
 
-.choice button{
-  flex:1;
-  padding:15px;
-  border:none;
-  border-radius:15px;
-  background:black;
-  color:white;
-  font-size:16px;
-}
+    .hero{
+      height:300px;
+      background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),
+      url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1200&auto=format&fit=crop');
+      background-size:cover;
+      background-position:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      text-align:center;
+      padding:20px;
+    }
 
-/* counter */
-.counter{
-  text-align:center;
-  margin:20px 0;
-}
+    .hero h1{
+      font-size:45px;
+      margin-bottom:10px;
+    }
 
-.counter button{
-  width:50px;
-  height:50px;
-  font-size:20px;
-}
+    .products{
+      padding:40px 20px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:25px;
+    }
 
-.total{
-  font-size:22px;
-  font-weight:bold;
-}
+    .card{
+      background:white;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 5px 20px rgba(0,0,0,0.08);
+      transition:0.3s;
+    }
 
-/* actions */
-.action{
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:15px;
-  margin-top:10px;
-  font-size:16px;
-}
+    .card:hover{
+      transform:translateY(-5px);
+    }
 
-.add{
-  background:orange;
-  color:white;
-}
+    .card img{
+      width:100%;
+      height:250px;
+      object-fit:cover;
+    }
 
-.cart{
-  background:green;
-  color:white;
-}
-</style>
+    .card-content{
+      padding:15px;
+    }
+
+    .card-content h2{
+      margin-bottom:10px;
+      font-size:22px;
+      color:#222;
+    }
+
+    .card-content p{
+      color:#666;
+      margin-bottom:15px;
+      line-height:1.5;
+    }
+
+    .price-input{
+      width:100%;
+      padding:12px;
+      border:none;
+      background:#edf2f7;
+      border-radius:10px;
+      margin-bottom:12px;
+      outline:none;
+      font-size:16px;
+    }
+
+    .whatsapp-btn{
+      width:100%;
+      padding:12px;
+      border:none;
+      background:#00a884;
+      color:white;
+      border-radius:10px;
+      font-size:16px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .whatsapp-btn:hover{
+      background:#019270;
+    }
+
+    footer{
+      background:#111;
+      color:white;
+      text-align:center;
+      padding:20px;
+      margin-top:40px;
+    }
+
+    @media(max-width:768px){
+
+      header{
+        flex-direction:column;
+        gap:15px;
+      }
+
+      .search-box{
+        width:100%;
+      }
+
+      .hero{
+        height:220px;
+      }
+
+      .hero h1{
+        font-size:30px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="header">تفاصيل المنتج</div>
+<header>
 
-<!-- SLIDER -->
-<div class="swiper">
-  <div class="swiper-wrapper" id="slider"></div>
-</div>
+  <div class="logo">
+    Mostafa Store
+  </div>
 
-<div class="box">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
+  </div>
 
-<h2 id="name"></h2>
+</header>
 
-<input id="priceInput" placeholder="دخل الثمن" style="width:100%;padding:10px">
+<section class="hero">
+  <div>
+    <h1>مرحبا بكم في Mostafa Store</h1>
+    <p>أفضل منتجات النظافة بأفضل جودة</p>
+  </div>
+</section>
 
-<h2 class="total" id="total">DH 0</h2>
+<section class="products" id="productsContainer">
+</section>
 
-<div class="choice">
-  <button onclick="setType('piece')">قطعة</button>
-  <button onclick="setType('box')">علبة</button>
-</div>
-
-<div class="counter">
-  <h1 id="qty">1</h1>
-  <button onclick="changeQty(-1)">-</button>
-  <button onclick="changeQty(1)">+</button>
-</div>
-
-<button class="action add" onclick="addToCart()">أضف للسلة</button>
-<button class="action cart" onclick="goCart()">اذهب للسلة</button>
-
-</div>
+<footer>
+  جميع الحقوق محفوظة © Mostafa Store
+</footer>
 
 <script>
 
-let product = JSON.parse(localStorage.getItem("selectedProduct"));
-let qty = 1;
-let type = "piece";
+const products = [
 
-document.getElementById("name").innerText = product.name;
+  {
+    name:"منظف الأرض",
+    description:"منظف قوي برائحة منعشة يدوم طويلا.",
+    image:"https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=800&auto=format&fit=crop"
+  },
 
-// slider
-let slider = document.getElementById("slider");
+  {
+    name:"سائل غسل الملابس",
+    description:"يحافظ على نظافة ولمعان الملابس.",
+    image:"https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?q=80&w=800&auto=format&fit=crop"
+  },
 
-product.images.forEach(img=>{
-  slider.innerHTML += `
-    <div class="swiper-slide">
-      <img src="${img}" onclick="zoom('${img}')">
-    </div>
-  `;
-});
+  {
+    name:"معطر المنزل",
+    description:"رائحة منعشة وفخمة لجميع الغرف.",
+    image:"https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?q=80&w=800&auto=format&fit=crop"
+  }
 
-new Swiper(".swiper", {loop:true});
+];
 
-// اختيار
-function setType(t){
-  type = t;
-  calc();
-}
+const container = document.getElementById("productsContainer");
 
-// تغيير الكمية
-function changeQty(n){
-  qty += n;
-  if(qty < 1) qty = 1;
-  document.getElementById("qty").innerText = qty;
-  calc();
-}
+function displayProducts(items){
 
-// الحساب
-function calc(){
-  let price = document.getElementById("priceInput").value || 0;
-  let total = price * qty;
+  container.innerHTML = "";
 
-  document.getElementById("total").innerText = "DH " + total;
-}
+  items.forEach(product => {
 
-// zoom
-function zoom(src){
-  let z = document.createElement("div");
+    container.innerHTML += `
 
-  z.style = `
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:black;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-  `;
+      <div class="card">
 
-  z.innerHTML = `<img src="${src}" style="max-width:100%;max-height:100%">`;
+        <img src="${product.image}" alt="">
 
-  z.onclick = ()=>z.remove();
+        <div class="card-content">
 
-  document.body.appendChild(z);
-}
+          <h2>${product.name}</h2>
 
-// cart
-function addToCart(){
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+          <p>${product.description}</p>
 
-  let price = document.getElementById("priceInput").value;
+          <input 
+          type="number" 
+          class="price-input"
+          placeholder="اكتب الثمن ">
 
-  cart.push({
-    ...product,
-    qty,
-    type,
-    price
+          <button class="whatsapp-btn"
+          onclick="sendWhatsApp('${product.name}', this)">
+          اطلب الآن
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
   });
 
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  alert("تمت الإضافة للسلة");
 }
 
-function goCart(){
-  window.location.href="cart.html";
+displayProducts(products);
+
+function sendWhatsApp(productName, button){
+
+  const card = button.parentElement;
+
+  const price = card.querySelector(".price-input").value;
+
+  const message = `
+مرحبا، أريد طلب:
+${productName}
+
+الثمن :
+${price} درهم
+`;
+
+  const phone = "212613675970";
+
+  const url = `
+https://wa.me/${phone}?text=${encodeURIComponent(message)}
+`;
+
+  window.open(url, "_blank");
+
 }
+
+document.getElementById("searchInput")
+.addEventListener("input", function(){
+
+  const value = this.value.toLowerCase();
+
+  const filtered = products.filter(product =>
+    product.name.toLowerCase().includes(value)
+  );
+
+  displayProducts(filtered);
+
+});
 
 </script>
 
