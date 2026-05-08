@@ -1,258 +1,301 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Store</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mostafa Store</title>
 
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#f5f5f5;
-}
+  <link rel="stylesheet" href="style.css">
 
-/* HEADER */
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px;
-  background:white;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial;
+    }
 
-header h2{margin:0}
+    body{
+      background:#f5f7fa;
+    }
 
-/* MENU */
-.menu{
-  position:fixed;
-  top:0;
-  left:-250px;
-  width:250px;
-  height:100%;
-  background:white;
-  box-shadow:2px 0 5px rgba(0,0,0,0.2);
-  transition:0.3s;
-  padding-top:60px;
-}
+    header{
+      background:white;
+      padding:15px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
 
-.menu a{
-  display:block;
-  padding:15px;
-  border-bottom:1px solid #eee;
-  text-decoration:none;
-  color:black;
-}
+    .logo{
+      font-size:28px;
+      font-weight:bold;
+      color:#00a884;
+    }
 
-/* HERO */
-.hero{
-  height:220px;
-  background:url("https://images.unsplash.com/photo-1581578731548-c64695cc6952") center/cover;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+    .search-box{
+      width:250px;
+    }
 
-.hero button{
-  padding:15px 25px;
-  border-radius:30px;
-  border:2px solid white;
-  background:transparent;
-  color:white;
-  font-size:16px;
-}
+    .search-box input{
+      width:100%;
+      padding:10px;
+      border:none;
+      border-radius:10px;
+      background:#edf2f7;
+      outline:none;
+    }
 
-/* PRODUCTS */
-.section{
-  padding:15px;
-}
+    .hero{
+      height:300px;
+      background:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),
+      url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1200&auto=format&fit=crop');
+      background-size:cover;
+      background-position:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      text-align:center;
+      padding:20px;
+    }
 
-.products{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
+    .hero h1{
+      font-size:45px;
+      margin-bottom:10px;
+    }
 
-.card{
-  background:white;
-  border-radius:15px;
-  padding:10px;
-  text-align:center;
-}
+    .products{
+      padding:40px 20px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:25px;
+    }
 
-.card img{
-  width:100%;
-  height:130px;
-  object-fit:cover;
-  border-radius:10px;
-}
+    .card{
+      background:white;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 5px 20px rgba(0,0,0,0.08);
+      transition:0.3s;
+    }
 
-/* ADMIN */
-.adminPanel{
-  position:fixed;
-  top:10%;
-  left:5%;
-  width:90%;
-  background:white;
-  padding:15px;
-  border-radius:15px;
-  display:none;
-}
+    .card:hover{
+      transform:translateY(-5px);
+    }
 
-input{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-}
+    .card img{
+      width:100%;
+      height:250px;
+      object-fit:cover;
+    }
 
-button{
-  border:none;
-  padding:10px;
-  border-radius:10px;
-}
-</style>
+    .card-content{
+      padding:15px;
+    }
+
+    .card-content h2{
+      margin-bottom:10px;
+      font-size:22px;
+      color:#222;
+    }
+
+    .card-content p{
+      color:#666;
+      margin-bottom:15px;
+      line-height:1.5;
+    }
+
+    .price-input{
+      width:100%;
+      padding:12px;
+      border:none;
+      background:#edf2f7;
+      border-radius:10px;
+      margin-bottom:12px;
+      outline:none;
+      font-size:16px;
+    }
+
+    .whatsapp-btn{
+      width:100%;
+      padding:12px;
+      border:none;
+      background:#00a884;
+      color:white;
+      border-radius:10px;
+      font-size:16px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .whatsapp-btn:hover{
+      background:#019270;
+    }
+
+    footer{
+      background:#111;
+      color:white;
+      text-align:center;
+      padding:20px;
+      margin-top:40px;
+    }
+
+    @media(max-width:768px){
+
+      header{
+        flex-direction:column;
+        gap:15px;
+      }
+
+      .search-box{
+        width:100%;
+      }
+
+      .hero{
+        height:220px;
+      }
+
+      .hero h1{
+        font-size:30px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- HEADER -->
 <header>
-  <span onclick="toggleMenu()">☰</span>
-  <h2>My Store</h2>
-  <span>🛒</span>
+
+  <div class="logo">
+    Mostafa Store
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
+  </div>
+
 </header>
 
-<!-- MENU -->
-<div class="menu" id="menu">
-  <a href="index.html">Home</a>
-  <a href="product.html">Products</a>
-  <a href="#" onclick="openAdmin()">Admin</a>
-  <a href="#">Contact</a>
-  <a href="#">Catalog</a>
-</div>
+<section class="hero">
+  <div>
+    <h1>مرحبا بكم في Mostafa Store</h1>
+    <p>أفضل منتجات النظافة بأفضل جودة</p>
+  </div>
+</section>
 
-<!-- HERO -->
-<div class="hero">
-  <button onclick="scrollProducts()">تصفح المنتجات</button>
-</div>
+<section class="products" id="productsContainer">
+</section>
 
-<!-- PRODUCTS -->
-<div class="section" id="productsSection">
-  <h2>Products</h2>
-
-  <div class="products" id="products"></div>
-</div>
-
-<!-- ADMIN PANEL -->
-<div class="adminPanel" id="adminPanel">
-  <h3>إضافة منتج</h3>
-
-  <input id="name" placeholder="اسم المنتج">
-  <input id="price" placeholder="الثمن">
-  <input id="pieces" placeholder="عدد القطع">
-
-  <input type="file" id="images" multiple>
-
-  <button onclick="addProduct()" style="background:green;color:white">إضافة</button>
-  <button onclick="deleteProduct()" style="background:red;color:white">حذف آخر منتج</button>
-  <button onclick="closeAdmin()">إغلاق</button>
-</div>
+<footer>
+  جميع الحقوق محفوظة © Mostafa Store
+</footer>
 
 <script>
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
+const products = [
 
-/* MENU */
-function toggleMenu(){
-  let m = document.getElementById("menu");
-  m.style.left = (m.style.left === "0px") ? "-250px" : "0px";
-}
+  {
+    name:"منظف الأرض",
+    description:"منظف قوي برائحة منعشة يدوم طويلا.",
+    image:"https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=800&auto=format&fit=crop"
+  },
 
-/* ADMIN */
-function openAdmin(){
-  let code = prompt("دخل الكود");
+  {
+    name:"سائل غسل الملابس",
+    description:"يحافظ على نظافة ولمعان الملابس.",
+    image:"https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?q=80&w=800&auto=format&fit=crop"
+  },
 
-  if(code == "36427239"){
-    document.getElementById("adminPanel").style.display = "block";
-  }else{
-    alert("كود خاطئ");
+  {
+    name:"معطر المنزل",
+    description:"رائحة منعشة وفخمة لجميع الغرف.",
+    image:"https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?q=80&w=800&auto=format&fit=crop"
   }
-}
 
-function closeAdmin(){
-  document.getElementById("adminPanel").style.display = "none";
-}
+];
 
-/* SAVE */
-function saveProducts(){
-  localStorage.setItem("products", JSON.stringify(products));
-}
+const container = document.getElementById("productsContainer");
 
-/* RENDER */
-function render(){
-  let container = document.getElementById("products");
+function displayProducts(items){
+
   container.innerHTML = "";
 
-  products.forEach((p,i)=>{
+  items.forEach(product => {
+
     container.innerHTML += `
-      <div class="card" onclick="goProduct(${i})">
-        <img src="${p.images[0]}">
-        <h3>${p.name}</h3>
-        <p>${p.price} dh</p>
+
+      <div class="card">
+
+        <img src="${product.image}" alt="">
+
+        <div class="card-content">
+
+          <h2>${product.name}</h2>
+
+          <p>${product.description}</p>
+
+          <input 
+          type="number" 
+          class="price-input"
+          placeholder="اكتب الثمن الذي تقترحه">
+
+          <button class="whatsapp-btn"
+          onclick="sendWhatsApp('${product.name}', this)">
+          اطلب الآن
+          </button>
+
+        </div>
+
       </div>
+
     `;
+
   });
+
 }
 
-/* ADD */
-function addProduct(){
-  let name = document.getElementById("name").value;
-  let price = document.getElementById("price").value;
-  let pieces = document.getElementById("pieces").value;
-  let files = document.getElementById("images").files;
+displayProducts(products);
 
-  let images = [];
-  let count = 0;
+function sendWhatsApp(productName, button){
 
-  for(let i=0;i<files.length;i++){
-    let reader = new FileReader();
+  const card = button.parentElement;
 
-    reader.onload = function(e){
-      images.push(e.target.result);
-      count++;
+  const price = card.querySelector(".price-input").value;
 
-      if(count === files.length){
-        products.push({name, price, pieces, images});
-        saveProducts();
-        render();
-        alert("تمت الإضافة");
-      }
-    }
+  const message = `
+مرحبا، أريد طلب:
+${productName}
 
-    reader.readAsDataURL(files[i]);
-  }
+الثمن المقترح:
+${price} درهم
+`;
+
+  const phone = "212600000000";
+
+  const url = `
+https://wa.me/${phone}?text=${encodeURIComponent(message)}
+`;
+
+  window.open(url, "_blank");
+
 }
 
-/* DELETE */
-function deleteProduct(){
-  products.pop();
-  saveProducts();
-  render();
-}
+document.getElementById("searchInput")
+.addEventListener("input", function(){
 
-/* GO PRODUCT */
-function goProduct(i){
-  localStorage.setItem("selectedProduct", JSON.stringify(products[i]));
-  window.location.href = "product.html";
-}
+  const value = this.value.toLowerCase();
 
-/* SCROLL */
-function scrollProducts(){
-  document.getElementById("productsSection").scrollIntoView({behavior:"smooth"});
-}
+  const filtered = products.filter(product =>
+    product.name.toLowerCase().includes(value)
+  );
 
-render();
+  displayProducts(filtered);
+
+});
 
 </script>
 
