@@ -1,74 +1,64 @@
-// =========================
-// Mostafa Store Script
-// =========================
-
-
-// =========================
-// PRODUCTS
-// =========================
-
 const products = [
 
   {
     id:1,
-
-    name:"منظف الأرض",
-
-    description:
-    "منظف قوي برائحة منعشة ولمعان رائع يدوم طويلا.",
-
-    image:
-    "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=1200&auto=format&fit=crop",
+    name:"Aluminium",
+    description:"منتج عالي الجودة للاستعمال اليومي.",
+    image:"images/product1.jpg",
 
     images:[
-      "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?q=80&w=1200&auto=format&fit=crop"
+      "images/product1.jpg",
+      "images/product1-2.jpg",
+      "images/product1-3.jpg"
     ]
   },
 
   {
     id:2,
+    name:"Asperox",
+    description:"منظف قوي لإزالة الدهون والأوساخ.",
 
-    name:"سائل غسل الملابس",
-
-    description:
-    "يحافظ على نظافة الملابس مع رائحة منعشة وفخمة.",
-
-    image:
-    "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?q=80&w=1200&auto=format&fit=crop",
+    image:"images/product2.jpg",
 
     images:[
-      "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=1200&auto=format&fit=crop"
+      "images/product2.jpg",
+      "images/product2-2.jpg",
+      "images/product2-3.jpg"
     ]
   },
 
   {
     id:3,
+    name:"balai IP harcha",
+    description:"فرشاة تنظيف قوية وعملية.",
 
-    name:"معطر المنزل",
-
-    description:
-    "معطر قوي لجميع الغرف برائحة تدوم طويلا.",
-
-    image:
-    "https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?q=80&w=1200&auto=format&fit=crop",
+    image:"images/product3.jpg",
 
     images:[
-      "https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1585421514738-01798e348b17?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?q=80&w=1200&auto=format&fit=crop"
+      "images/product3.jpg",
+      "images/product3-2.jpg",
+      "images/product3-3.jpg"
+    ]
+  },
+
+  {
+    id:4,
+    name:"Dettol",
+    description:"صابون نظافة وحماية فعالة.",
+
+    image:"images/product4.jpg",
+
+    images:[
+      "images/product4.jpg",
+      "images/product4-2.jpg",
+      "images/product4-3.jpg"
     ]
   }
 
 ];
 
 
-// =========================
-// DISPLAY PRODUCTS
-// =========================
+// INDEX PAGE
 
 const productsContainer =
 document.getElementById("productsContainer");
@@ -91,30 +81,35 @@ function displayProducts(items){
 
         <a href="product.html?id=${product.id}">
 
-          <img src="${product.image}" alt="${product.name}">
+          <img
+          src="${product.image}"
+          class="main-image">
 
         </a>
+
+        <div class="small-images">
+
+          ${product.images.map(img => `
+
+            <img src="${img}">
+
+          `).join("")}
+
+        </div>
 
         <div class="card-content">
 
           <h2>${product.name}</h2>
 
-          <p>${product.description}</p>
-
-          <input
-          type="number"
-          class="price-input"
-          placeholder="اكتب الثمن الذي تقترحه">
-
-          <button
-          class="whatsapp-btn"
-          onclick="sendWhatsApp('${product.name}', this)">
-
-          اطلب الآن
-
-          </button>
-
         </div>
+
+        <button
+        class="whatsapp-btn"
+        onclick="sendWhatsApp('${product.name}')">
+
+        أضف للسلة
+
+        </button>
 
       </div>
 
@@ -125,68 +120,26 @@ function displayProducts(items){
 }
 
 
-// =========================
-// SEARCH
-// =========================
-
-const searchInput =
-document.getElementById("searchInput");
-
-if(searchInput){
-
-  searchInput.addEventListener("input", function(){
-
-    const value = this.value.toLowerCase();
-
-    const filtered = products.filter(product =>
-
-      product.name.toLowerCase().includes(value)
-
-    );
-
-    displayProducts(filtered);
-
-  });
-
-}
-
-
-// =========================
 // WHATSAPP
-// =========================
 
-function sendWhatsApp(productName, button){
-
-  const card = button.parentElement;
-
-  const price =
-  card.querySelector(".price-input").value;
+function sendWhatsApp(productName){
 
   const message = `
-
-مرحبا، أريد طلب:
-
+مرحبا أريد طلب:
 ${productName}
-
-الثمن المقترح:
-${price} درهم
-
 `;
 
-  // ضع رقمك هنا
   const phone = "212600000000";
 
   const url =
   `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
-  window.open(url, "_blank");
+  window.open(url,"_blank");
 
 }
 
 
-// =========================
 // PRODUCT PAGE
-// =========================
 
 const productName =
 document.getElementById("productName");
@@ -196,13 +149,10 @@ if(productName){
   const params =
   new URLSearchParams(window.location.search);
 
-  const productId = params.get("id");
+  const id = params.get("id");
 
-  const product = products.find(p =>
-
-    p.id == productId
-
-  );
+  const product =
+  products.find(p => p.id == id);
 
   if(product){
 
@@ -220,52 +170,43 @@ function loadProduct(product){
   document.getElementById("productDescription")
   .innerText = product.description;
 
-  const mainImage =
-  document.getElementById("mainImage");
-
-  mainImage.src = product.image;
+  document.getElementById("mainProductImage")
+  .src = product.image;
 
   const thumbs =
-  document.getElementById("thumbsContainer");
+  document.getElementById("productThumbs");
 
-  if(thumbs){
+  thumbs.innerHTML = "";
 
-    thumbs.innerHTML = "";
+  product.images.forEach(img => {
 
-    product.images.forEach(image => {
+    thumbs.innerHTML += `
 
-      thumbs.innerHTML += `
+      <img
+      src="${img}"
+      onclick="changeImage('${img}')">
 
-        <img
-        src="${image}"
-        onclick="changeImage('${image}')">
+    `;
 
-      `;
-
-    });
-
-  }
+  });
 
 }
 
 
-// =========================
 // CHANGE IMAGE
-// =========================
 
 function changeImage(src){
 
-  document.getElementById("mainImage").src = src;
+  document.getElementById("mainProductImage")
+  .src = src;
 
 }
 
 
-// =========================
-// ZOOM IMAGE
-// =========================
+// ZOOM
 
 const mainImage =
-document.getElementById("mainImage");
+document.getElementById("mainProductImage");
 
 if(mainImage){
 
@@ -285,38 +226,5 @@ function closeZoom(){
 
   document.getElementById("zoomModal")
   .style.display = "none";
-
-}
-
-
-// =========================
-// PRODUCT PAGE WHATSAPP
-// =========================
-
-function sendProductWhatsApp(){
-
-  const name =
-  document.getElementById("productName").innerText;
-
-  const price =
-  document.getElementById("priceInput").value;
-
-  const message = `
-
-مرحبا، أريد طلب:
-
-${name}
-
-الثمن المقترح:
-${price} درهم
-
-`;
-
-  const phone = "212613675970";
-
-  const url =
-  `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-
-  window.open(url, "_blank");
 
 }
