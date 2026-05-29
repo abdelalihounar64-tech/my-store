@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>السلة</title><style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f5f5f5;
+padding:15px;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+.cart-card{
+background:white;
+border-radius:20px;
+padding:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.cart-card img{
+width:100%;
+border-radius:15px;
+margin-bottom:15px;
+}
+
+.row{
+margin:10px 0;
+font-size:20px;
+}
+
+.total{
+font-size:28px;
+font-weight:bold;
+margin-top:15px;
+}
+
+.delete-btn{
+width:100%;
+padding:15px;
+border:none;
+background:#dc3545;
+color:white;
+font-size:20px;
+border-radius:15px;
+margin-top:15px;
+cursor:pointer;
+}
+
+.whatsapp-btn{
+width:100%;
+padding:18px;
+border:none;
+background:#25D366;
+color:white;
+font-size:22px;
+border-radius:15px;
+margin-top:15px;
+cursor:pointer;
+}
+
+.empty{
+text-align:center;
+font-size:22px;
+margin-top:50px;
+}
+
+</style></head><body><h1>
+🛒 السلة
+</h1><div id="cartContainer"></div><script>
+
+const product =
+JSON.parse(
+localStorage.getItem("cartItem")
+);
+
+const container =
+document.getElementById(
+"cartContainer"
+);
+
+if(!product){
+
+container.innerHTML =
+'<div class="empty">السلة فارغة</div>';
+
+}else{
+
+const total =
+(product.price || 0)
+*
+(product.quantity || 0);
+
+container.innerHTML =
+
+`
+<div class="cart-card">
+
+<img src="${product.image}">
+
+<div class="row">
+المنتج:
+${product.name}
+</div>
+
+<div class="row">
+النوع:
+${product.unit}
+</div>
+
+<div class="row">
+الثمن:
+${product.price || 0} درهم
+</div>
+
+<div class="row">
+الكمية:
+${product.quantity}
+</div>
+
+<div class="total">
+المجموع:
+${total} درهم
+</div>
+
+<button
+class="delete-btn"
+onclick="deleteProduct()">
+
+حذف المنتج
+
+</button>
+
+<button
+class="whatsapp-btn"
+onclick="orderWhatsapp()">
+
+إتمام الطلب عبر واتساب
+
+</button>
+
+</div>
+
+`;
+
+}
+
+function deleteProduct(){
+
+localStorage.removeItem(
+"cartItem"
+);
+
+location.reload();
+
+}
+
+function orderWhatsapp(){
+
+const message =
+
+`طلب جديد
+
+المنتج: ${product.name}
+
+النوع: ${product.unit}
+
+الكمية: ${product.quantity}
+
+الثمن: ${product.price || 0} درهم
+
+المجموع: ${
+(product.price || 0)
+*
+(product.quantity || 0)
+} درهم`;
+
+window.open(
+
+"https://wa.me/212613675970?text=" +
+
+encodeURIComponent(message)
+
+);
+
+}
+
+</script></body>
+</html>
