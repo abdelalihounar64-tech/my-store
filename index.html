@@ -1,7 +1,11 @@
-<!DOCTYPE html><html lang="fr"><head>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MOSTAFA CLEAN SHOP</title><style>
+<title>MOSTAFA CLEAN SHOP</title>
+
+<style>
 
 *{
 margin:0;
@@ -46,6 +50,22 @@ font-size:24px;
 .icons a{
 text-decoration:none;
 color:black;
+position:relative;
+}
+
+#cart-count{
+position:absolute;
+top:-8px;
+right:-10px;
+background:red;
+color:white;
+width:18px;
+height:18px;
+border-radius:50%;
+font-size:12px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .hero{
@@ -136,27 +156,100 @@ padding:25px;
 margin-top:40px;
 }
 
-</style></head><body><header><div class="menu">☰</div><div class="logo">
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="menu">☰</div>
+
+<div class="logo">
 MOSTAFA CLEAN SHOP
-</div><div class="icons">
+</div>
+
+<div class="icons">
 <a href="#">🔍</a>
-<a href="cart.html">🛒</a>
-</div></header><section class="hero"><div class="hero-content">
+
+<a href="cart.html">
+🛒
+<span id="cart-count">0</span>
+</a>
+
+</div>
+
+</header>
+
+<section class="hero">
+
+<div class="hero-content">
+
 <a href="#" class="shop-btn">
 Shop All
 </a>
-</div></section><section class="section"><h2>Produits</h2><div class="products"><a href="product.html" class="product-link"><div class="card"><img
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>Produits</h2>
+
+<div class="products">
+
+<a href="product.html" class="product-link">
+
+<div class="card">
+
+<img
 src="https://i.ibb.co/Qjz9xgdQ/1779799104968.png"
 alt="Asperox">
 
 <div class="card-body">
 <h3>Asperox Magic Yellow</h3>
-</div></div></a><a href="dalaa.html" class="product-link"><div class="card"><img
+</div>
+
+</div>
+
+</a>
+
+<a href="dalaa.html" class="product-link">
+
+<div class="card">
+
+<img
 src="https://i.ibb.co/DPWKcxP0/1779798715820.png"
 alt="Clenix Dalaa">
 
 <div class="card-body">
 <h3>Clenix Dalaa</h3>
-</div></div></a></div></section><footer>
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+</section>
+
+<footer>
 © 2026 MOSTAFA CLEAN SHOP
-</footer></body></html>
+</footer>
+
+<script>
+
+let cartItems =
+JSON.parse(
+localStorage.getItem("cartItems")
+) || [];
+
+document.getElementById("cart-count")
+.textContent = cartItems.length;
+
+</script>
+
+</body>
+</html>
