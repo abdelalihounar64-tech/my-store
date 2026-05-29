@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
-
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Asperox Magic Yellow</title>
-
-<style>
+<title>Asperox Magic Yellow</title><style>
 
 *{
 margin:0;
@@ -54,7 +47,7 @@ background:white;
 }
 
 .product-title{
-font-size:42px;
+font-size:38px;
 font-weight:bold;
 margin-top:25px;
 margin-bottom:20px;
@@ -63,13 +56,12 @@ margin-bottom:20px;
 .price-input{
 width:100%;
 padding:18px;
-font-size:24px;
+font-size:22px;
 border:1px solid #ccc;
 border-radius:18px;
 outline:none;
-direction:rtl;
-text-align:right;
 margin-bottom:20px;
+text-align:right;
 }
 
 .price-input::placeholder{
@@ -79,10 +71,9 @@ text-align:right;
 select{
 width:100%;
 padding:18px;
-font-size:24px;
+font-size:22px;
 border-radius:18px;
 border:1px solid #ccc;
-direction:rtl;
 margin-bottom:25px;
 }
 
@@ -90,14 +81,14 @@ margin-bottom:25px;
 display:flex;
 justify-content:center;
 align-items:center;
-gap:40px;
+gap:35px;
 margin-bottom:25px;
 }
 
 .qty-box button{
-width:90px;
-height:90px;
-font-size:40px;
+width:80px;
+height:80px;
+font-size:35px;
 border:none;
 border-radius:20px;
 background:#000;
@@ -106,7 +97,7 @@ cursor:pointer;
 }
 
 #quantity{
-font-size:60px;
+font-size:50px;
 font-weight:bold;
 min-width:100px;
 text-align:center;
@@ -114,8 +105,8 @@ text-align:center;
 
 .cart-btn{
 width:100%;
-padding:20px;
-font-size:28px;
+padding:18px;
+font-size:24px;
 background:black;
 color:white;
 border:none;
@@ -132,22 +123,12 @@ line-height:1.8;
 font-size:18px;
 }
 
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<img
+</style></head><body><div class="container"><img
 id="mainImage"
 class="main-image"
 src="https://i.ibb.co/DPG2xsQk/file-0000000029d0724684d8971c36b3fbb4.png">
 
-<div class="thumbnails">
-
-<img
+<div class="thumbnails"><img
 src="https://i.ibb.co/DPG2xsQk/file-0000000029d0724684d8971c36b3fbb4.png"
 onclick="changeImage(this.src)">
 
@@ -159,74 +140,31 @@ onclick="changeImage(this.src)">
 src="https://i.ibb.co/4wWrXNWv/file-00000000c7387246b04adb92ee45ef54.png"
 onclick="changeImage(this.src)">
 
-</div>
-
-<h1 class="product-title">
+</div><h1 class="product-title">
 Asperox Magic Yellow
-</h1>
-
-<input
+</h1><input
 type="number"
 class="price-input"
-placeholder="الثمن (اختياري)"
-value="">
+placeholder="الثمن (اختياري)">
 
-<select id="unit">
-
-<option value="piece">
+<select id="unit"><option value="piece">
 قطعة
-</option>
-
-<option value="carton">
+</option><option value="carton">
 علبة (12 قطعة)
-</option>
-
-</select>
-
-<div class="qty-box">
-
-<button onclick="increaseQuantity()">
+</option></select><div class="qty-box"><button onclick="increaseQuantity()">
 +
-</button>
-
-<span id="quantity">
+</button><span id="quantity">
 0
-</span>
-
-<button onclick="decreaseQuantity()">
+</span><button onclick="decreaseQuantity()">
 -
-</button>
-
-</div>
-
-<button class="cart-btn">
+</button></div><button class="cart-btn" onclick="addToCart()">
 إضافة إلى السلة
-</button>
+</button><div class="description">منظف قوي لإزالة الدهون والأوساخ الصعبة.
 
-<div class="description">
+مناسب للمطبخ والأفران والشوايات
+والأسطح المختلفة.
 
-منظف قوي لإزالة الدهون الصعبة
-والأوساخ من المطبخ والأسطح المختلفة.
-
-يمكن استخدامه على:
-
-• المطابخ
-
-• الأفران
-
-• الشوايات
-
-• المعادن
-
-• البلاستيك
-
-• الأسطح المنزلية
-
-</div>
-
-</div>
-
-<script>
+</div></div><script>
 
 function changeImage(src){
 document.getElementById("mainImage").src = src;
@@ -294,7 +232,41 @@ quantity;
 
 });
 
-</script>
+function addToCart(){
 
-</body>
+const price =
+document.querySelector(".price-input").value || 0;
+
+const unit =
+document.getElementById("unit").value;
+
+const product = {
+
+name: "Asperox Magic Yellow",
+
+image:
+"https://i.ibb.co/DPG2xsQk/file-0000000029d0724684d8971c36b3fbb4.png",
+
+price: price,
+
+unit:
+unit === "piece"
+? "قطعة"
+: "علبة",
+
+quantity: quantity
+
+};
+
+localStorage.setItem(
+"cartItem",
+JSON.stringify(product)
+);
+
+window.location.href =
+"cart.html";
+
+}
+
+</script></body>
 </html>
