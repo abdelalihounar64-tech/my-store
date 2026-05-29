@@ -21,22 +21,18 @@ background:#f5f5f5;
 /* HEADER */
 
 header{
-background:white;
+background:#fff;
 height:70px;
 display:flex;
-align-items:center;
 justify-content:space-between;
+align-items:center;
 padding:0 15px;
-box-shadow:0 2px 10px rgba(0,0,0,.1);
-position:sticky;
-top:0;
-z-index:1000;
+box-shadow:0 2px 10px rgba(0,0,0,.08);
 }
 
 .logo{
 font-size:18px;
 font-weight:bold;
-text-align:center;
 }
 
 .menu{
@@ -46,13 +42,8 @@ cursor:pointer;
 
 .header-icons{
 display:flex;
-gap:18px;
-}
-
-.header-icons a{
-text-decoration:none;
+gap:20px;
 font-size:24px;
-color:#222;
 }
 
 /* HERO */
@@ -69,7 +60,7 @@ position:relative;
 }
 
 .hero::before{
-content:"";
+content:'';
 position:absolute;
 inset:0;
 background:rgba(0,0,0,.25);
@@ -80,26 +71,25 @@ position:relative;
 z-index:2;
 }
 
-.btn{
-display:inline-block;
+.shop-btn{
 padding:15px 40px;
-border:2px solid white;
+border:2px solid #fff;
 border-radius:50px;
+color:#fff;
 text-decoration:none;
 font-size:22px;
-color:white;
 background:rgba(255,255,255,.1);
-backdrop-filter:blur(5px);
+backdrop-filter:blur(4px);
 }
 
 /* PRODUCTS */
 
 .section{
-padding:30px 15px;
+padding:25px 15px;
 }
 
 .section h2{
-font-size:42px;
+font-size:40px;
 margin-bottom:20px;
 }
 
@@ -113,29 +103,23 @@ gap:15px;
 background:white;
 border-radius:15px;
 overflow:hidden;
-box-shadow:0 5px 15px rgba(0,0,0,.08);
+box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
 
 .card img{
 width:100%;
-height:220px;
+height:240px;
 object-fit:cover;
 }
 
 .card-body{
-padding:10px;
+padding:12px;
 }
 
 .card h3{
-font-size:18px;
-margin-bottom:8px;
-}
-
-.price{
-font-size:20px;
-font-weight:bold;
-color:#16a34a;
-margin-bottom:10px;
+font-size:16px;
+text-align:center;
+min-height:45px;
 }
 
 .buy-btn{
@@ -145,22 +129,21 @@ border:none;
 background:black;
 color:white;
 border-radius:10px;
-font-size:16px;
+margin-top:10px;
 cursor:pointer;
 }
 
 /* FOOTER */
 
 footer{
-margin-top:40px;
 background:#111;
 color:white;
 text-align:center;
 padding:25px;
+margin-top:40px;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -174,8 +157,8 @@ MOSTAFA CLEAN SHOP
 </div>
 
 <div class="header-icons">
-<a href="#">🔍</a>
-<a href="cart.html">🛒</a>
+<span>🔍</span>
+<span>🛒</span>
 </div>
 
 </header>
@@ -183,7 +166,7 @@ MOSTAFA CLEAN SHOP
 <section class="hero">
 
 <div class="hero-content">
-<a href="products.html" class="btn">
+<a href="products.html" class="shop-btn">
 Shop All
 </a>
 </div>
@@ -196,26 +179,32 @@ Shop All
 
 <div class="products">
 
-<div class="card">
-<img src="https://via.placeholder.com/400x500">
-<div class="card-body">
-<h3>Asperox</h3>
-<div class="price">49 DH</div>
-<button class="buy-btn">
-Ajouter au panier
-</button>
-</div>
-</div>
+<!-- A -->
 
 <div class="card">
-<img src="https://via.placeholder.com/400x500">
+<img src="https://i.ibb.co/Qjz9xgdQ/1779799104968.png" alt="Asperox">
+
 <div class="card-body">
-<h3>Dalaa Wooly</h3>
-<div class="price">25 DH</div>
+<h3>Asperox Magic Yellow</h3>
 <button class="buy-btn">
 Ajouter au panier
 </button>
 </div>
+
+</div>
+
+<!-- C -->
+
+<div class="card">
+<img src="images/clenix-dalaa.jpg" alt="Clenix Dalaa">
+
+<div class="card-body">
+<h3>Clenix Dalaa 330</h3>
+<button class="buy-btn">
+Ajouter au panier
+</button>
+</div>
+
 </div>
 
 </div>
