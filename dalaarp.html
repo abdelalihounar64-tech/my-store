@@ -1,0 +1,237 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dalaa RP</title><style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f5f5f5;
+padding:15px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+}
+
+.main-image{
+width:100%;
+border-radius:20px;
+background:white;
+cursor:pointer;
+transition:.3s;
+}
+
+.thumbnails{
+display:flex;
+gap:10px;
+overflow-x:auto;
+margin-top:15px;
+padding-bottom:5px;
+}
+
+.thumbnails img{
+width:90px;
+height:90px;
+object-fit:cover;
+border-radius:12px;
+cursor:pointer;
+border:2px solid #ddd;
+background:white;
+}
+
+.product-title{
+font-size:38px;
+font-weight:bold;
+margin-top:25px;
+margin-bottom:20px;
+}
+
+.price-input{
+width:100%;
+padding:18px;
+font-size:22px;
+border:1px solid #ccc;
+border-radius:18px;
+outline:none;
+margin-bottom:20px;
+text-align:right;
+}
+
+.qty-box{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:35px;
+margin-bottom:25px;
+}
+
+.qty-box button{
+width:80px;
+height:80px;
+font-size:35px;
+border:none;
+border-radius:20px;
+background:#000;
+color:white;
+cursor:pointer;
+}
+
+#quantity{
+font-size:50px;
+font-weight:bold;
+min-width:100px;
+text-align:center;
+}
+
+.cart-btn{
+width:100%;
+padding:18px;
+font-size:24px;
+background:black;
+color:white;
+border:none;
+border-radius:20px;
+cursor:pointer;
+}
+
+.description{
+margin-top:25px;
+background:white;
+padding:20px;
+border-radius:20px;
+line-height:1.9;
+font-size:18px;
+}
+
+</style></head><body><div class="container"><img
+id="mainImage"
+class="main-image"
+src="https://i.ibb.co/hJvRtzpB/1777563253651.png">
+
+<div class="thumbnails"><img src="https://i.ibb.co/hJvRtzpB/1777563253651.png" onclick="changeImage(this.src)"><img src="https://i.ibb.co/cSjqC288/file-00000000c8887246825758bbcdbf0a2c.png" onclick="changeImage(this.src)"></div><h1 class="product-title">
+Dalaa RP
+</h1><input
+type="number"
+class="price-input"
+placeholder="الثمن (اختياري)">
+
+<div class="qty-box"><button onclick="increaseQuantity()">+</button>
+
+<span id="quantity">0</span>
+
+<button onclick="decreaseQuantity()">-</button>
+
+</div><button class="cart-btn" onclick="addToCart()">
+إضافة إلى السلة
+</button><div class="description">حفاضات Dalaa RP مصممة لتوفير الراحة والحماية اليومية لطفلك.
+
+✔ امتصاص فعال للسوائل
+
+✔ حماية من التسرب
+
+✔ ملمس ناعم على البشرة
+
+✔ تصميم مريح ومرن
+
+✔ مناسبة للاستعمال اليومي
+
+توفر لطفلك الراحة والثقة أثناء اللعب والنوم والتنقل.
+
+يباع بالقطعة فقط.
+
+</div></div><script>
+
+function changeImage(src){
+document.getElementById("mainImage").src = src;
+}
+
+document.getElementById("mainImage")
+.addEventListener("click",function(){
+
+if(this.style.transform==="scale(2)"){
+this.style.transform="scale(1)";
+}else{
+this.style.transform="scale(2)";
+}
+
+});
+
+let quantity = 0;
+
+const quantityValue =
+document.getElementById("quantity");
+
+function increaseQuantity(){
+
+quantity += 1;
+
+quantityValue.textContent =
+quantity;
+
+}
+
+function decreaseQuantity(){
+
+quantity -= 1;
+
+if(quantity < 0){
+quantity = 0;
+}
+
+quantityValue.textContent =
+quantity;
+
+}
+
+function addToCart(){
+
+const price =
+document.querySelector(".price-input").value || 0;
+
+if(quantity <= 0){
+
+alert("اختر الكمية أولاً");
+
+return;
+
+}
+
+const product = {
+
+id: Date.now(),
+
+name: "Dalaa RP",
+
+image:
+"https://i.ibb.co/hJvRtzpB/1777563253651.png",
+
+price: Number(price),
+
+unit: "قطعة",
+
+quantity: quantity
+
+};
+
+let cartItems =
+JSON.parse(
+localStorage.getItem("cartItems")
+) || [];
+
+cartItems.push(product);
+
+localStorage.setItem(
+"cartItems",
+JSON.stringify(cartItems)
+);
+
+alert("تمت إضافة المنتج إلى السلة");
+
+}
+
+</script></body></html>
