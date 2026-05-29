@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadum</title><style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f5f5f5;
+padding:15px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+}
+
+.main-image{
+width:100%;
+border-radius:20px;
+background:white;
+cursor:pointer;
+transition:.3s;
+}
+
+.thumbnails{
+display:flex;
+gap:10px;
+overflow-x:auto;
+margin-top:15px;
+padding-bottom:5px;
+}
+
+.thumbnails img{
+width:90px;
+height:90px;
+object-fit:cover;
+border-radius:12px;
+cursor:pointer;
+border:2px solid #ddd;
+background:white;
+}
+
+.product-title{
+font-size:38px;
+font-weight:bold;
+margin-top:25px;
+margin-bottom:20px;
+}
+
+.price-input{
+width:100%;
+padding:18px;
+font-size:22px;
+border:1px solid #ccc;
+border-radius:18px;
+outline:none;
+margin-bottom:20px;
+text-align:right;
+}
+
+select{
+width:100%;
+padding:18px;
+font-size:22px;
+border-radius:18px;
+border:1px solid #ccc;
+margin-bottom:25px;
+}
+
+.qty-box{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:35px;
+margin-bottom:25px;
+}
+
+.qty-box button{
+width:80px;
+height:80px;
+font-size:35px;
+border:none;
+border-radius:20px;
+background:#000;
+color:white;
+cursor:pointer;
+}
+
+#quantity{
+font-size:50px;
+font-weight:bold;
+min-width:100px;
+text-align:center;
+}
+
+.cart-btn{
+width:100%;
+padding:18px;
+font-size:24px;
+background:black;
+color:white;
+border:none;
+border-radius:20px;
+cursor:pointer;
+}
+
+.description{
+margin-top:25px;
+background:white;
+padding:20px;
+border-radius:20px;
+line-height:1.8;
+font-size:18px;
+}
+
+</style></head><body><div class="container"><img
+id="mainImage"
+class="main-image"
+src="https://i.ibb.co/bjd7DZdY/file-000000004c5871fd8cfa806c66400729.png">
+
+<div class="thumbnails"><img src="https://i.ibb.co/bjd7DZdY/file-000000004c5871fd8cfa806c66400729.png" onclick="changeImage(this.src)"><img src="https://i.ibb.co/4wnRm9qd/file-00000000d4a871fdba98c573b1d4b47f.png" onclick="changeImage(this.src)"></div><h1 class="product-title">
+Cadum
+</h1><input
+type="number"
+class="price-input"
+placeholder="الثمن (اختياري)">
+
+<select id="unit">
+<option value="piece">قطعة</option>
+<option value="carton">علبة (24 قطعة)</option>
+</select><div class="qty-box">
+<button onclick="increaseQuantity()">+</button>
+<span id="quantity">0</span>
+<button onclick="decreaseQuantity()">-</button>
+</div><button class="cart-btn" onclick="addToCart()">
+إضافة إلى السلة
+</button><div class="description">شامبو Cadum Force & Vitalité aux Œufs هو عناية يومية 2 في 1 مخصصة للشعر العادي.
+
+تركيبته الغنية بمستخلص البيض، المعروف باحتوائه على البروتينات الطبيعية، تساعد على تغذية الشعر وتقويته من الجذور إلى الأطراف، مما يمنحه مظهراً أكثر صحة وحيوية.
+
+يساعد الشامبو على تنظيف الشعر بلطف، وتسهيل التمشيط، وتقليل التشابك، مع ترك الشعر ناعماً ولامعاً وسهل التصفيف.
+
+✔ ينظف الشعر بلطف
+✔ يغذي ويقوي الشعر
+✔ يمنح النعومة واللمعان
+✔ يسهل فك تشابك الشعر
+✔ مناسب للاستعمال اليومي ولجميع أفراد العائلة
+
+اختيار مثالي للعناية اليومية بالشعر والحفاظ على قوته وحيويته.
+
+العلبة تحتوي على 24 قطعة.
+
+</div></div><script>
+
+function changeImage(src){
+document.getElementById("mainImage").src = src;
+}
+
+let quantity = 0;
+
+const quantityValue =
+document.getElementById("quantity");
+
+const unitSelect =
+document.getElementById("unit");
+
+function increaseQuantity(){
+
+const step =
+unitSelect.value === "carton"
+? 24
+: 1;
+
+quantity += step;
+
+quantityValue.textContent = quantity;
+
+}
+
+function decreaseQuantity(){
+
+const step =
+unitSelect.value === "carton"
+? 24
+: 1;
+
+quantity -= step;
+
+if(quantity < 0){
+quantity = 0;
+}
+
+quantityValue.textContent = quantity;
+
+}
+
+function addToCart(){
+
+const price =
+document.querySelector(".price-input").value || 0;
+
+const unit =
+document.getElementById("unit").value;
+
+if(quantity <= 0){
+alert("اختر الكمية أولاً");
+return;
+}
+
+const product = {
+
+id: Date.now(),
+
+name: "Cadum",
+
+image:
+"https://i.ibb.co/bjd7DZdY/file-000000004c5871fd8cfa806c66400729.png",
+
+price: Number(price),
+
+unit:
+unit === "piece"
+? "قطعة"
+: "علبة",
+
+quantity: quantity
+
+};
+
+let cartItems =
+JSON.parse(
+localStorage.getItem("cartItems")
+) || [];
+
+cartItems.push(product);
+
+localStorage.setItem(
+"cartItems",
+JSON.stringify(cartItems)
+);
+
+alert("تمت إضافة المنتج إلى السلة");
+
+}
+
+</script></body>
+</html>
