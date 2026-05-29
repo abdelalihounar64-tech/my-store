@@ -1,213 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mostafa Clean Shop</title>
 
-  <title>Mostafa Store</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
 
-  <!-- Icons -->
-  <link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+body{
+background:#f5f5f5;
+}
 
-  <style>
+header{
+background:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+position:sticky;
+top:0;
+z-index:100;
+}
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial, sans-serif;
-    }
+.logo{
+font-size:28px;
+font-weight:bold;
+}
 
-    body{
-      background:#f5f5f5;
-    }
+.icons{
+display:flex;
+gap:20px;
+font-size:22px;
+}
 
-    /* HEADER */
+.hero{
+height:500px;
+background:url('https://i.ibb.co/qYL5PBx6/Screenshot-2026-05-29-14-28-04-640-edit-com-miui-gallery.jpg') center center/cover;
+display:flex;
+justify-content:center;
+align-items:center;
+position:relative;
+}
 
-    header{
-      width:100%;
-      height:80px;
-      background:white;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 20px;
-      border-bottom:1px solid #ddd;
-      position:sticky;
-      top:0;
-      z-index:1000;
-    }
+.hero::before{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,.35);
+}
 
-    .left-icons,
-    .right-icons{
-      display:flex;
-      gap:22px;
-      font-size:30px;
-      color:#111;
-    }
+.hero-content{
+position:relative;
+text-align:center;
+color:white;
+}
 
-    .logo{
-      font-size:28px;
-      font-weight:bold;
-      color:#111;
-    }
+.hero h1{
+font-size:50px;
+margin-bottom:15px;
+}
 
-    /* HERO */
+.hero p{
+font-size:20px;
+margin-bottom:20px;
+}
 
-    .hero{
-      width:100%;
-      height:350px;
-      overflow:hidden;
-    }
+.btn{
+display:inline-block;
+padding:15px 35px;
+border:2px solid white;
+color:white;
+text-decoration:none;
+border-radius:40px;
+font-size:18px;
+transition:.3s;
+}
 
-    .hero img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
+.btn:hover{
+background:white;
+color:black;
+}
 
-    /* PRODUCTS TITLE */
+.section{
+padding:40px 20px;
+}
 
-    .products-header{
-      padding:25px 25px 15px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
+.section h2{
+font-size:40px;
+margin-bottom:30px;
+}
 
-    .products-header h2{
-      font-size:55px;
-      font-weight:700;
-      color:#111;
-    }
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
 
-    .products-header a{
-      text-decoration:none;
-      font-size:28px;
-      color:#111;
-    }
+.card{
+background:white;
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
 
-    /* PRODUCT CARD */
+.card img{
+width:100%;
+height:260px;
+object-fit:cover;
+}
 
-    .products{
-      padding:0 20px 40px;
-    }
+.card-body{
+padding:15px;
+}
 
-    .product-card{
-      width:100%;
-      background:white;
-      border-radius:30px;
-      overflow:hidden;
-      box-shadow:0 5px 20px rgba(0,0,0,0.08);
-    }
+.card h3{
+margin-bottom:10px;
+}
 
-    .product-card img{
-      width:100%;
-      display:block;
-    }
+.price{
+color:green;
+font-size:22px;
+font-weight:bold;
+margin-bottom:10px;
+}
 
-    .product-info{
-      padding:20px;
-    }
+.buy{
+display:block;
+width:100%;
+padding:12px;
+background:#28a745;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
 
-    .product-info h3{
-      font-size:28px;
-      color:#111;
-    }
+footer{
+background:#111;
+color:white;
+text-align:center;
+padding:25px;
+margin-top:50px;
+}
+</style>
 
-    /* MOBILE */
-
-    @media(max-width:768px){
-
-      header{
-        height:70px;
-      }
-
-      .logo{
-        font-size:22px;
-      }
-
-      .left-icons,
-      .right-icons{
-        font-size:24px;
-        gap:18px;
-      }
-
-      .hero{
-        height:250px;
-      }
-
-      .products-header h2{
-        font-size:34px;
-      }
-
-      .products-header a{
-        font-size:22px;
-      }
-
-      .product-info h3{
-        font-size:22px;
-      }
-
-    }
-
-  </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+<header>
+<div class="logo">MOSTAFA CLEAN SHOP</div>
 
-  <header>
+<div class="icons">
+🔍
+👤
+🛒
+</div>
+</header>
 
-    <div class="left-icons">
-      <i class="fa-solid fa-bars"></i>
-      <i class="fa-solid fa-magnifying-glass"></i>
-    </div>
+<section class="hero">
+<div class="hero-content">
+<h1>Mostafa Clean Shop</h1>
+<p>Tout pour une maison propre et saine</p>
+<a href="products.html" class="btn">Shop All</a>
+</div>
+</section>
 
-    <div class="logo">
-      Mostafa Store
-    </div>
+<section class="section">
 
-    <div class="right-icons">
-      <i class="fa-regular fa-user"></i>
-      <i class="fa-solid fa-bag-shopping"></i>
-    </div>
+<h2>Produits</h2>
 
-  </header>
+<div class="products">
 
-  <!-- HERO IMAGE -->
+<div class="card">
+<img src="images/product1.jpg">
+<div class="card-body">
+<h3>Asperox</h3>
+<div class="price">49 DH</div>
+<button class="buy">Ajouter au panier</button>
+</div>
+</div>
 
-  <section class="hero">
+<div class="card">
+<img src="images/product2.jpg">
+<div class="card-body">
+<h3>Dalaa Wooly</h3>
+<div class="price">25 DH</div>
+<button class="buy">Ajouter au panier</button>
+</div>
+</div>
 
-    <!-- صورة المتجر -->
-    <img src="mostafa-store.jpg" alt="Mostafa Store">
+</div>
 
-  </section>
+</section>
 
-  <!-- PRODUCTS -->
-
-  <div class="products-header">
-    <h2>Products</h2>
-    <a href="#">View all</a>
-  </div>
-
-  <!-- PRODUCT -->
-
-  <section class="products">
-
-    <div class="product-card">
-
-      <!-- صورة المنتج -->
-      <img src="chapo.jpg" alt="Chapo Shampooing">
-
-      <div class="product-info">
-        <h3>Chapo Shampooing</h3>
-      </div>
-
-    </div>
-
-  </section>
+<footer>
+© 2026 Mostafa Clean Shop
+</footer>
 
 </body>
 </html>
