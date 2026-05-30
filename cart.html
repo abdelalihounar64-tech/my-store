@@ -1,5 +1,13 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>السلة</title><style>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>السلة</title>
+
+<style>
 
 *{
 margin:0;
@@ -91,12 +99,18 @@ font-size:22px;
 margin-top:50px;
 }
 
-</style></head><body><h1>
-🛒 السلة
-</h1><div id="cartContainer"></div><script>
+</style>
+</head>
+
+<body>
+
+<h1>🛒 السلة</h1>
+
+<div id="cartContainer"></div>
+
+<script>
 
 let cartItems =
-
 JSON.parse(
 localStorage.getItem("cartItems")
 ) || [];
@@ -113,7 +127,6 @@ function renderCart(){
 if(cartItems.length === 0){
 
 container.innerHTML =
-
 '<div class="empty">السلة فارغة</div>';
 
 return;
@@ -121,7 +134,6 @@ return;
 }
 
 let total = 0;
-
 let html = "";
 
 cartItems.forEach((item,index)=>{
@@ -132,6 +144,52 @@ const itemTotal =
 (item.quantity || 0);
 
 total += itemTotal;
+
+let sangoDetails = "";
+
+if(item.name === "Sango" && item.details){
+
+if(item.details.scents){
+
+sangoDetails +=
+'<div class="row"><b>الاختيارات:</b></div>';
+
+for(let scent in item.details.scents){
+
+if(item.details.scents[scent] > 0){
+
+sangoDetails +=
+`<div class="row">
+${scent}: ${item.details.scents[scent]} قطعة
+</div>`;
+
+}
+
+}
+
+}
+
+if(item.details.gifts){
+
+sangoDetails +=
+'<div class="row"><b>🎁 الهدايا:</b></div>';
+
+for(let gift in item.details.gifts){
+
+if(item.details.gifts[gift] > 0){
+
+sangoDetails +=
+`<div class="row">
+${gift}: ${item.details.gifts[gift]} قطعة
+</div>`;
+
+}
+
+}
+
+}
+
+}
 
 html += `
 
@@ -154,6 +212,8 @@ ${item.unit}
 الثمن:
 ${item.price || 0} درهم
 </div>
+
+${sangoDetails}
 
 <div class="row">
 الكمية:
@@ -224,7 +284,6 @@ renderCart();
 function orderWhatsapp(){
 
 let message =
-
 "مرحباً مصطفى،%0A%0Aأريد طلب:%0A%0A";
 
 let total = 0;
@@ -239,16 +298,53 @@ const itemTotal =
 total += itemTotal;
 
 message +=
-
 "- " + item.name + "%0A" +
 "النوع: " + item.unit + "%0A" +
 "الثمن: " + (item.price || 0) + " درهم%0A" +
-"الكمية: " + item.quantity + "%0A%0A";
+"الكمية: " + item.quantity + "%0A";
+
+if(item.name === "Sango" && item.details){
+
+message += "%0Aالاختيارات:%0A";
+
+for(let scent in item.details.scents){
+
+if(item.details.scents[scent] > 0){
+
+message +=
+scent +
+": " +
+item.details.scents[scent] +
+" قطعة%0A";
+
+}
+
+}
+
+message += "%0Aالهدايا:%0A";
+
+for(let gift in item.details.gifts){
+
+if(item.details.gifts[gift] > 0){
+
+message +=
+gift +
+": " +
+item.details.gifts[gift] +
+" قطعة%0A";
+
+}
+
+}
+
+}
+
+message += "%0A";
 
 });
 
 message +=
-"الإجمالي: " +
+"%0Aالإجمالي: " +
 total +
 " درهم";
 
@@ -259,4 +355,7 @@ message
 
 }
 
-</script></body></html>
+</script>
+
+</body>
+</html>
