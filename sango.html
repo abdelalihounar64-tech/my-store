@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sango</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f5f5f5;
+padding:15px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+}
+
+.main-image{
+width:100%;
+border-radius:20px;
+background:white;
+cursor:pointer;
+transition:.3s;
+}
+
+.thumbnails{
+display:flex;
+gap:10px;
+overflow-x:auto;
+margin-top:15px;
+padding-bottom:5px;
+}
+
+.thumbnails img{
+width:90px;
+height:90px;
+object-fit:cover;
+border-radius:12px;
+cursor:pointer;
+border:2px solid #ddd;
+background:white;
+}
+
+.product-title{
+font-size:38px;
+font-weight:bold;
+margin-top:25px;
+margin-bottom:20px;
+}
+
+.price-input{
+width:100%;
+padding:18px;
+font-size:22px;
+border:1px solid #ccc;
+border-radius:18px;
+outline:none;
+margin-bottom:20px;
+text-align:right;
+}
+
+.scent-box{
+background:white;
+padding:15px;
+border-radius:15px;
+margin-bottom:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.scent-name{
+font-size:22px;
+font-weight:bold;
+}
+
+.counter{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.counter button{
+width:45px;
+height:45px;
+border:none;
+border-radius:10px;
+background:black;
+color:white;
+font-size:22px;
+cursor:pointer;
+}
+
+.counter span{
+font-size:24px;
+font-weight:bold;
+min-width:35px;
+text-align:center;
+}
+
+.summary{
+background:white;
+padding:20px;
+border-radius:20px;
+margin-top:20px;
+line-height:2;
+font-size:22px;
+font-weight:bold;
+}
+
+.gift-section{
+background:white;
+padding:20px;
+border-radius:20px;
+margin-top:20px;
+display:none;
+}
+
+.gift-title{
+font-size:28px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.cart-btn{
+width:100%;
+padding:18px;
+font-size:24px;
+background:black;
+color:white;
+border:none;
+border-radius:20px;
+cursor:pointer;
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<img
+id="mainImage"
+class="main-image"
+src="https://i.ibb.co/DPpHSZcq/In-Shot-20260530-153859085.jpg">
+
+<div class="thumbnails">
+
+<img src="https://i.ibb.co/DPpHSZcq/In-Shot-20260530-153859085.jpg" onclick="changeImage(this.src)">
+
+<img src="https://i.ibb.co/vxbb6Yj6/file-0000000020d4720a8c001d0aec7131a8.png" onclick="changeImage(this.src)">
+
+<img src="https://i.ibb.co/CjCBC64/file-00000000a2f4724396f5a888ca8ec95f.png" onclick="changeImage(this.src)">
+
+<img src="https://i.ibb.co/ZpQ24tc8/file-00000000ba5471f4a26eead984b78754.png" onclick="changeImage(this.src)">
+
+<img src="https://i.ibb.co/PGcNDKpX/file-00000000b4d8720aaec7091aa20d02c7.png" onclick="changeImage(this.src)">
+
+<img src="https://i.ibb.co/0yQmmt28/file-000000008bf471f480ff8fecba0fe18f.png" onclick="changeImage(this.src)">
+
+<img src="https://i.ibb.co/93bWkDdG/file-0000000057c071f49ed77fee0c3a70d1.png" onclick="changeImage(this.src)">
+
+<img src="https://i.ibb.co/RG6FY8n5/file-00000000adf0720a844a61c3b842b972.png" onclick="changeImage(this.src)">
+
+</div>
+
+<h1 class="product-title">
+Sango
+</h1>
+
+<input
+type="number"
+class="price-input"
+placeholder="الثمن (اختياري)">
+
+<div id="scents"></div>
+
+<div class="summary">
+
+<div>
+المجموع:
+<span id="totalPieces">0</span>
+قطعة
+</div>
+
+<div>
+🎁 الهدايا:
+<span id="freePieces">0</span>
+قطعة
+</div>
+
+<div>
+الإجمالي:
+<span id="finalPieces">0</span>
+قطعة
+</div>
+
+</div>
+
+<div
+id="giftSection"
+class="gift-section">
+
+<div class="gift-title">
+🎁 اختر الهدايا المجانية
+</div>
+
+<div id="giftScents"></div>
+
+<div style="margin-top:15px;font-size:22px;font-weight:bold;">
+
+المسموح:
+<span id="allowedGifts">0</span>
+
+|
+
+المختار:
+<span id="selectedGifts">0</span>
+
+</div>
+
+</div>
+
+<button
+class="cart-btn"
+onclick="addToCart()">
+
+إضافة إلى السلة
+
+</button>
+  
+<script>
+
+const scents = [
+"Vanille",
+"Lavande",
+"Citron",
+"Rose",
+"Ocean",
+"Florale",
+"Oud"
+];
+
+let quantities = {};
+let gifts = {};
+
+function createCounters(){
+
+const scentsContainer =
+document.getElementById("scents");
+
+const giftContainer =
+document.getElementById("giftScents");
+
+scents.forEach(name=>{
+
+quantities[name] = 0;
+gifts[name] = 0;
+
+scentsContainer.innerHTML += `
+
+<div class="scent-box">
+
+<div class="scent-name">${name}</div>
+
+<div class="counter">
+
+<button onclick="changeQty('${name}',-1)">-</button>
+
+<span id="qty-${name}">0</span>
+
+<button onclick="changeQty('${name}',1)">+</button>
+
+</div>
+
+</div>
+
+`;
+
+giftContainer.innerHTML += `
+
+<div class="scent-box">
+
+<div class="scent-name">${name}</div>
+
+<div class="counter">
+
+<button onclick="changeGift('${name}',-1)">-</button>
+
+<span id="gift-${name}">0</span>
+
+<button onclick="changeGift('${name}',1)">+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function changeQty(name,value){
+
+quantities[name] += value;
+
+if(quantities[name] < 0){
+quantities[name] = 0;
+}
+
+document.getElementById(
+`qty-${name}`
+).textContent = quantities[name];
+
+updateTotals();
+
+}
+
+function changeGift(name,value){
+
+const allowed =
+parseInt(
+document.getElementById("allowedGifts")
+.textContent
+);
+
+let selected = 0;
+
+for(let key in gifts){
+selected += gifts[key];
+}
+
+if(value > 0 && selected >= allowed){
+return;
+}
+
+gifts[name] += value;
+
+if(gifts[name] < 0){
+gifts[name] = 0;
+}
+
+document.getElementById(
+`gift-${name}`
+).textContent = gifts[name];
+
+updateGiftCount();
+
+}
+
+function updateGiftCount(){
+
+let selected = 0;
+
+for(let key in gifts){
+selected += gifts[key];
+}
+
+document.getElementById(
+"selectedGifts"
+).textContent = selected;
+
+}
+
+function updateTotals(){
+
+let total = 0;
+
+for(let key in quantities){
+total += quantities[key];
+}
+
+const free =
+Math.floor(total / 12) * 2;
+
+const finalTotal =
+total + free;
+
+document.getElementById(
+"totalPieces"
+).textContent = total;
+
+document.getElementById(
+"freePieces"
+).textContent = free;
+
+document.getElementById(
+"finalPieces"
+).textContent = finalTotal;
+
+document.getElementById(
+"allowedGifts"
+).textContent = free;
+
+if(free > 0){
+
+document.getElementById(
+"giftSection"
+).style.display = "block";
+
+}else{
+
+document.getElementById(
+"giftSection"
+).style.display = "none";
+
+}
+
+updateGiftCount();
+
+}
+
+function changeImage(src){
+
+document.getElementById(
+"mainImage"
+).src = src;
+
+}
+
+document.getElementById(
+"mainImage"
+).addEventListener(
+"click",
+function(){
+
+if(this.style.transform==="scale(2)"){
+this.style.transform="scale(1)";
+}else{
+this.style.transform="scale(2)";
+}
+
+}
+);
+
+function addToCart(){
+
+let total = 0;
+
+for(let key in quantities){
+total += quantities[key];
+}
+
+if(total <= 0){
+
+alert("اختر الكمية أولاً");
+
+return;
+
+}
+
+const free =
+Math.floor(total / 12) * 2;
+
+let selectedGifts = 0;
+
+for(let key in gifts){
+selectedGifts += gifts[key];
+}
+
+if(selectedGifts > free){
+
+alert("عدد الهدايا أكبر من المسموح");
+
+return;
+
+}
+
+const price =
+document.querySelector(
+".price-input"
+).value || 0;
+
+const product = {
+
+id: Date.now(),
+
+name: "Sango",
+
+image:
+"https://i.ibb.co/DPpHSZcq/In-Shot-20260530-153859085.jpg",
+
+price: Number(price),
+
+unit: "قطعة",
+
+quantity: total,
+
+details: {
+
+scents: quantities,
+
+gifts: gifts,
+
+free: free,
+
+finalTotal:
+total + free
+
+}
+
+};
+
+let cartItems =
+JSON.parse(
+localStorage.getItem("cartItems")
+) || [];
+
+cartItems.push(product);
+
+localStorage.setItem(
+"cartItems",
+JSON.stringify(cartItems)
+);
+
+alert("تمت إضافة المنتج إلى السلة");
+
+}
+
+createCounters();
+
+</script>
+
+</body>
+
+</html>
