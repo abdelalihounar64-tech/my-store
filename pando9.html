@@ -126,6 +126,14 @@ line-height:1.8;
 font-size:18px;
 }
 
+/* زدناها غير للفيديو */
+.product-video{
+width:100%;
+border-radius:20px;
+margin-top:20px;
+background:black;
+}
+
 </style>
 
 </head>
@@ -137,13 +145,18 @@ font-size:18px;
 <img
 id="mainImage"
 class="main-image"
-src="https://i.ibb.co/SDGv6jvV/file-000000004e2c720ab1fe9ae4a0e6ca9a.png">
+src="https://i.ibb.co/SDGv6jvV/file-000004e2c720ab1fe9ae4a0e6ca9a.png">
+
+<!-- الفيديو تزاد هنا بلا ما نمسو شي حاجة أخرى -->
+<video class="product-video" controls autoplay muted playsinline>
+  <source src="https://res.cloudinary.com/dxhqxicb9/video/upload/InShot_20260603_160048838_u1uko0.mp4" type="video/mp4">
+</video>
 
 <div class="thumbnails">
 
-<img src="https://i.ibb.co/SDGv6jvV/file-000000004e2c720ab1fe9ae4a0e6ca9a.png" onclick="changeImage(this.src)">
+<img src="https://i.ibb.co/SDGv6jvV/file-000004e2c720ab1fe9ae4a0e6ca9a.png" onclick="changeImage(this.src)">
 
-<img src="https://i.ibb.co/RG8Rsn2y/file-000000000bac71f49dc2c4fb5ff6c28e.png" onclick="changeImage(this.src)">
+<img src="https://i.ibb.co/RG8Rsn2y/file-000bac71f49dc2c4fb5ff6c28e.png" onclick="changeImage(this.src)">
 
 </div>
 
@@ -297,7 +310,7 @@ id: Date.now(),
 name: "Pando",
 
 image:
-"https://i.ibb.co/SDGv6jvV/file-000000004e2c720ab1fe9ae4a0e6ca9a.png",
+"https://i.ibb.co/SDGv6jvV/file-000004e2c720ab1fe9ae4a0e6ca9a.png",
 
 price: Number(price),
 
