@@ -33,11 +33,6 @@ border-radius:20px;
 background:white;
 cursor:pointer;
 transition:.3s;
-border:3px solid transparent;
-}
-
-.main-image.active{
-border:3px solid #000;
 }
 
 .thumbnails{
@@ -56,56 +51,6 @@ border-radius:12px;
 cursor:pointer;
 border:2px solid #ddd;
 background:white;
-flex-shrink:0;
-}
-
-.thumbnails img.active{
-border:3px solid #000;
-}
-
-.video-wrapper{
-position:relative;
-width:90px;
-height:90px;
-flex-shrink:0;
-}
-
-.thumbnails video{
-width:100%;
-height:100%;
-object-fit:cover;
-border-radius:12px;
-cursor:pointer;
-border:2px solid #ddd;
-background:black;
-}
-
-.thumbnails video.active{
-border:3px solid #000;
-}
-
-/* أيقونة Play */
-.play-icon{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:35px;
-height:35px;
-background:rgba(0,0,0,0.7);
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-pointer-events:none;
-}
-
-.play-icon::after{
-content:'';
-border-left:12px solid white;
-border-top:8px solid transparent;
-border-bottom:8px solid transparent;
-margin-left:3px;
 }
 
 .product-title{
@@ -181,53 +126,6 @@ line-height:1.8;
 font-size:18px;
 }
 
-/* ديزاين الرسالة الجديدة */
-.custom-alert{
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%) scale(0);
-background:white;
-padding:30px 25px;
-border-radius:25px;
-box-shadow:0 10px 40px rgba(0,0,0,0.3);
-text-align:center;
-z-index:9999;
-transition:all 0.3s;
-min-width:280px;
-}
-
-.custom-alert.show{
-transform:translate(-50%,-50%) scale(1);
-}
-
-.custom-alert p{
-font-size:20px;
-margin-bottom:20px;
-color:#333;
-}
-
-.custom-alert button{
-background:black;
-color:white;
-border:none;
-padding:12px 40px;
-border-radius:15px;
-font-size:18px;
-cursor:pointer;
-}
-
-.alert-overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.5);
-z-index:9998;
-display:none;
-}
-
 </style>
 
 </head>
@@ -238,20 +136,14 @@ display:none;
 
 <img
 id="mainImage"
-class="main-image active"
-src="https://i.ibb.co/SDGv6jvV/file-000004e2c720ab1fe9ae4a0e6ca9a.png">
+class="main-image"
+src="https://i.ibb.co/SDGv6jvV/file-000000004e2c720ab1fe9ae4a0e6ca9a.png">
 
 <div class="thumbnails">
 
-<img class="thumb active" src="https://i.ibb.co/SDGv6jvV/file-000004e2c720ab1fe9ae4a0e6ca9a.png" onclick="changeImage(this.src,'image',this)">
+<img src="https://i.ibb.co/SDGv6jvV/file-000000004e2c720ab1fe9ae4a0e6ca9a.png" onclick="changeImage(this.src)">
 
-<img class="thumb" src="https://i.ibb.co/RG8Rsn2y/file-000bac71f49dc2c4fb5ff6c28e.png" onclick="changeImage(this.src,'image',this)">
-
-<!-- الفيديو مع أيقونة Play -->
-<div class="video-wrapper">
-<video class="thumb" muted playsinline poster="https://i.ibb.co/SDGv6jvV/file-000004e2c720ab1fe9ae4a0e6ca9a.png" onclick="changeImage('https://res.cloudinary.com/dxhqxicb9/video/upload/InShot_20260603_160048838_u1uko0.mp4','video',this)"></video>
-<div class="play-icon"></div>
-</div>
+<img src="https://i.ibb.co/RG8Rsn2y/file-000000000bac71f49dc2c4fb5ff6c28e.png" onclick="changeImage(this.src)">
 
 </div>
 
@@ -314,14 +206,22 @@ placeholder="الثمن (اختياري)">
 
 </div>
 
-<!-- الرسالة الجميلة -->
-<div class="alert-overlay" id="overlay" onclick="closeAlert()"></div>
-<div class="custom-alert" id="customAlert">
-<p id="alertText"></p>
-<button onclick="closeAlert()">OK</button>
-</div>
-
 <script>
+
+function changeImage(src){
+document.getElementById("mainImage").src = src;
+}
+
+document.getElementById("mainImage")
+.addEventListener("click",function(){
+
+if(this.style.transform==="scale(2)"){
+this.style.transform="scale(1)";
+}else{
+this.style.transform="scale(2)";
+}
+
+});
 
 let quantity = 0;
 
@@ -330,40 +230,6 @@ document.getElementById("quantity");
 
 const unitSelect =
 document.getElementById("unit");
-
-function changeImage(src,type,el){
-document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
-document.getElementById('mainImage').classList.remove('active');
-if(el.classList.contains('video-wrapper')) el.querySelector('video').classList.add('active');
-else el.classList.add('active');
-
-const mainImage = document.getElementById("mainImage");
-if(type === 'video'){
-mainImage.outerHTML = `<video id="mainImage" class="main-image active" src="${src}" controls autoplay muted playsinline poster="${el.poster || src}"></video>`;
-}else{
-if(mainImage.tagName === 'VIDEO'){
-mainImage.outerHTML = `<img id="mainImage" class="main-image active" src="${src}">`;
-}else{
-mainImage.src = src;
-mainImage.classList.add('active');
-}
-}
-
-// بدل الصورة الصغيرة حتى هي
-const mainThumb = document.querySelector('.thumbnails .thumb.active');
-if(mainThumb && type === 'image'){
-mainThumb.src = src;
-}
-}
-
-document.addEventListener("click",function(e){
-if(e.target.id === "mainImage" && e.target.tagName === "IMG"){
-if(e.target.style.transform==="scale(2)"){
-e.target.style.transform="scale(1)";
-}else{
-e.target.style.transform="scale(2)";
-}
-}); // سديت القوس هنا
 
 function increaseQuantity(){
 
@@ -408,18 +274,6 @@ quantity;
 
 });
 
-// دالة الرسالة الجديدة
-function showAlert(text){
-document.getElementById("alertText").textContent = text;
-document.getElementById("overlay").style.display = "block";
-document.getElementById("customAlert").classList.add("show");
-}
-
-function closeAlert(){
-document.getElementById("overlay").style.display = "none";
-document.getElementById("customAlert").classList.remove("show");
-}
-
 function addToCart(){
 
 const price =
@@ -430,7 +284,7 @@ document.getElementById("unit").value;
 
 if(quantity <= 0){
 
-showAlert("اختر الكمية أولاً");
+alert("اختر الكمية أولاً");
 
 return;
 
@@ -443,7 +297,7 @@ id: Date.now(),
 name: "Pando",
 
 image:
-"https://i.ibb.co/SDGv6jvV/file-000004e2c720ab1fe9ae4a0e6ca9a.png",
+"https://i.ibb.co/SDGv6jvV/file-000000004e2c720ab1fe9ae4a0e6ca9a.png",
 
 price: Number(price),
 
@@ -468,7 +322,7 @@ localStorage.setItem(
 JSON.stringify(cartItems)
 );
 
-showAlert("تمت إضافة المنتج إلى السلة");
+alert("تمت إضافة المنتج إلى السلة");
 
 }
 
