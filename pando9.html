@@ -323,6 +323,14 @@ placeholder="الثمن (اختياري)">
 
 <script>
 
+let quantity = 0;
+
+const quantityValue =
+document.getElementById("quantity");
+
+const unitSelect =
+document.getElementById("unit");
+
 function changeImage(src,type,el){
 document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
 document.getElementById('mainImage').classList.remove('active');
@@ -355,15 +363,7 @@ e.target.style.transform="scale(1)";
 }else{
 e.target.style.transform="scale(2)";
 }
-}); // هنا كنت ناقص القوس
-
-let quantity = 0;
-
-const quantityValue =
-document.getElementById("quantity");
-
-const unitSelect =
-document.getElementById("unit");
+}); // سديت القوس هنا
 
 function increaseQuantity(){
 
