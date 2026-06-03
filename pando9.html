@@ -331,13 +331,20 @@ else el.classList.add('active');
 
 const mainImage = document.getElementById("mainImage");
 if(type === 'video'){
-mainImage.outerHTML = `<video id="mainImage" class="main-image active" src="${src}" controls autoplay muted playsinline></video>`;
+mainImage.outerHTML = `<video id="mainImage" class="main-image active" src="${src}" controls autoplay muted playsinline poster="${el.poster || src}"></video>`;
 }else{
 if(mainImage.tagName === 'VIDEO'){
 mainImage.outerHTML = `<img id="mainImage" class="main-image active" src="${src}">`;
 }else{
 mainImage.src = src;
 mainImage.classList.add('active');
+}
+}
+
+// بدل الصورة الصغيرة حتى هي
+const mainThumb = document.querySelector('.thumbnails .thumb.active');
+if(mainThumb && type === 'image'){
+mainThumb.src = src;
 }
 }
 
@@ -348,7 +355,7 @@ e.target.style.transform="scale(1)";
 }else{
 e.target.style.transform="scale(2)";
 }
-});
+}); // هنا كنت ناقص القوس
 
 let quantity = 0;
 
