@@ -121,41 +121,44 @@ font-size:35px;
 margin-bottom:20px;
 }
 
-..products{
+.products{
 display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:8px;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+.product-link{
+text-decoration:none;
+color:inherit;
 }
 
 .card{
 background:white;
-border-radius:8px;
+border-radius:15px;
 overflow:hidden;
 box-shadow:0 4px 12px rgba(0,0,0,.08);
-height:170px;
-display:flex;
-flex-direction:column;
+transition:.2s;
+}
+
+.card:hover{
+transform:translateY(-3px);
 }
 
 .card img{
 width:100%;
-height:110px;
+height:220px;
 object-fit:cover;
 }
 
 .card-body{
-flex:1;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:5px;
+padding:12px;
 }
 
 .card h3{
-font-size:12px;
+font-size:16px;
 text-align:center;
-margin:0;
 }
+
 footer{
 background:#111;
 color:white;
@@ -171,7 +174,7 @@ margin-top:40px;
 <div class="logo">
 
 <img
-src="IMG-20260531-WA0003.jpg"
+src="IMG-20260531-WA0004.jpg"
 alt="Mostafa Clean Shop"
 style="
 width:45px;
@@ -691,13 +694,6 @@ src="https://i.ibb.co/Dg6NLGB6/In-Shot-20260427-164243487.jpg" alt="Damti">
 <h3>Strome</h3>
 </div>
 </div>
-</a><a href="balaplas.html" class="product-link">
-<div class="card">
-<img src="https://i.ibb.co/0yR0hfPb/Screenshot-2026-06-06-14-36-23-981-edit-com-miui-gallery.jpg" alt="Bala Plas">
-<div class="card-body">
-<h3>Bala Plas</h3>
-</div>
-</div>
 </a><a href="yuki.html" class="product-link"><div class="card"><img
 src="https://i.ibb.co/qFBQvY7k/file-00000000625c71fdacc8b3aa5c0f8f2a.png" alt="Yuki">
 <div class="card-body">
@@ -744,5 +740,6 @@ product.style.display = "none";
 
 });
 
-</script></body>
+</script>
+</body>
 </html>
