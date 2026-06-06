@@ -121,44 +121,41 @@ font-size:35px;
 margin-bottom:20px;
 }
 
-.products{
+..products{
 display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-}
-
-.product-link{
-text-decoration:none;
-color:inherit;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
 }
 
 .card{
 background:white;
-border-radius:15px;
+border-radius:8px;
 overflow:hidden;
 box-shadow:0 4px 12px rgba(0,0,0,.08);
-transition:.2s;
-}
-
-.card:hover{
-transform:translateY(-3px);
+height:170px;
+display:flex;
+flex-direction:column;
 }
 
 .card img{
 width:100%;
-height:220px;
+height:110px;
 object-fit:cover;
 }
 
 .card-body{
-padding:12px;
+flex:1;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:5px;
 }
 
 .card h3{
-font-size:16px;
+font-size:12px;
 text-align:center;
+margin:0;
 }
-
 footer{
 background:#111;
 color:white;
@@ -692,6 +689,7 @@ src="https://i.ibb.co/Dg6NLGB6/In-Shot-20260427-164243487.jpg" alt="Damti">
 <img src="https://i.ibb.co/BVvm5YZ0/1777418221945.png" alt="Strome">
 <div class="card-body">
 <h3>Strome</h3>
+</div>
 </div>
 </a><a href="balaplas.html" class="product-link">
 <div class="card">
